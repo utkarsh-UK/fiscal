@@ -1,7 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 
-class Transaction extends Equatable {
+class TransactionModel extends Transaction {
   final String transactionID;
   final String title;
   final String? description;
@@ -11,7 +11,7 @@ class Transaction extends Equatable {
   final int accountID;
   final DateTime date;
 
-  Transaction({
+  TransactionModel({
     required this.transactionID,
     required this.title,
     this.description,
@@ -20,8 +20,13 @@ class Transaction extends Equatable {
     required this.categoryID,
     required this.accountID,
     required this.date,
-  });
-
-  @override
-  List<Object> get props => [transactionID, title, amount, date, transactionType];
+  }) : super(
+            transactionID: transactionID,
+            title: title,
+            description: description,
+            amount: amount,
+            transactionType: transactionType,
+            categoryID: categoryID,
+            accountID: accountID,
+            date: date);
 }

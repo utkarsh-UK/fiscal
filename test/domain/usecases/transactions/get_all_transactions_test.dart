@@ -20,7 +20,7 @@ void main() {
 
   DateTime transactionDate = DateTime(2021, 05, 12);
 
-  List<Transaction> transactions = [
+  Map<String, List<Transaction>> transactions = {'2021-05-12': [
     Transaction(
       transactionID: 'id',
       title: 'title',
@@ -30,7 +30,7 @@ void main() {
       accountID: 1,
       date: transactionDate,
     ),
-  ];
+  ] };
 
   int batchSize = 10;
 

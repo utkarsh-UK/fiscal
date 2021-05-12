@@ -4,13 +4,13 @@ import 'package:fiscal/core/usecase/usecase.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/repositories/repositories.dart';
 
-class GetAllTransactions extends Usecase<List<Transaction>, Params> {
+class GetAllTransactions extends Usecase<Map<String, List<Transaction>>, Params> {
   final TransactionRepository _repository;
 
   GetAllTransactions(this._repository);
 
   @override
-  Future<Either<Failure, List<Transaction>>> call(Params params) async {
+  Future<Either<Failure, Map<String, List<Transaction>>>> call(Params params) async {
     return await _repository.getAllTransactions(params.transactionParam!.transactionBatchSize);
   }
 }
