@@ -33,6 +33,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  #tdd
+  mockito: ^5.0.7
+  build_runner: ^2.0.2
+
 flutter:
   uses-material-design: true
 
