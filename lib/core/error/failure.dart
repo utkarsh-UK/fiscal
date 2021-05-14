@@ -5,10 +5,10 @@ abstract class Failure {
   Failure([List properties = const <dynamic>[]]) : super();
 }
 
-class DatabaseFailure extends Failure with EquatableMixin {
+class DataFailure extends Failure with EquatableMixin {
   final String message;
 
-  DatabaseFailure({this.message = DEFAULT_DATABASE_FAILURE_MESSAGE }) : super([message]);
+  DataFailure({this.message = DEFAULT_DATABASE_FAILURE_MESSAGE }) : super([message]);
 
   @override
   List<Object> get props => [message];

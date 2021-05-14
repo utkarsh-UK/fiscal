@@ -21,7 +21,6 @@ void main() {
   });
 
   DateTime transactionDate = DateTime(2021, 05, 12);
-
   List<Transaction> transactions = [
     Transaction(
       transactionID: 'id',
