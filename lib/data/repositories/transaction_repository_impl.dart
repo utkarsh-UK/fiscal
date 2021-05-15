@@ -13,8 +13,14 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
 
   @override
-  Future<Either<Failure, Map<String, List<Transaction>>>> getAllTransactions([int batchSize = 10]) async {
-    return Right({});
+  Future<Either<Failure, Map<String, List<Transaction>>>> getAllTransactions(String lastFetchedTransactionID,
+      [int batchSize = 10]) async {
+    try {
+      final transactions = await remoteDataSource.getAllTransactions(lastFetchedTransactionID, batchSize);
+      return Right(transactions);
+    } on DataException catch (d) {
+      return Left(DataFailure(message: d.message));
+    }
   }
 
   @override
@@ -29,12 +35,12 @@ class TransactionRepositoryImpl implements TransactionRepository {
       await localDataSource.cacheRecentTransactions(dbTransactions);
 
       return Right(dbTransactions);
-    } on DataException catch(d) {
+    } on DataException catch (d) {
       //TODO add logs
       return Left(DataFailure(message: d.message));
-    } on CacheException catch(c) {
+    } on CacheException catch (c) {
       //TODO add logs
-      return Left(DataFailure(message: c.message));
+      return Left(CacheFailure(message: c.message));
     }
   }
 }

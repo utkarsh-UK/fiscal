@@ -4,5 +4,6 @@ import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 
 abstract class TransactionRepository {
   Future<Either<Failure, List<Transaction>>> getRecentTransactions();
-  Future<Either<Failure, Map<String, List<Transaction>>>> getAllTransactions([int batchSize = 10]);
+  Future<Either<Failure, Map<String, List<Transaction>>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize =
+  10]);
 }

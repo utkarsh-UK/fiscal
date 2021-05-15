@@ -20,28 +20,32 @@ void main() {
 
   DateTime transactionDate = DateTime(2021, 05, 12);
 
-  Map<String, List<Transaction>> transactions = {'2021-05-12': [
-    Transaction(
-      transactionID: 'id',
-      title: 'title',
-      amount: 1.0,
-      transactionType: TransactionType.INCOME,
-      categoryID: 'category',
-      accountID: 1,
-      date: transactionDate,
-    ),
-  ] };
+  Map<String, List<Transaction>> transactions = {
+    '2021-05-12': [
+      Transaction(
+        transactionID: 'id',
+        title: 'title',
+        amount: 1.0,
+        transactionType: TransactionType.INCOME,
+        categoryID: 'category',
+        accountID: 1,
+        date: transactionDate,
+      ),
+    ]
+  };
 
   int batchSize = 10;
+  String lastTransactionID = 'id';
 
   test('should get all transactions from the repository', () async {
     // arrange
-    when(mockTransactionRepository.getAllTransactions(batchSize)).thenAnswer((realInvocation) async => Right(transactions));
+    when(mockTransactionRepository.getAllTransactions(lastTransactionID, batchSize)).thenAnswer((_) async => Right(transactions));
     //act
-    final result = await usecase(Params(transactionParam: TransactionParam(transactionBatchSize: batchSize)));
+    final result = await usecase(
+        Params(transactionParam: TransactionParam(transactionBatchSize: batchSize, lastFetchedTransactionID: lastTransactionID)));
     //assert
     expect(result, Right(transactions));
-    verify(mockTransactionRepository.getAllTransactions(batchSize));
+    verify(mockTransactionRepository.getAllTransactions(lastTransactionID, batchSize));
     verifyNoMoreInteractions(mockTransactionRepository);
   });
 }

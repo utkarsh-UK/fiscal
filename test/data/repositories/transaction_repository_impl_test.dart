@@ -26,20 +26,20 @@ void main() {
         remoteDataSource: mockTransactionRemoteDataSource, localDataSource: mockTransactionLocalDataSource);
   });
 
-  group('getRecentTransactions', () {
-    DateTime transactionDate = DateTime(2021, 05, 12);
-    List<Transaction> transactions = [
-      Transaction(
-        transactionID: 'id',
-        title: 'title',
-        amount: 1.0,
-        transactionType: TransactionType.INCOME,
-        categoryID: 'category',
-        accountID: 1,
-        date: transactionDate,
-      ),
-    ];
+  DateTime transactionDate = DateTime(2021, 05, 12);
+  List<Transaction> transactions = [
+    Transaction(
+      transactionID: 'id',
+      title: 'title',
+      amount: 1.0,
+      transactionType: TransactionType.INCOME,
+      categoryID: 'category',
+      accountID: 1,
+      date: transactionDate,
+    ),
+  ];
 
+  group('getRecentTransactions', () {
     test('should return recent transactions for batch size when call to remote data source is successful', () async {
       // arrange
       when(mockTransactionRemoteDataSource.getRecentTransactions()).thenAnswer((_) async => transactions);
@@ -93,6 +93,33 @@ void main() {
       //assert
       verify(mockTransactionLocalDataSource.getRecentTransactions());
       expect(result, Left(CacheFailure(message: DEFAULT_CACHE_EXCEPTION_MESSAGE)));
+    });
+  });
+
+  group('getAllTransactions', () {
+    Map<String, List<Transaction>> transactionsData = {
+      '2021-05-14 01:56:00': transactions,
+    };
+    String lastFetchedTransactionID = 'id';
+
+    test('should return all transactions when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getAllTransactions(any, any)).thenAnswer((realInvocation) async => transactionsData);
+      //act
+      final result = await repository.getAllTransactions(lastFetchedTransactionID);
+      //assert
+      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, 10));
+      expect(result, Right(transactionsData));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getAllTransactions(any, any)).thenThrow(DataException());
+      //act
+      final result = await repository.getAllTransactions(lastFetchedTransactionID);
+      //assert
+      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, 10));
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
 }

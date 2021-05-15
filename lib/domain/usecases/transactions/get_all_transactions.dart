@@ -11,6 +11,9 @@ class GetAllTransactions extends Usecase<Map<String, List<Transaction>>, Params>
 
   @override
   Future<Either<Failure, Map<String, List<Transaction>>>> call(Params params) async {
-    return await _repository.getAllTransactions(params.transactionParam!.transactionBatchSize);
+    return await _repository.getAllTransactions(
+      params.transactionParam!.lastFetchedTransactionID,
+      params.transactionParam!.transactionBatchSize,
+    );
   }
 }
