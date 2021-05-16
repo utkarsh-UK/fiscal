@@ -1,4 +1,4 @@
-Map<String, Object> transactionQuery = {
+Map<String, Object?> transactionQuery = {
   "transaction_id": "id",
   "date": "2021-05-14T14:13:29.104",
   "title": "title",

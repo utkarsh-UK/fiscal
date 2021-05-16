@@ -29,7 +29,7 @@ void main() {
 
   test('should return valid model when the data is valid', () async {
     // arrange
-    Map<String, Object> modelQuery = transactionQuery;
+    Map<String, Object?> modelQuery = transactionQuery;
     //act
     final result = TransactionModel.fromQueryResult(modelQuery);
     //assert
