@@ -7,19 +7,19 @@ import '../../fixtures/transactions/transaction.dart';
 
 void main() {
   late TransactionModel model;
+  late DateTime date;
 
   setUp(() {
-    final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
+    date = DateTime(2021, 05, 14, 14, 13, 29, 104);
     model = TransactionModel(
-      transactionID: 'id',
-      title: 'title',
-      amount: 10.10,
-      transactionType: TransactionType.INCOME,
-      categoryID: 'category',
-      accountID: 1,
-      date: date,
-      description: 'desc'
-    );
+        transactionID: 'id',
+        title: 'title',
+        amount: 10.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 'category',
+        accountID: 1,
+        date: date,
+        description: 'desc');
   });
 
   test('should be a subclass of Transaction entity', () async {
@@ -42,5 +42,23 @@ void main() {
     //assert
     final expectedMap = transactionQuery;
     expect(result, expectedMap);
+  });
+
+  test('should return valid TransactionModel when Transaction entity is valid', () async {
+    //arrange
+    final transaction = Transaction(
+      transactionID: 'id',
+      title: 'title',
+      amount: 10.10,
+      transactionType: TransactionType.INCOME,
+      categoryID: 'category',
+      accountID: 1,
+      date: date,
+      description: 'desc',
+    );
+    //act
+    final result = TransactionModel.fromTransaction(transaction);
+    //assert
+    expect(result, model);
   });
 }

@@ -8,7 +8,8 @@ import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart
     as _i5;
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart'
     as _i2;
-import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i4;
+import 'package:fiscal/data/models/transactions/transaction_model.dart' as _i4;
+import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: comment_references
@@ -28,21 +29,25 @@ class MockTransactionRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i3.Future<List<_i4.Transaction>> getRecentTransactions() =>
+  _i3.Future<List<_i4.TransactionModel>> getRecentTransactions() =>
       (super.noSuchMethod(Invocation.method(#getRecentTransactions, []),
-              returnValue:
-                  Future<List<_i4.Transaction>>.value(<_i4.Transaction>[]))
-          as _i3.Future<List<_i4.Transaction>>);
+              returnValue: Future<List<_i4.TransactionModel>>.value(
+                  <_i4.TransactionModel>[]))
+          as _i3.Future<List<_i4.TransactionModel>>);
   @override
-  _i3.Future<Map<String, List<_i4.Transaction>>> getAllTransactions(
+  _i3.Future<Map<String, List<_i4.TransactionModel>>> getAllTransactions(
           String? lastFetchedTransactionID,
           [int? batchSize = 10]) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #getAllTransactions, [lastFetchedTransactionID, batchSize]),
-              returnValue: Future<Map<String, List<_i4.Transaction>>>.value(
-                  <String, List<_i4.Transaction>>{}))
-          as _i3.Future<Map<String, List<_i4.Transaction>>>);
+          Invocation.method(
+              #getAllTransactions, [lastFetchedTransactionID, batchSize]),
+          returnValue: Future<Map<String, List<_i4.TransactionModel>>>.value(
+              <String, List<_i4.TransactionModel>>{})) as _i3
+          .Future<Map<String, List<_i4.TransactionModel>>>);
+  @override
+  _i3.Future<String> addNewTransaction(_i4.TransactionModel? transaction) =>
+      (super.noSuchMethod(Invocation.method(#addNewTransaction, [transaction]),
+          returnValue: Future<String>.value('')) as _i3.Future<String>);
 }
 
 /// A class which mocks [TransactionLocalDataSource].
@@ -55,20 +60,20 @@ class MockTransactionLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i3.Future<List<_i4.Transaction>> getRecentTransactions() =>
+  _i3.Future<List<_i6.Transaction>> getRecentTransactions() =>
       (super.noSuchMethod(Invocation.method(#getRecentTransactions, []),
               returnValue:
-                  Future<List<_i4.Transaction>>.value(<_i4.Transaction>[]))
-          as _i3.Future<List<_i4.Transaction>>);
+                  Future<List<_i6.Transaction>>.value(<_i6.Transaction>[]))
+          as _i3.Future<List<_i6.Transaction>>);
   @override
   _i3.Future<void> cacheRecentTransactions(
-          List<_i4.Transaction>? transactions) =>
+          List<_i6.Transaction>? transactions) =>
       (super.noSuchMethod(
           Invocation.method(#cacheRecentTransactions, [transactions]),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
-  _i3.Future<void> cacheNewTransaction(_i4.Transaction? transaction) => (super
+  _i3.Future<void> cacheNewTransaction(_i6.Transaction? transaction) => (super
       .noSuchMethod(Invocation.method(#cacheNewTransaction, [transaction]),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);

@@ -44,6 +44,20 @@ class TransactionModel extends Transaction {
     );
   }
 
+  factory TransactionModel.fromTransaction(Transaction transaction) {
+    return TransactionModel(
+      transactionID: transaction.transactionID,
+      title: transaction.title,
+      amount: transaction.amount,
+      description: transaction.description,
+      transactionType: transaction.transactionType,
+      categoryID: transaction.categoryID,
+      accountID: transaction.accountID,
+      date: transaction.date,
+
+    );
+  }
+
   static Map<String, Object?> toQuery(TransactionModel model) => {
     TransactionTable.id: model.transactionID,
     TransactionTable.title: model.title,

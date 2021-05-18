@@ -12,7 +12,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../fixtures/transactions/transaction.dart';
 import 'transaction_remote_data_source_impl_test.mocks.dart';
 
-@GenerateMocks([Database])
+@GenerateMocks([Database, DatabaseExecutor])
 void main() {
   late TransactionRemoteDataSourceImpl dataSourceImpl;
   late MockDatabase mockDatabase;
@@ -105,6 +105,40 @@ void main() {
       final call = dataSourceImpl.getRecentTransactions;
       //assert
       expect(() => call(), throwsA(TypeMatcher<DataException>()));
+    });
+  });
+
+  group('addNewTransaction', () {
+    String query = 'INSERT INTO ${TransactionTable.TABLE_NAME} VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+    final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
+    final transaction = TransactionModel(
+        transactionID: 'id',
+        title: 'title',
+        amount: 10.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 'category',
+        accountID: 1,
+        date: date,
+        description: 'desc');
+
+    test('should fetch recent transactions from database', () async {
+      // arrange
+      int transactionID = 1;
+      when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction)))
+          .thenAnswer((_) async => transactionID);
+      //act
+      final result = await dataSourceImpl.addNewTransaction(transaction);
+      //assert
+      verify(mockDatabase.rawQuery(query, [10]));
+      expect(result, '$transactionID');
+    });
+
+    test('should throw DataException when fetching data fails', () async {
+      //act
+      final call = dataSourceImpl.addNewTransaction;
+      //assert
+      expect(() => call(transaction), throwsA(TypeMatcher<DataException>()));
     });
   });
 }

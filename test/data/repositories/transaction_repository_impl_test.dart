@@ -5,13 +5,13 @@ import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/core/utils/static/messages.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
+import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
-import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'mocks/transaction_repository_impl_test.mocks.dart';
+import 'transaction_repository_impl_test.mocks.dart';
 
 @GenerateMocks([TransactionRemoteDataSource, TransactionLocalDataSource])
 void main() {
@@ -27,8 +27,8 @@ void main() {
   });
 
   DateTime transactionDate = DateTime(2021, 05, 12);
-  List<Transaction> transactions = [
-    Transaction(
+  List<TransactionModel> transactions = [
+    TransactionModel(
       transactionID: 'id',
       title: 'title',
       amount: 1.0,
@@ -97,7 +97,7 @@ void main() {
   });
 
   group('getAllTransactions', () {
-    Map<String, List<Transaction>> transactionsData = {
+    Map<String, List<TransactionModel>> transactionsData = {
       '2021-05-14 01:56:00': transactions,
     };
     String lastFetchedTransactionID = 'id';
@@ -119,6 +119,40 @@ void main() {
       final result = await repository.getAllTransactions(lastFetchedTransactionID);
       //assert
       verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, 10));
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
+
+  group('addNewTransaction', () {
+    DateTime transactionDate = DateTime(2021, 05, 12);
+    TransactionModel transaction = TransactionModel(
+      transactionID: 'id',
+      title: 'title',
+      amount: 1.0,
+      transactionType: TransactionType.INCOME,
+      categoryID: 'category',
+      accountID: 1,
+      date: transactionDate,
+    );
+    String transactionID = 'id';
+
+    test('should return newly added transaction id when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.addNewTransaction(transaction)).thenAnswer((_) async => transactionID);
+      //act
+      final result = await repository.addNewTransaction(transaction);
+      //assert
+      verify(mockTransactionRemoteDataSource.addNewTransaction(transaction));
+      expect(result, Right(transactionID));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.addNewTransaction(any)).thenThrow(DataException());
+      //act
+      final result = await repository.addNewTransaction(transaction);
+      //assert
+      verify(mockTransactionRemoteDataSource.addNewTransaction(transaction));
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });

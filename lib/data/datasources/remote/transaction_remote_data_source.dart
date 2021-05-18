@@ -1,13 +1,14 @@
 import 'package:fiscal/core/error/exceptions.dart';
 import 'package:fiscal/core/utils/tables/transaction_table.dart';
 import 'package:fiscal/data/models/models.dart';
-import 'package:fiscal/domain/enitities/transactions/transaction.dart' as t;
 import 'package:sqflite/sqflite.dart';
 
 abstract class TransactionRemoteDataSource {
-  Future<List<t.Transaction>> getRecentTransactions();
+  Future<List<TransactionModel>> getRecentTransactions();
 
-  Future<Map<String, List<t.Transaction>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]);
+  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]);
+
+  Future<String> addNewTransaction(TransactionModel transaction);
 }
 
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
@@ -16,7 +17,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   TransactionRemoteDataSourceImpl({required this.db});
 
   @override
-  Future<Map<String, List<t.Transaction>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]) async {
+  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]) async {
     try {
       late List<Map<String, Object?>> queryData;
       if (lastFetchedTransactionID.isEmpty) {
@@ -44,7 +45,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   }
 
   @override
-  Future<List<t.Transaction>> getRecentTransactions() async {
+  Future<List<TransactionModel>> getRecentTransactions() async {
     try {
       final queryData = await db.rawQuery(
         'SELECT * FROM ${TransactionTable.TABLE_NAME}  ORDER BY'
@@ -55,6 +56,17 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
 
       final queryList = queryData.map((transaction) => TransactionModel.fromQueryResult(transaction)).toList();
       return queryList;
+    } catch (e) {
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<String> addNewTransaction(TransactionModel transaction) async {
+    try {
+      final int id = await db.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction));
+
+      return '$id';
     } catch (e) {
       throw DataException(message: e.toString());
     }

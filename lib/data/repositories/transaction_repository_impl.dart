@@ -3,6 +3,7 @@ import 'package:fiscal/core/error/exceptions.dart';
 import 'package:fiscal/core/error/failure.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
+import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/domain/repositories/transaction_repository.dart';
 
@@ -41,6 +42,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
     } on CacheException catch (c) {
       //TODO add logs
       return Left(CacheFailure(message: c.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> addNewTransaction(Transaction transaction) async {
+    try {
+      return Right(await remoteDataSource.addNewTransaction(TransactionModel.fromTransaction(transaction)));
+    } on DataException catch (d) {
+      return Left(DataFailure(message: d.message));
     }
   }
 }
