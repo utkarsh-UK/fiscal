@@ -36,11 +36,37 @@ void main() {
     expect(result, model);
   });
 
-  test('should return valid JSON when the model is valid', () async {
+  test('should return valid model when the JSON is valid', () async {
+    // arrange
+    Map<String, Object?> modelQuery = transactionQuery;
+    //act
+    final result = TransactionModel.fromQueryResult(modelQuery);
+    //assert
+    expect(result, model);
+  });
+
+  test('should return valid query JSON data when the model is valid', () async {
     //act
     final result = TransactionModel.toQuery(model);
     //assert
     final expectedMap = transactionQuery;
+    expect(result, expectedMap);
+  });
+
+  test('should return valid JSON when the model is valid', () async {
+    //act
+    final result = TransactionModel.toJSON(model);
+    //assert
+    final expectedMap = <String, dynamic>{
+      "transaction_id": "id",
+      "date": "2021-05-14T14:13:29.104",
+      "title": "title",
+      "description": "desc",
+      "amount": 10.10,
+      "transaction_type": "INCOME",
+      "category_id": "category",
+      "acc_id": 1
+    };
     expect(result, expectedMap);
   });
 

@@ -9,7 +9,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../fixtures/transactions/transaction.dart';
+import '../../../fixtures/transactions/transaction.dart';
 import 'transaction_remote_data_source_impl_test.mocks.dart';
 
 @GenerateMocks([Database, DatabaseExecutor])
@@ -24,6 +24,7 @@ void main() {
 
   group('getAllTransactions', () {
     String lastFetchedTransactionID = 'id';
+    String time = '2021-05-14%';
     int batchSize = 10;
 
     List<Map<String, Object?>> queryResult = [transactionQuery];
@@ -42,11 +43,11 @@ void main() {
 
     test('should fetch all transactions for initial load and specified batch size', () async {
       // arrange
-      String query = 'SELECT * FROM ${TransactionTable.TABLE_NAME} ORDER BY'
+      String query = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
-      when(mockDatabase.rawQuery(query, ['', batchSize])).thenAnswer((_) async => queryResult);
+      when(mockDatabase.rawQuery(query, ['', time, batchSize])).thenAnswer((_) async => queryResult);
       //act
-      final result = await dataSourceImpl.getAllTransactions('');
+      final result = await dataSourceImpl.getAllTransactions('', time);
       //assert
       verify(mockDatabase.rawQuery(query, [batchSize]));
       expect(result, {'data': transactions});
@@ -54,13 +55,15 @@ void main() {
 
     test('should fetch paginated transactions for subsequent load and specified batch size', () async {
       // arrange
-      String paginatedQuery = 'SELECT * FROM ${TransactionTable.TABLE_NAME} where ${TransactionTable.id} < ? ORDER BY'
+      String paginatedQuery = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? and  '
+          '${TransactionTable.id} < ? ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
-      when(mockDatabase.rawQuery(paginatedQuery, [lastFetchedTransactionID, batchSize])).thenAnswer((_) async => queryResult);
+      when(mockDatabase.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]))
+          .thenAnswer((_) async => queryResult);
       //act
-      final result = await dataSourceImpl.getAllTransactions(lastFetchedTransactionID);
+      final result = await dataSourceImpl.getAllTransactions(lastFetchedTransactionID, time);
       //assert
-      verify(mockDatabase.rawQuery(paginatedQuery, [lastFetchedTransactionID, batchSize]));
+      verify(mockDatabase.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]));
       expect(result, {'data': transactions});
     });
 
@@ -68,7 +71,7 @@ void main() {
       //act
       final call = dataSourceImpl.getAllTransactions;
       //assert
-      expect(() => call(lastFetchedTransactionID), throwsA(TypeMatcher<DataException>()));
+      expect(() => call(lastFetchedTransactionID, time), throwsA(TypeMatcher<DataException>()));
     });
   });
 
@@ -122,7 +125,7 @@ void main() {
         date: date,
         description: 'desc');
 
-    test('should fetch recent transactions from database', () async {
+    test('should add new transaction to the database and return row count', () async {
       // arrange
       int transactionID = 1;
       when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction)))

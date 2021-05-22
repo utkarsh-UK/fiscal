@@ -13,6 +13,7 @@ class GetAllTransactions extends Usecase<Map<String, List<Transaction>>, Params>
   Future<Either<Failure, Map<String, List<Transaction>>>> call(Params params) async {
     return await _repository.getAllTransactions(
       params.transactionParam!.lastFetchedTransactionID,
+      params.transactionParam!.time,
       params.transactionParam!.transactionBatchSize,
     );
   }

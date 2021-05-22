@@ -1,0 +1,1 @@
+const String RECENT_TRANS_SHARED_PREF_KEY = 'recent_transactions';

@@ -6,7 +6,8 @@ import 'package:sqflite/sqflite.dart';
 abstract class TransactionRemoteDataSource {
   Future<List<TransactionModel>> getRecentTransactions();
 
-  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]);
+  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, String time,
+      [int batchSize = 10]);
 
   Future<String> addNewTransaction(TransactionModel transaction);
 }
@@ -17,23 +18,25 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   TransactionRemoteDataSourceImpl({required this.db});
 
   @override
-  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, [int batchSize = 10]) async {
+  Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, String time,
+      [int batchSize = 10]) async {
     try {
       late List<Map<String, Object?>> queryData;
       if (lastFetchedTransactionID.isEmpty) {
         //initial fetch request
         queryData = await db.rawQuery(
-          'SELECT * FROM ${TransactionTable.TABLE_NAME}  ORDER BY'
+          'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ?  ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?',
-          [batchSize],
+          [time, batchSize],
         );
       } else {
         //subsequent fetch request
         queryData = await db.rawQuery(
-          'SELECT * FROM ${TransactionTable.TABLE_NAME} where ${TransactionTable.id} < ? ORDER BY'
+          'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
+          'ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?'
           '',
-          [lastFetchedTransactionID, batchSize],
+          [time, lastFetchedTransactionID, batchSize],
         );
       }
 

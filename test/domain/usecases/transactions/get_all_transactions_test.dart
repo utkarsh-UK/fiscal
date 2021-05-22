@@ -9,7 +9,6 @@ import 'package:mockito/mockito.dart';
 
 import 'get_recent_transactions_test.mocks.dart';
 
-
 void main() {
   late GetAllTransactions usecase;
   late MockTransactionRepository mockTransactionRepository;
@@ -37,16 +36,19 @@ void main() {
 
   int batchSize = 10;
   String lastTransactionID = 'id';
+  String time = '2021-05-14';
 
   test('should get all transactions from the repository', () async {
     // arrange
-    when(mockTransactionRepository.getAllTransactions(lastTransactionID, batchSize)).thenAnswer((_) async => Right(transactions));
+    when(mockTransactionRepository.getAllTransactions(lastTransactionID, time, batchSize))
+        .thenAnswer((_) async => Right(transactions));
     //act
-    final result = await usecase(
-        Params(transactionParam: TransactionParam(transactionBatchSize: batchSize, lastFetchedTransactionID: lastTransactionID)));
+    final result = await usecase(Params(
+        transactionParam:
+            TransactionParam(transactionBatchSize: batchSize, lastFetchedTransactionID: lastTransactionID, time: time)));
     //assert
     expect(result, Right(transactions));
-    verify(mockTransactionRepository.getAllTransactions(lastTransactionID, batchSize));
+    verify(mockTransactionRepository.getAllTransactions(lastTransactionID, time, batchSize));
     verifyNoMoreInteractions(mockTransactionRepository);
   });
 }

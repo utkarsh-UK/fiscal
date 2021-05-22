@@ -101,14 +101,15 @@ void main() {
       '2021-05-14 01:56:00': transactions,
     };
     String lastFetchedTransactionID = 'id';
+    String time = '2021-05-14';
 
     test('should return all transactions when call to remote data source is successful.', () async {
       // arrange
       when(mockTransactionRemoteDataSource.getAllTransactions(any, any)).thenAnswer((realInvocation) async => transactionsData);
       //act
-      final result = await repository.getAllTransactions(lastFetchedTransactionID);
+      final result = await repository.getAllTransactions(lastFetchedTransactionID, time);
       //assert
-      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, 10));
+      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, time, 10));
       expect(result, Right(transactionsData));
     });
 
@@ -116,9 +117,9 @@ void main() {
       // arrange
       when(mockTransactionRemoteDataSource.getAllTransactions(any, any)).thenThrow(DataException());
       //act
-      final result = await repository.getAllTransactions(lastFetchedTransactionID);
+      final result = await repository.getAllTransactions(lastFetchedTransactionID, time);
       //assert
-      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, 10));
+      verify(mockTransactionRemoteDataSource.getAllTransactions(lastFetchedTransactionID, time, 10));
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
@@ -143,6 +144,7 @@ void main() {
       final result = await repository.addNewTransaction(transaction);
       //assert
       verify(mockTransactionRemoteDataSource.addNewTransaction(transaction));
+      verify(mockTransactionLocalDataSource.cacheNewTransaction(transaction));
       expect(result, Right(transactionID));
     });
 
