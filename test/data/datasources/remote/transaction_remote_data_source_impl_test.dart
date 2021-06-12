@@ -137,7 +137,16 @@ void main() {
       expect(result, '$transactionID');
     });
 
-    test('should throw DataException when fetching data fails', () async {
+    test('should throw DataException when adding data fails', () async {
+      //act
+      final call = dataSourceImpl.addNewTransaction;
+      //assert
+      expect(() => call(transaction), throwsA(TypeMatcher<DataException>()));
+    });
+
+    test('should throw DataException when insert returns 0 row count.', () async {
+      // arrange
+      when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction))).thenAnswer((_) async => 0);
       //act
       final call = dataSourceImpl.addNewTransaction;
       //assert

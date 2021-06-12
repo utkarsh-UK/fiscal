@@ -38,7 +38,7 @@ void main() {
   final transactionsList = [transaction, transaction];
   final sequalizedList = transactionsList.map((t) => TransactionModel.toJSON(t)).toList();
 
-  group('cacheRecentTransactions', () {
+  group('cacheNewTransaction', () {
     test('should cache transaction when new transaction is added', () async {
       // arrange
       when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
@@ -56,6 +56,48 @@ void main() {
       final call = localDataSource.cacheNewTransaction;
       //assert
       expect(() => call(transaction), throwsA(TypeMatcher<CacheException>()));
+    });
+  });
+
+  group('cacheRecentTransactions', () {
+    test('should cache given recent transactions', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      //act
+      await localDataSource.cacheRecentTransactions(transactionsList);
+      //assert
+      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(sequalizedList)));
+    });
+
+    test('should throw CacheException when caching goes wrong', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenThrow(CacheException());
+      //act
+      final call = localDataSource.cacheRecentTransactions;
+      //assert
+      expect(() => call(transactionsList), throwsA(TypeMatcher<CacheException>()));
+    });
+  });
+
+  group('getRecentTransactions', () {
+    test('should return recent transactions from cache', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      when(mockSharedPreferences.getString(any)).thenReturn(json.encode([transactionQuery, transactionQuery]));
+      //act
+      final result = await localDataSource.getRecentTransactions();
+      //assert
+      verify(mockSharedPreferences.getString(RECENT_TRANS_SHARED_PREF_KEY));
+      expect(result, transactionsList);
+    });
+
+    test('should throw CacheException when caching goes wrong', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenThrow(CacheException());
+      //act
+      final call = localDataSource.getRecentTransactions;
+      //assert
+      expect(() => call(), throwsA(TypeMatcher<CacheException>()));
     });
   });
 }
