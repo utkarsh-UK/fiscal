@@ -3,6 +3,8 @@
 export './utils/tables/transaction_table.dart';
 
 // helpers
+/* utility*/
+export './utils/helpers/utility.dart';
 /* converters */
 export './utils/helpers/converters.dart';
 
