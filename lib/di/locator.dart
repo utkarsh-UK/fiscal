@@ -1,0 +1,42 @@
+import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
+import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
+import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
+import 'package:fiscal/domain/repositories/repositories.dart';
+import 'package:fiscal/domain/usecases/usecases.dart';
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final locator = GetIt.instance;
+
+void init() async {
+  // providers
+  locator.registerLazySingleton<TransactionProvider>(
+    () => TransactionProvider(
+      getAllTransactions: locator(),
+      getRecentTransactions: locator(),
+      addNewTransaction: locator(),
+    ),
+  );
+
+  // usecases
+  locator.registerFactory(() => GetAllTransactions(locator()));
+  locator.registerFactory(() => GetRecentTransactions(locator()));
+  locator.registerFactory(() => AddNewTransaction(locator()));
+
+  // repository
+  locator.registerFactory<TransactionRepository>(
+    () => TransactionRepositoryImpl(
+      remoteDataSource: locator(),
+      localDataSource: locator(),
+    ),
+  );
+  
+  // data sources
+  locator.registerFactory<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(db: locator()));
+  locator.registerFactory<TransactionLocalDataSource>(() => TransactionLocalDataSourceImpl(locator()));
+
+  //external
+  final sharedPreferences = await SharedPreferences.getInstance();
+  locator.registerLazySingleton(() => sharedPreferences);
+}
