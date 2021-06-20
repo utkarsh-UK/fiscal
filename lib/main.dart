@@ -1,8 +1,10 @@
+import 'package:fiscal/core/core.dart';
 import 'package:fiscal/di/locator.dart' as di;
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   runApp(MyApp());
 }
@@ -14,7 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Fiscal',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        fontFamily: FiscalTheme.SECONDARY_FONT_SIGNIKA,
+        canvasColor: Colors.white
       ),
       home: Home(),
     );

@@ -16,4 +16,7 @@ class FiscalTheme {
   static const Color OTHER_COLOR = Color(0xfafafa);
   static const Color POSITIVE_COLOR = Color(0xfafafa);
   static const Color NEGATIVE_COLOR = Color(0xfafafa);
+
+  static const String PRIMARY_FONT_PATUA = 'Patua One';
+  static const String SECONDARY_FONT_SIGNIKA = 'Signika';
 }

@@ -11,3 +11,7 @@ export './utils/helpers/converters.dart';
 // static
 /* constants */
 export './utils/static/constants.dart';
+
+// theme
+export './theme/fiscal_assets.dart';
+export './theme/fiscal_theme.dart';

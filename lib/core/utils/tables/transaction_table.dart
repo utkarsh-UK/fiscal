@@ -1,5 +1,5 @@
 class TransactionTable {
-  static const String TABLE_NAME = 'transaction';
+  static const String TABLE_NAME = 'transact';
 
   //COLUMNS
   static const String id = 'transaction_id';
