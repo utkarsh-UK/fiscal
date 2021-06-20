@@ -1,15 +1,17 @@
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
+import 'package:fiscal/data/db/database.dart';
 import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
 import 'package:fiscal/domain/repositories/repositories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 final locator = GetIt.instance;
 
-void init() async {
+Future<void> init() async {
   // providers
   locator.registerLazySingleton<TransactionProvider>(
     () => TransactionProvider(
@@ -39,4 +41,7 @@ void init() async {
   //external
   final sharedPreferences = await SharedPreferences.getInstance();
   locator.registerLazySingleton(() => sharedPreferences);
+  
+  final db = await FiscalDatabase.instance.database;
+  locator.registerSingleton<Database>(db);
 }

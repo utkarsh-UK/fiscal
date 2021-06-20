@@ -1,7 +1,9 @@
+import 'package:fiscal/di/locator.dart' as di;
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  await di.init();
   runApp(MyApp());
 }
 
