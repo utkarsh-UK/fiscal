@@ -153,4 +153,31 @@ void main() {
       expect(() => call(transaction), throwsA(TypeMatcher<DataException>()));
     });
   });
+
+  group('getDailySummary', () {
+    Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
+    final String query = ''
+        'SELECT SUM(amount)'
+        'FROM ${TransactionTable.TABLE_NAME} '
+        'GROUP BY ${TransactionTable.transaction_type} '
+        'WHERE ${TransactionTable.date}=DATE()';
+    final rows = [summary];
+
+    test('should get daily summary data for current day', () async {
+      // arrange
+      when(mockDatabase.rawQuery(query)).thenAnswer((_) async => rows);
+      //act
+      final result = await dataSourceImpl.getDailySummary();
+      //assert
+      verify(mockDatabase.rawQuery(query, [10]));
+      expect(result, summary);
+    });
+
+    test('should throw DataException when adding data fails', () async {
+      //act
+      final call = dataSourceImpl.getDailySummary;
+      //assert
+      expect(() => call(), throwsA(TypeMatcher<DataException>()));
+    });
+  });
 }

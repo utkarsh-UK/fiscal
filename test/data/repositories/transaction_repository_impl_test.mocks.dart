@@ -47,6 +47,11 @@ class MockTransactionRemoteDataSource extends _i1.Mock
   _i3.Future<String> addNewTransaction(_i4.TransactionModel? transaction) =>
       (super.noSuchMethod(Invocation.method(#addNewTransaction, [transaction]),
           returnValue: Future<String>.value('')) as _i3.Future<String>);
+  @override
+  _i3.Future<Map<String, Object?>> getDailySummary() => (super.noSuchMethod(
+          Invocation.method(#getDailySummary, []),
+          returnValue: Future<Map<String, Object?>>.value(<String, Object?>{}))
+      as _i3.Future<Map<String, Object?>>);
 }
 
 /// A class which mocks [TransactionLocalDataSource].

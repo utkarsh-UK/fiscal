@@ -18,6 +18,7 @@ Future<void> init() async {
       getAllTransactions: locator(),
       getRecentTransactions: locator(),
       addNewTransaction: locator(),
+      getDailySummary: locator(),
     ),
   );
 
@@ -25,6 +26,7 @@ Future<void> init() async {
   locator.registerFactory(() => GetAllTransactions(locator()));
   locator.registerFactory(() => GetRecentTransactions(locator()));
   locator.registerFactory(() => AddNewTransaction(locator()));
+  locator.registerFactory(() => GetDailySummary(locator()));
 
   // repository
   locator.registerFactory<TransactionRepository>(

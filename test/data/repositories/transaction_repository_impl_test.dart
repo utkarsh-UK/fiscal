@@ -158,4 +158,28 @@ void main() {
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
+
+  group('getDailySummary', () {
+    Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
+
+    test('should return summary data when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getDailySummary()).thenAnswer((_) async => summary);
+      //act
+      final result = await repository.getDailySummary();
+      //assert
+      verify(mockTransactionRemoteDataSource.getDailySummary());
+      expect(result, Right(summary));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getDailySummary()).thenThrow(DataException());
+      //act
+      final result = await repository.getDailySummary();
+      //assert
+      verify(mockTransactionRemoteDataSource.getDailySummary());
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
 }

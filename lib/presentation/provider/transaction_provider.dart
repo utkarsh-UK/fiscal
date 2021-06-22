@@ -6,20 +6,23 @@ import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:flutter/foundation.dart';
 
-enum TransactionStatus { LOADING, COMPLETED, ERROR }
+enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ERROR }
 
 class TransactionProvider extends ChangeNotifier {
   final GetAllTransactions _getAllTransactions;
   final GetRecentTransactions _getRecentTransactions;
   final AddNewTransaction _addNewTransaction;
+  final GetDailySummary _getDailySummary;
 
   TransactionProvider({
     required GetAllTransactions getAllTransactions,
     required GetRecentTransactions getRecentTransactions,
     required AddNewTransaction addNewTransaction,
+    required GetDailySummary getDailySummary,
   })  : _getAllTransactions = getAllTransactions,
         _getRecentTransactions = getRecentTransactions,
-        _addNewTransaction = addNewTransaction;
+        _addNewTransaction = addNewTransaction,
+        _getDailySummary = getDailySummary;
 
   late TransactionStatus _status;
   String _message = '';
@@ -102,14 +105,33 @@ class TransactionProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  Future<void> getDailySummary() async {
+    _status = TransactionStatus.REFRESHING;
+    notifyListeners();
+
+    final failureOrSummary = await _getDailySummary(NoParams());
+
+    failureOrSummary.fold((failure) {
+      _message = Utility.mapFailureToMessage(failure);
+      _status = TransactionStatus.ERROR;
+      notifyListeners();
+    }, (fetchedSummary) {
+      data.summary = fetchedSummary;
+      _status = TransactionStatus.COMPLETED;
+      notifyListeners();
+    });
+  }
 }
 
 class TransactionProviderData {
   List<Transaction> recentTransactions;
   List<Transaction> allTransactions;
+  Map<String, Object?> summary;
 
   TransactionProviderData({
     this.recentTransactions = const [],
     this.allTransactions = const [],
+    this.summary = const {},
   });
 }

@@ -54,4 +54,11 @@ class MockTransactionRepository extends _i1.Mock
               returnValue: Future<_i2.Either<_i5.Failure, String>>.value(
                   _FakeEither<_i5.Failure, String>()))
           as _i4.Future<_i2.Either<_i5.Failure, String>>);
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, Map<String, Object?>>> getDailySummary() =>
+      (super.noSuchMethod(Invocation.method(#getDailySummary, []),
+              returnValue:
+                  Future<_i2.Either<_i5.Failure, Map<String, Object?>>>.value(
+                      _FakeEither<_i5.Failure, Map<String, Object?>>()))
+          as _i4.Future<_i2.Either<_i5.Failure, Map<String, Object?>>>);
 }

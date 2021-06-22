@@ -56,4 +56,13 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return Left(DataFailure(message: d.message));
     }
   }
+
+  @override
+  Future<Either<Failure, Map<String, Object?>>> getDailySummary() async {
+    try {
+      return Right(await remoteDataSource.getDailySummary());
+    } on DataException catch (d) {
+      return Left(DataFailure(message: d.message));
+    }
+  }
 }

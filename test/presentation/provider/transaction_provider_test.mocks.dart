@@ -12,6 +12,8 @@ import 'package:fiscal/domain/usecases/transactions/add_new_transaction.dart'
     as _i9;
 import 'package:fiscal/domain/usecases/transactions/get_all_transactions.dart'
     as _i3;
+import 'package:fiscal/domain/usecases/transactions/get_daily_summary.dart'
+    as _i10;
 import 'package:fiscal/domain/usecases/transactions/get_recent_transactions.dart'
     as _i8;
 import 'package:mockito/mockito.dart' as _i1;
@@ -78,4 +80,22 @@ class MockAddNewTransaction extends _i1.Mock implements _i9.AddNewTransaction {
               returnValue: Future<_i2.Either<_i5.Failure, String>>.value(
                   _FakeEither<_i5.Failure, String>()))
           as _i4.Future<_i2.Either<_i5.Failure, String>>);
+}
+
+/// A class which mocks [GetDailySummary].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetDailySummary extends _i1.Mock implements _i10.GetDailySummary {
+  MockGetDailySummary() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, Map<String, Object?>>> call(
+          _i7.NoParams? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue:
+                  Future<_i2.Either<_i5.Failure, Map<String, Object?>>>.value(
+                      _FakeEither<_i5.Failure, Map<String, Object?>>()))
+          as _i4.Future<_i2.Either<_i5.Failure, Map<String, Object?>>>);
 }

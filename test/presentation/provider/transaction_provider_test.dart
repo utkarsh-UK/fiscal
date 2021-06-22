@@ -13,23 +13,25 @@ import 'package:mockito/mockito.dart';
 
 import 'transaction_provider_test.mocks.dart';
 
-@GenerateMocks([GetAllTransactions, GetRecentTransactions, AddNewTransaction])
+@GenerateMocks([GetAllTransactions, GetRecentTransactions, AddNewTransaction, GetDailySummary])
 void main() {
   late TransactionProvider provider;
   late MockGetAllTransactions mockGetAllTransactions;
   late MockGetRecentTransactions mockGetRecentTransactions;
   late MockAddNewTransaction mockAddNewTransaction;
+  late MockGetDailySummary mockGetDailySummary;
 
   setUp(() {
     mockGetAllTransactions = MockGetAllTransactions();
     mockGetRecentTransactions = MockGetRecentTransactions();
     mockAddNewTransaction = MockAddNewTransaction();
+    mockGetDailySummary = MockGetDailySummary();
 
     provider = TransactionProvider(
-      getAllTransactions: mockGetAllTransactions,
-      getRecentTransactions: mockGetRecentTransactions,
-      addNewTransaction: mockAddNewTransaction,
-    );
+        getAllTransactions: mockGetAllTransactions,
+        getRecentTransactions: mockGetRecentTransactions,
+        addNewTransaction: mockAddNewTransaction,
+        getDailySummary: mockGetDailySummary);
   });
 
   DateTime transactionDate = DateTime(2021, 05, 12);
@@ -147,6 +149,30 @@ void main() {
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
+      expect(provider.status, TransactionStatus.ERROR);
+      expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
+    });
+  });
+  group('addNewTransaction', () {
+    Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
+
+    test('should get summary and set status to COMPLETED when data is fetched', () async {
+      // arrange
+      when(mockGetDailySummary(any)).thenAnswer((_) async => Right(summary));
+      //act
+      await provider.getDailySummary();
+      //assert
+      verify(mockGetDailySummary(NoParams()));
+      expect(provider.status, TransactionStatus.COMPLETED);
+    });
+
+    test('should mark status ERROR and set error message when summary is failed.', () async {
+      // arrange
+      when(mockGetDailySummary(any)).thenAnswer((_) async => Left(DataFailure()));
+      //act
+      await provider.getDailySummary();
+      //assert
+      verify(mockGetDailySummary(NoParams()));
       expect(provider.status, TransactionStatus.ERROR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
     });

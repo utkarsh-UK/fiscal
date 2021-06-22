@@ -14,6 +14,8 @@ abstract class TransactionRemoteDataSource {
       [int batchSize = 10]);
 
   Future<String> addNewTransaction(TransactionModel transaction);
+
+  Future<Map<String, Object?>> getDailySummary();
 }
 
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
@@ -77,6 +79,24 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       if (rowCount == 0) throw DataException(message: 'Could not insert transaction. Please try later');
 
       return '$rowCount';
+    } catch (e) {
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, Object?>> getDailySummary() async {
+    try {
+      final String query = ''
+          'SELECT SUM(amount)'
+          'FROM ${TransactionTable.TABLE_NAME} '
+          'GROUP BY ${TransactionTable.transaction_type} '
+          'WHERE ${TransactionTable.date}=DATE()';
+      final results = await db.rawQuery(query);
+
+      if (results.isEmpty) throw DataException(message: 'Could not fetch summary.');
+
+      return results.first;
     } catch (e) {
       throw DataException(message: e.toString());
     }
