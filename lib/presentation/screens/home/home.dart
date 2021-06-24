@@ -1,4 +1,6 @@
 import 'package:fiscal/core/core.dart';
+import 'package:fiscal/presentation/screens/home/recent_transactions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -20,13 +22,48 @@ class Home extends StatelessWidget {
                     ),
                     TextSpan(
                       text: 'Utkarsh Kore',
-                      style: TextStyle(color: FiscalTheme.FONT_DARK_PRIMARY_COLOR, fontSize: 32.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: FiscalTheme.FONT_DARK_PRIMARY_COLOR, fontSize: 32.0, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 key: ValueKey('onboard_key'),
               ),
-              Placeholder(),
+              const SizedBox(height: 12.0),
+              Container(
+                key: ValueKey('summary'),
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: const Placeholder(),
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Recent Transactions',
+                    style: const TextStyle(
+                      color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
+                      fontSize: 26.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    key: ValueKey('see_all'),
+                    onPressed: () {},
+                    child: Text(
+                      'See All',
+                      style: const TextStyle(
+                        color: FiscalTheme.ACCENT_COLOR,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const RecentTransactions(
+                    key: ValueKey('recent_transactions'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
