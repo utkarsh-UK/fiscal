@@ -14,8 +14,8 @@ class FiscalTheme {
   static const Color BROWN_COLOR = Color(0xFFfafafa);
   static const Color GREEN_COLOR = Color(0xFFfafafa);
   static const Color OTHER_COLOR = Color(0xFFfafafa);
-  static const Color POSITIVE_COLOR = Color(0xFFfafafa);
-  static const Color NEGATIVE_COLOR = Color(0xFFfafafa);
+  static const Color POSITIVE_COLOR = Color(0xFF29bb89);
+  static const Color NEGATIVE_COLOR = Color(0xFFfb3640);
 
   static const String PRIMARY_FONT_PATUA = 'Patua One';
   static const String SECONDARY_FONT_SIGNIKA = 'Signika';

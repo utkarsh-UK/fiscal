@@ -1,6 +1,6 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/di/locator.dart' as di;
-import 'package:fiscal/presentation/screens/home/home.dart';
+import 'package:fiscal/presentation/screens/home/landing.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         fontFamily: FiscalTheme.SECONDARY_FONT_SIGNIKA,
         canvasColor: Colors.white
       ),
-      home: Home(),
+      home: Landing(),
     );
   }
 }

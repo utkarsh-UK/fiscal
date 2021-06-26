@@ -1,11 +1,15 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/presentation/screens/home/recent_transactions.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fiscal/presentation/widgets/home/transactions_summary.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -18,12 +22,17 @@ class Home extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: 'Welcome back,\n',
-                      style: TextStyle(color: Color(0xFF524E79), fontSize: 24.0, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Color(0xFF524E79),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600),
                     ),
                     TextSpan(
                       text: 'Utkarsh Kore',
                       style: const TextStyle(
-                          color: FiscalTheme.FONT_DARK_PRIMARY_COLOR, fontSize: 32.0, fontWeight: FontWeight.bold),
+                          color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -32,8 +41,8 @@ class Home extends StatelessWidget {
               const SizedBox(height: 12.0),
               Container(
                 key: ValueKey('summary'),
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: const Placeholder(),
+                height: size.height * 0.3,
+                child: const TransactionsSummary(),
               ),
               const SizedBox(height: 12.0),
               Row(
@@ -43,26 +52,38 @@ class Home extends StatelessWidget {
                     'Recent Transactions',
                     style: const TextStyle(
                       color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
-                      fontSize: 26.0,
+                      fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextButton(
-                    key: ValueKey('see_all'),
-                    onPressed: () {},
-                    child: Text(
-                      'See All',
-                      style: const TextStyle(
-                        color: FiscalTheme.ACCENT_COLOR,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w700,
+                  InkWell(
+                    onTap: () {},
+                    splashColor: Colors.grey[400],
+                    radius: 30.0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12.0,
+                        top: 8.0,
+                        bottom: 8.0,
+                      ),
+                      child: Text(
+                        'See All',
+                        key: ValueKey('see_all'),
+                        style: const TextStyle(
+                          color: FiscalTheme.ACCENT_COLOR,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                  const RecentTransactions(
-                    key: ValueKey('recent_transactions'),
-                  ),
                 ],
+              ),
+              const SizedBox(height: 12.0),
+              const Expanded(
+                child: const RecentTransactions(
+                  key: ValueKey('recent_transactions'),
+                ),
               ),
             ],
           ),
