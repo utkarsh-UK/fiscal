@@ -26,6 +26,8 @@ dependencies:
   #backend
   sqflite: ^2.0.0+3
   shared_preferences: ^2.0.5
+  f_logs: ^2.0.0
+  permission_handler: ^8.1.1
 
   #ui
   syncfusion_flutter_charts: ^19.1.59

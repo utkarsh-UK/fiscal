@@ -1,3 +1,4 @@
+import 'package:fiscal/core/utils/routing/navigation_service.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/db/database.dart';
@@ -35,15 +36,20 @@ Future<void> init() async {
       localDataSource: locator(),
     ),
   );
-  
+
   // data sources
-  locator.registerFactory<TransactionRemoteDataSource>(() => TransactionRemoteDataSourceImpl(db: locator()));
-  locator.registerFactory<TransactionLocalDataSource>(() => TransactionLocalDataSourceImpl(locator()));
+  locator.registerFactory<TransactionRemoteDataSource>(
+      () => TransactionRemoteDataSourceImpl(db: locator()));
+  locator.registerFactory<TransactionLocalDataSource>(
+      () => TransactionLocalDataSourceImpl(locator()));
 
   //external
   final sharedPreferences = await SharedPreferences.getInstance();
   locator.registerLazySingleton(() => sharedPreferences);
-  
+
   final db = await FiscalDatabase.instance.database;
   locator.registerSingleton<Database>(db);
+
+  // navigation
+  locator.registerLazySingleton(() => NavigationService());
 }

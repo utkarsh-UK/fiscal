@@ -1,20 +1,16 @@
-import 'package:fiscal/presentation/screens/home/home.dart';
+import 'package:fiscal/presentation/screens/home/recent_transactions.dart';
+import 'package:fiscal/presentation/widgets/home/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUp(() {});
 
-  testWidgets('show summary and recent transactions when app is loaded.', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: Home()));
+  testWidgets('fetch recent transactions and show them in list.',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: RecentTransactions()));
 
-    final summaryWidget = find.byKey(ValueKey('summary'));
-    expect(summaryWidget, findsOneWidget);
-
-    final seeAllBtn = find.byKey(ValueKey('see_all'));
-    expect(seeAllBtn, findsOneWidget);
-
-    final recentTransactions = find.byKey(ValueKey('recent_transactions'));
-    expect(recentTransactions, findsOneWidget);
+    final items = find.byType(TransactionItem);
+    expect(items, findsNWidgets(5));
   });
 }

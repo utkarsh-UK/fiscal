@@ -1,6 +1,7 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class _LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
+
+    requestPermission(Permission.storage);
 
     _screens = [
       Home(key: ValueKey('home')),
@@ -95,4 +98,6 @@ class _LandingState extends State<Landing> {
   }
 
   void _changePage(int index) => setState(() => _pageIndex = index);
+
+  Future<void> requestPermission(Permission permission) => permission.request();
 }
