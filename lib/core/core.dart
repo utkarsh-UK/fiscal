@@ -15,3 +15,6 @@ export './utils/static/constants.dart';
 // theme
 export './theme/fiscal_assets.dart';
 export './theme/fiscal_theme.dart';
+
+// extensions
+export './utils/extensions/string_extensions.dart';

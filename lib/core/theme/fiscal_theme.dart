@@ -10,6 +10,8 @@ class FiscalTheme {
   static const Color FONT_LIGHT_SECONDARY_COLOR = Color(0xFFcbc9c9);
   static const Color CARD_COLOR = Color(0xFFebebeb);
   static const Color BACKGROUND_COLOR = Color(0xFFfafafa);
+  static const Color MENU_PRIMARY_COLOR = Color(0xFF221f3b);
+  static const Color MENU_SECONDARY_COLOR = Color(0xFFB05ABA);
   static const Color BLUE_COLOR = Color(0xFFfafafa);
   static const Color BROWN_COLOR = Color(0xFFfafafa);
   static const Color GREEN_COLOR = Color(0xFFfafafa);

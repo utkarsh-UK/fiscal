@@ -2,6 +2,7 @@ import 'package:f_logs/model/flog/flog.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Landing extends StatefulWidget {
@@ -30,7 +31,8 @@ class _LandingState extends State<Landing> {
     ];
 
     FLog.info(
-      text: 'Exit: Request Permissions and initialized ${_screens.length} screens',
+      text:
+          'Exit: Request Permissions and initialized ${_screens.length} screens',
       className: CLASS_NAME,
       methodName: 'initState()',
     );
@@ -83,23 +85,51 @@ class _LandingState extends State<Landing> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          IconButton(onPressed: () => _changePage(0), icon: Icon(Icons.home)),
+          IconButton(
+            onPressed: () => _changePage(0),
+            icon: SvgPicture.asset(
+              FiscalAssets.MENU_HOME_ICON,
+              color: _pageIndex == 0
+                  ? FiscalTheme.MENU_PRIMARY_COLOR
+                  : FiscalTheme.MENU_SECONDARY_COLOR,
+            ),
+          ),
           IconButton(
             key: ValueKey('tran_menu'),
             onPressed: () => _changePage(1),
-            icon: Icon(Icons.list),
+            icon: SvgPicture.asset(
+              FiscalAssets.MENU_TRANSACTION_ICON,
+              color: _pageIndex == 1
+                  ? FiscalTheme.MENU_PRIMARY_COLOR
+                  : FiscalTheme.MENU_SECONDARY_COLOR,
+            ),
           ),
           IconButton(
             onPressed: () => _changePage(2),
-            icon: Icon(Icons.chat_rounded),
+            icon: SvgPicture.asset(
+              FiscalAssets.MENU_STATS_ICON,
+              color: _pageIndex == 2
+                  ? FiscalTheme.MENU_PRIMARY_COLOR
+                  : FiscalTheme.MENU_SECONDARY_COLOR,
+            ),
           ),
           IconButton(
             onPressed: () => _changePage(3),
-            icon: Icon(Icons.house),
+            icon: SvgPicture.asset(
+              FiscalAssets.MENU_ACCOUNT_ICON,
+              color: _pageIndex == 3
+                  ? FiscalTheme.MENU_PRIMARY_COLOR
+                  : FiscalTheme.MENU_SECONDARY_COLOR,
+            ),
           ),
           IconButton(
             onPressed: () => _changePage(4),
-            icon: Icon(Icons.settings),
+            icon: SvgPicture.asset(
+              FiscalAssets.MENU_SETTINGS_ICON,
+              color: _pageIndex == 4
+                  ? FiscalTheme.MENU_PRIMARY_COLOR
+                  : FiscalTheme.MENU_SECONDARY_COLOR,
+            ),
           ),
         ],
       ),
