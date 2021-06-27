@@ -1,3 +1,4 @@
+import 'package:f_logs/model/flog/flog.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
+  static const String CLASS_NAME = 'Landing';
+
   late List<Widget> _screens = [];
   int _pageIndex = 0;
 
@@ -25,6 +28,12 @@ class _LandingState extends State<Landing> {
       Container(key: ValueKey('accounts'), child: Text('Accounts Page')),
       Container(key: ValueKey('settings'), child: Text('Settings Page')),
     ];
+
+    FLog.info(
+      text: 'Exit: Request Permissions and initialized ${_screens.length} screens',
+      className: CLASS_NAME,
+      methodName: 'initState()',
+    );
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/usecase/transaction_param.dart';
 import 'package:fiscal/core/usecase/usecase.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/foundation.dart';
 enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ERROR }
 
 class TransactionProvider extends ChangeNotifier {
+  static const String CLASS_NAME = 'TransactionProvider';
+
   final GetAllTransactions _getAllTransactions;
   final GetRecentTransactions _getRecentTransactions;
   final AddNewTransaction _addNewTransaction;
@@ -33,6 +36,8 @@ class TransactionProvider extends ChangeNotifier {
   String get error => _message;
 
   Future<void> getRecentTransactions() async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getRecentTransactions()');
+
     _status = TransactionStatus.LOADING;
     notifyListeners();
 
@@ -42,14 +47,30 @@ class TransactionProvider extends ChangeNotifier {
       _message = Utility.mapFailureToMessage(failure);
       _status = TransactionStatus.ERROR;
       notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'getRecentTransactions()',
+      );
     }, (fetchedTransactions) {
       data.recentTransactions = fetchedTransactions;
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
+
+      FLog.info(
+        text: 'Fetched recent transactions and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'getRecentTransactions()',
+      );
     });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getRecentTransactions()');
   }
 
   Future<void> getAllTransactions({required String lastTransactionID, required String timestamp}) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAllTransactions()');
+    FLog.info(text: 'Parameters: [$lastTransactionID], [$timestamp]', className: CLASS_NAME, methodName: 'getAllTransactions()');
+
     _status = TransactionStatus.LOADING;
     notifyListeners();
 
@@ -63,11 +84,24 @@ class TransactionProvider extends ChangeNotifier {
       _message = Utility.mapFailureToMessage(failure);
       _status = TransactionStatus.ERROR;
       notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'getAllTransactions()',
+      );
     }, (fetchedTransactions) {
       data.allTransactions = [...data.allTransactions, ...fetchedTransactions['data']!];
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
+
+      FLog.info(
+        text: 'Fetched all transactions and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'getAllTransactions()',
+      );
     });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getAllTransactions()');
   }
 
   Future<void> addNewTransaction({
@@ -79,6 +113,13 @@ class TransactionProvider extends ChangeNotifier {
     required int accountID,
     required DateTime date,
   }) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
+    FLog.info(
+      text: 'Parameters: [$title], [$description], [$amount], [$type], [$categoryID], [$accountID], [$date]',
+      className: CLASS_NAME,
+      methodName: 'addNewTransaction()',
+    );
+
     _status = TransactionStatus.LOADING;
     notifyListeners();
 
@@ -100,13 +141,28 @@ class TransactionProvider extends ChangeNotifier {
       _message = Utility.mapFailureToMessage(failure);
       _status = TransactionStatus.ERROR;
       notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'addNewTransaction()',
+      );
     }, (fetchedTransactions) {
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
+
+      FLog.info(
+        text: 'Added new transaction and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'addNewTransaction()',
+      );
     });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'addNewTransaction()');
   }
 
   Future<void> getDailySummary() async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getDailySummary()');
+
     _status = TransactionStatus.REFRESHING;
     notifyListeners();
 
@@ -116,11 +172,24 @@ class TransactionProvider extends ChangeNotifier {
       _message = Utility.mapFailureToMessage(failure);
       _status = TransactionStatus.ERROR;
       notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'getDailySummary()',
+      );
     }, (fetchedSummary) {
       data.summary = fetchedSummary;
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
+
+      FLog.info(
+        text: 'Fetched daily summary and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'getDailySummary()',
+      );
     });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
   }
 }
 

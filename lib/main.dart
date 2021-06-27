@@ -19,8 +19,8 @@ void initLogConfig() {
       FieldName.EXCEPTION,
       FieldName.STACKTRACE,
     ]
-    ..customOpeningDivider = '{'
-    ..customClosingDivider = '}';
+    ..customOpeningDivider = '['
+    ..customClosingDivider = ']';
 
   FLog.applyConfigurations(config);
 }

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/error/exceptions.dart';
 import 'package:fiscal/core/error/failure.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
@@ -8,6 +9,8 @@ import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
+  static const String CLASS_NAME = 'TransactionRepositoryImpl';
+
   final TransactionRemoteDataSource remoteDataSource;
   final TransactionLocalDataSource localDataSource;
 
@@ -16,43 +19,75 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<Either<Failure, Map<String, List<Transaction>>>> getAllTransactions(String lastFetchedTransactionID, String time,
       [int batchSize = 10]) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAllTransactions()');
+
     try {
       final transactions = await remoteDataSource.getAllTransactions(lastFetchedTransactionID, time, batchSize);
+      FLog.info(text: 'Fetched transactions from data source', className: CLASS_NAME, methodName: 'getAllTransactions()');
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getAllTransactions()');
       return Right(transactions);
     } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getAllTransactions()');
       return Left(DataFailure(message: d.message));
     }
   }
 
   @override
   Future<Either<Failure, List<Transaction>>> getRecentTransactions() async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getRecentTransactions()');
+
     try {
       final transactions = await localDataSource.getRecentTransactions();
 
-      if (transactions.isNotEmpty) return Right(transactions);
+      if (transactions.isNotEmpty) {
+        FLog.info(
+          text: '${transactions.length} transactions in cache',
+          className: CLASS_NAME,
+          methodName: 'getRecentTransactions()',
+        );
+        FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getRecentTransactions()');
+        return Right(transactions);
+      }
 
       // no cache present. hit database.
       final dbTransactions = await remoteDataSource.getRecentTransactions();
       await localDataSource.cacheRecentTransactions(dbTransactions);
+      FLog.info(
+        text: 'Cached ${dbTransactions.length} transactions in [Recent] cache',
+        className: CLASS_NAME,
+        methodName: 'getRecentTransactions()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getRecentTransactions()');
 
       return Right(dbTransactions);
     } on DataException catch (d) {
-      //TODO add logs
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getRecentTransactions()');
       return Left(DataFailure(message: d.message));
     } on CacheException catch (c) {
-      //TODO add logs
+      FLog.error(text: 'Error Repo: ${c.message}', className: CLASS_NAME, methodName: 'getRecentTransactions()');
       return Left(CacheFailure(message: c.message));
     }
   }
 
   @override
   Future<Either<Failure, String>> addNewTransaction(Transaction transaction) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
+
     try {
       final transactionModel = TransactionModel.fromTransaction(transaction);
       final rows = await remoteDataSource.addNewTransaction(transactionModel);
       await localDataSource.cacheNewTransaction(transactionModel);
+
+      FLog.info(
+        text: 'Added new transaction. ID: [${transaction.transactionID}], AMOUNT: [${transaction.amount}]',
+        className: CLASS_NAME,
+        methodName: 'addNewTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'addNewTransaction()');
+
       return Right(rows);
     } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'addNewTransaction()');
       return Left(DataFailure(message: d.message));
     }
   }
@@ -60,8 +95,20 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<Either<Failure, Map<String, Object?>>> getDailySummary() async {
     try {
-      return Right(await remoteDataSource.getDailySummary());
+      FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
+
+      final summary = await remoteDataSource.getDailySummary();
+
+      FLog.info(
+        text: 'Fetched summary from data source.',
+        className: CLASS_NAME,
+        methodName: 'getDailySummary()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
+
+      return Right(summary);
     } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getDailySummary()');
       return Left(DataFailure(message: d.message));
     }
   }
