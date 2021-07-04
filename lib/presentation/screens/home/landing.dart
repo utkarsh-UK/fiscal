@@ -1,5 +1,6 @@
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:fiscal/core/core.dart';
+import 'package:fiscal/di/locator.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,7 +48,7 @@ class _LandingState extends State<Landing> {
       floatingActionButton: _pageIndex < 2
           ? FloatingActionButton(
               key: ValueKey('fab'),
-              onPressed: () {},
+              onPressed: () => locator.get<NavigationService>().navigateToNamed(ADD_NEW_TRANSACTION),
               backgroundColor: FiscalTheme.SECONDARY_COLOR,
               child: Icon(
                 Icons.add,

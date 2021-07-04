@@ -63,6 +63,7 @@ class _RecentTransactionsState extends State<RecentTransactions> {
   Widget build(BuildContext context) => ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: _transactions.length,
+        shrinkWrap: true,
         itemBuilder: (BuildContext ctx, int index) => TransactionItem(
           key: ValueKey('trans_$index'),
           title: _transactions[index].title,

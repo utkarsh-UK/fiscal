@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'Fiscal',
       debugShowCheckedModeBanner: false,
       navigatorKey: di.locator.get<NavigationService>().navigatorKey,
+      onGenerateRoute: generateRoute,
       home: Landing(),
       theme: ThemeData(
         primarySwatch: Colors.purple,

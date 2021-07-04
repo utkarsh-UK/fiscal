@@ -23,15 +23,14 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final containerSize = size.width - 16.0;
     final bool isIncome = transactionType == TransactionType.INCOME;
 
     return Container(
-      width: size.width - 16.0,
+      width: containerSize,
       decoration: BoxDecoration(
         color: Color(0xFFFAFAFA),
-        border: Border.all(
-          color: Color(0xFFBABABA),
-        ),
+        border: Border.all(color: Color(0xFFBABABA)),
         borderRadius: BorderRadius.circular(8.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -65,16 +64,13 @@ class TransactionItem extends StatelessWidget {
                       BoxShadow(color: Colors.grey[400]!, blurRadius: 6.0),
                     ],
                   ),
-                  child: SvgPicture.asset(
-                    FiscalAssets.INVESTMENT_ICON,
-                    width: 10.0,
-                  ),
+                  child: SvgPicture.asset(FiscalAssets.INVESTMENT_ICON, width: 10.0),
                 ),
               ],
             ),
           ),
           Container(
-            width: size.width * 0.43,
+            width: containerSize * 0.43,
             padding: const EdgeInsets.only(right: 4.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -83,37 +79,24 @@ class TransactionItem extends StatelessWidget {
                 Text(
                   title,
                   key: ValueKey('title'),
-                  style: const TextStyle(
-                    color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: FiscalTheme.titleText,
                   overflow: TextOverflow.clip,
                   softWrap: false,
                 ),
                 const SizedBox(height: 4.0),
                 Text(
                   description ?? 'N/A',
-                  style: const TextStyle(
-                    color: FiscalTheme.FONT_LIGHT_PRIMARY_COLOR,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FiscalTheme.subTitleText,
                   overflow: TextOverflow.clip,
                   softWrap: false,
                 ),
                 const SizedBox(height: 4.0),
                 Text(
-                  Converters.convertTransactionTypeEnum(transactionType)
-                      .titleCase,
+                  Converters.convertTransactionTypeEnum(transactionType).titleCase,
                   key: ValueKey('type'),
                   overflow: TextOverflow.clip,
-                  style: TextStyle(
-                    color: isIncome
-                        ? FiscalTheme.POSITIVE_COLOR
-                        : FiscalTheme.NEGATIVE_COLOR,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+                  style: FiscalTheme.subTitle2Text.copyWith(
+                    color: isIncome ? FiscalTheme.POSITIVE_COLOR : FiscalTheme.NEGATIVE_COLOR,
                   ),
                 ),
               ],
@@ -128,21 +111,15 @@ class TransactionItem extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat.MMMMd().format(transactionDate),
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 4.0),
                   Text(
                     '₹' + amount.toStringAsFixed(2),
                     key: ValueKey('amount'),
-                    style: TextStyle(
-                      color: isIncome
-                          ? FiscalTheme.POSITIVE_COLOR
-                          : FiscalTheme.NEGATIVE_COLOR,
+                    style: FiscalTheme.subTitle2Text.copyWith(
+                      color: isIncome ? FiscalTheme.POSITIVE_COLOR : FiscalTheme.NEGATIVE_COLOR,
                       fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

@@ -18,3 +18,8 @@ export './theme/fiscal_theme.dart';
 
 // extensions
 export './utils/extensions/string_extensions.dart';
+
+// route
+export './utils/routing/router.dart';
+export './utils/routing/route_names.dart';
+export './utils/routing/navigation_service.dart';
