@@ -22,28 +22,19 @@ class Home extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: 'Welcome back,\n',
-                      style: TextStyle(
-                          color: Color(0xFF524E79),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Color(0xFF524E79), fontSize: 20.0, fontWeight: FontWeight.w600),
                     ),
                     TextSpan(
                       text: 'Utkarsh Kore',
                       style: const TextStyle(
-                          color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold),
+                          color: FiscalTheme.FONT_DARK_PRIMARY_COLOR, fontSize: 28.0, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 key: ValueKey('onboard_key'),
               ),
               const SizedBox(height: 12.0),
-              Container(
-                key: ValueKey('summary'),
-                height: size.height * 0.3,
-                child: const TransactionsSummary(),
-              ),
+              const TransactionsSummary(key: ValueKey('summary')),
               const SizedBox(height: 12.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

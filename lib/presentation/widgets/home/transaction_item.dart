@@ -54,6 +54,7 @@ class TransactionItem extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 Container(
+                  key: ValueKey('icon'),
                   width: 40.0,
                   height: 40.0,
                   padding: const EdgeInsets.all(8.0),

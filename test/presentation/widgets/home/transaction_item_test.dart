@@ -32,7 +32,7 @@ void main() {
     //find transaction type
     final type = find.byKey(ValueKey('type'));
     expect(type, findsOneWidget);
-    expect(find.text('INCOME'), findsOneWidget);
+    expect(find.text('Income'), findsOneWidget);
 
     // find amount
     final amount = find.byKey(ValueKey('amount'));
