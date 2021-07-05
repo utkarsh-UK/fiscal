@@ -24,6 +24,9 @@ class FiscalTheme {
   static const Color POSITIVE_COLOR = Color(0xFF29bb89);
   static const Color NEGATIVE_COLOR = Color(0xFFfb3640);
 
+  static const Color TEXT_INPUT_BORDER_COLOR = Color(0xFFBDBDBD);
+  static const Color TEXT_INPUT_BACKGROUND_COLOR = Color(0xFFF1F1F1);
+
   // font family
   static const String PRIMARY_FONT_PATUA = 'Patua One';
   static const String SECONDARY_FONT_SIGNIKA = 'Signika';
@@ -38,6 +41,11 @@ class FiscalTheme {
   static TextStyle sectionHeadingText = TextStyle(
     color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
     fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+  );
+  static TextStyle inputText = TextStyle(
+    color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
+    fontSize: 16.0,
     fontWeight: FontWeight.bold,
   );
   static TextStyle smallButtonText = TextStyle(
