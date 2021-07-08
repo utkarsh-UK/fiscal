@@ -75,17 +75,19 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
     try {
       final transactionModel = TransactionModel.fromTransaction(transaction);
-      final rows = await remoteDataSource.addNewTransaction(transactionModel);
-      await localDataSource.cacheNewTransaction(transactionModel);
+      final transactionID = await remoteDataSource.addNewTransaction(transactionModel);
+
+      final transactionModelWithID = TransactionModel.fromTransaction(transaction, id: transactionID);
+      await localDataSource.cacheNewTransaction(transactionModelWithID);
 
       FLog.info(
-        text: 'Added new transaction. ID: [${transaction.transactionID}], AMOUNT: [${transaction.amount}]',
+        text: 'Added new transaction. ID: [$transactionID], AMOUNT: [${transaction.amount}]',
         className: CLASS_NAME,
         methodName: 'addNewTransaction()',
       );
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'addNewTransaction()');
 
-      return Right(rows);
+      return Right(transactionID);
     } on DataException catch (d) {
       FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'addNewTransaction()');
       return Left(DataFailure(message: d.message));

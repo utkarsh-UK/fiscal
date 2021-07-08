@@ -127,7 +127,7 @@ void main() {
   group('addNewTransaction', () {
     DateTime transactionDate = DateTime(2021, 05, 12);
     TransactionModel transaction = TransactionModel(
-      transactionID: 'id',
+      transactionID: '1',
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
@@ -135,7 +135,7 @@ void main() {
       accountID: 1,
       date: transactionDate,
     );
-    String transactionID = 'id';
+    String transactionID = '1';
 
     test('should return newly added transaction id when call to remote data source is successful.', () async {
       // arrange

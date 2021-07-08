@@ -57,9 +57,9 @@ class TransactionModel extends Transaction {
     );
   }
 
-  factory TransactionModel.fromTransaction(Transaction transaction) {
+  factory TransactionModel.fromTransaction(Transaction transaction, {String id = ''}) {
     return TransactionModel(
-      transactionID: transaction.transactionID,
+      transactionID: id.isNotEmpty ? id : transaction.transactionID,
       title: transaction.title,
       amount: transaction.amount,
       description: transaction.description,
@@ -67,19 +67,17 @@ class TransactionModel extends Transaction {
       categoryID: transaction.categoryID,
       accountID: transaction.accountID,
       date: transaction.date,
-
     );
   }
 
   static Map<String, Object?> toQuery(TransactionModel model) => {
-    TransactionTable.id: model.transactionID,
     TransactionTable.title: model.title,
     TransactionTable.description: model.description,
     TransactionTable.amount: model.amount,
     TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
-    TransactionTable.category_id: model.categoryID,
-    TransactionTable.acc_id: model.accountID,
-    TransactionTable.date: model.date.toIso8601String(),
+    // TransactionTable.category_id: model.categoryID,
+    // TransactionTable.acc_id: model.accountID,
+    // TransactionTable.date: model.date.toIso8601String(),
   };
 
   static Map<String, dynamic> toJSON(TransactionModel model) => {

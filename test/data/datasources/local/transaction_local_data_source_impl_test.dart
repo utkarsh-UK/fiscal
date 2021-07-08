@@ -36,7 +36,7 @@ void main() {
       description: 'desc');
 
   final transactionsList = [transaction, transaction];
-  final sequalizedList = transactionsList.map((t) => TransactionModel.toJSON(t)).toList();
+  final serializedList = transactionsList.map((t) => TransactionModel.toJSON(t)).toList();
 
   group('cacheNewTransaction', () {
     test('should cache transaction when new transaction is added', () async {
@@ -46,7 +46,18 @@ void main() {
       //act
       await localDataSource.cacheNewTransaction(transaction);
       //assert
-      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(sequalizedList)));
+      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(serializedList)));
+    });
+
+    test('should cache transaction when no recent transactions present in cache', () async {
+      // arrange
+      final singleTransactionList = [serializedList[0]];
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      when(mockSharedPreferences.getString(RECENT_TRANS_SHARED_PREF_KEY)).thenReturn(null);
+      //act
+      await localDataSource.cacheNewTransaction(transaction);
+      //assert
+      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(singleTransactionList)));
     });
 
     test('should throw CacheException when caching goes wrong', () async {
@@ -66,7 +77,7 @@ void main() {
       //act
       await localDataSource.cacheRecentTransactions(transactionsList);
       //assert
-      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(sequalizedList)));
+      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(serializedList)));
     });
 
     test('should throw CacheException when caching goes wrong', () async {
@@ -89,6 +100,17 @@ void main() {
       //assert
       verify(mockSharedPreferences.getString(RECENT_TRANS_SHARED_PREF_KEY));
       expect(result, transactionsList);
+    });
+
+    test('should return empty transactions when no transactions present in cache.', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      when(mockSharedPreferences.getString(any)).thenReturn(null);
+      //act
+      final result = await localDataSource.getRecentTransactions();
+      //assert
+      verify(mockSharedPreferences.getString(RECENT_TRANS_SHARED_PREF_KEY));
+      expect(result, isEmpty);
     });
 
     test('should throw CacheException when caching goes wrong', () async {

@@ -111,26 +111,40 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
 
     try {
-      final int rowCount = await db.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      final int rowCount = await db.insert(
+        TransactionTable.TABLE_NAME,
+        TransactionModel.toQuery(transaction),
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
 
       if (rowCount == 0) {
         FLog.warning(
-          text: 'Could not insert this transaction ${transaction.transactionID}. Confirm query once.',
+          text: 'Could not insert this transaction. Confirm query once.',
           className: CLASS_NAME,
           methodName: 'addNewTransaction()',
         );
         throw DataException(message: 'Could not insert transaction. Please try later');
       }
 
+      final rowID = await db.rawQuery('select last_insert_rowid();');
+      if (rowID.isEmpty) {
+        FLog.warning(
+          text: 'Could not get last inserted row ID. [${transaction.title}]',
+          className: CLASS_NAME,
+          methodName: 'addNewTransaction()',
+        );
+        throw DataException(message: 'Could not insert transaction. Please try later');
+      }
+      int transactionID = int.parse(rowID.first['last_insert_rowid()']!.toString());
+
       FLog.info(
-        text: 'Inserted new transaction. [TransactionID: ${transaction.transactionID}]',
+        text: 'Inserted new transaction. [TransactionID: $transactionID]',
         className: CLASS_NAME,
         methodName: 'addNewTransaction()',
       );
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'addNewTransaction()');
 
-      return '$rowCount';
+      return '$transactionID';
     } catch (e, trace) {
       FLog.error(
         text: 'Exception occurred: Might be due to wrong transaction ID or bad query',

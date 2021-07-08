@@ -112,7 +112,10 @@ void main() {
   });
 
   group('addNewTransaction', () {
-    String query = 'INSERT INTO ${TransactionTable.TABLE_NAME} VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    String lastInsertedRowIDQuery = 'select last_insert_rowid();';
+    final List<Map<String, Object?>> lastInsertedRowResult = [
+      {'last_insert_rowid()': 1}
+    ];
 
     final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
     final transaction = TransactionModel(
@@ -125,15 +128,21 @@ void main() {
         date: date,
         description: 'desc');
 
-    test('should add new transaction to the database and return row count', () async {
+    test('should add new transaction to the database and return inserted row ID', () async {
       // arrange
       int transactionID = 1;
       when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction)))
           .thenAnswer((_) async => transactionID);
+      when(mockDatabase.rawQuery(lastInsertedRowIDQuery)).thenAnswer((_) async => lastInsertedRowResult);
       //act
       final result = await dataSourceImpl.addNewTransaction(transaction);
       //assert
-      verify(mockDatabase.rawQuery(query, [10]));
+      verify(mockDatabase.insert(
+        TransactionTable.TABLE_NAME,
+        TransactionModel.toQuery(transaction),
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      ));
+      verify(mockDatabase.rawQuery(lastInsertedRowIDQuery));
       expect(result, '$transactionID');
     });
 

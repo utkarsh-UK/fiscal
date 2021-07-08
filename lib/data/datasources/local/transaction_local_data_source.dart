@@ -27,7 +27,7 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
 
     try {
       final oldTransactions = await getRecentTransactions();
-      oldTransactions.removeAt(0);
+      if (oldTransactions.isNotEmpty && oldTransactions.length > 10) oldTransactions.removeAt(0);
 
       oldTransactions.add(transaction);
       final newTransactions = oldTransactions.map((t) => TransactionModel.toJSON(t)).toList();
@@ -82,6 +82,16 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getRecentTransactions()');
 
     try {
+      if (_preferences.getString(RECENT_TRANS_SHARED_PREF_KEY) == null) {
+        FLog.info(
+          text: 'Exit: No data present. Returning empty results',
+          className: CLASS_NAME,
+          methodName: 'getRecentTransactions()',
+        );
+
+        return <TransactionModel>[];
+      }
+
       final transactions = json.decode(_preferences.getString(RECENT_TRANS_SHARED_PREF_KEY)!) as List<dynamic>;
       final oldTransactions = transactions.map((transactionData) => TransactionModel.fromJSON(transactionData)).toList();
 

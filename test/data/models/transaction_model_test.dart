@@ -7,12 +7,22 @@ import '../../fixtures/transactions/transaction.dart';
 
 void main() {
   late TransactionModel model;
+  late TransactionModel modelWithIntID;
   late DateTime date;
 
   setUp(() {
     date = DateTime(2021, 05, 14, 14, 13, 29, 104);
     model = TransactionModel(
         transactionID: 'id',
+        title: 'title',
+        amount: 10.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 'category',
+        accountID: 1,
+        date: date,
+        description: 'desc');
+    modelWithIntID = TransactionModel(
+        transactionID: '1',
         title: 'title',
         amount: 10.10,
         transactionType: TransactionType.INCOME,
@@ -86,5 +96,23 @@ void main() {
     final result = TransactionModel.fromTransaction(transaction);
     //assert
     expect(result, model);
+  });
+
+  test('should return valid TransactionModel when Transaction entity is valid and ID is passed separately', () async {
+    //arrange
+    final transaction = Transaction(
+      transactionID: '1',
+      title: 'title',
+      amount: 10.10,
+      transactionType: TransactionType.INCOME,
+      categoryID: 'category',
+      accountID: 1,
+      date: date,
+      description: 'desc',
+    );
+    //act
+    final result = TransactionModel.fromTransaction(transaction, id: '1');
+    //assert
+    expect(result, modelWithIntID);
   });
 }

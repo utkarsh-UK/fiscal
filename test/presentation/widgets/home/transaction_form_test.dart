@@ -1,7 +1,13 @@
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:provider/provider.dart';
 
+import 'transaction_form_test.mocks.dart';
+
+@GenerateMocks([TransactionProvider])
 void main() {
   setUp(() {});
 
@@ -10,7 +16,9 @@ void main() {
       MediaQuery(
         data: MediaQueryData(),
         child: MaterialApp(
-          home: TransactionForm(onSubmit: () {}),
+          home: Scaffold(
+            body: TransactionForm(onSubmit: () {}),
+          ),
         ),
       ),
     );

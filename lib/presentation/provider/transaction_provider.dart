@@ -7,7 +7,7 @@ import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:flutter/foundation.dart';
 
-enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ERROR }
+enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ERROR, INITIAL }
 
 class TransactionProvider extends ChangeNotifier {
   static const String CLASS_NAME = 'TransactionProvider';
@@ -27,7 +27,7 @@ class TransactionProvider extends ChangeNotifier {
         _addNewTransaction = addNewTransaction,
         _getDailySummary = getDailySummary;
 
-  late TransactionStatus _status;
+  TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
   TransactionProviderData data = TransactionProviderData();
 
@@ -131,6 +131,7 @@ class TransactionProvider extends ChangeNotifier {
       categoryID: categoryID,
       accountID: accountID,
       date: date,
+      description: description,
     );
 
     final failureOrTransactions = await _addNewTransaction(
