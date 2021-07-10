@@ -204,4 +204,16 @@ class TransactionProviderData {
     this.allTransactions = const [],
     this.summary = const {},
   });
+
+  set setRecentTransactions(List<Transaction> trans) {
+    this.recentTransactions = trans;
+  }
+
+  set setAllTransactions(List<Transaction> all) {
+    this.allTransactions = all;
+  }
+
+  set setRecentTransaction(Map<String, Object?> data) {
+    this.summary = data;
+  }
 }

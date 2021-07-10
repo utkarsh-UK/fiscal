@@ -27,9 +27,9 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
 
     try {
       final oldTransactions = await getRecentTransactions();
-      if (oldTransactions.isNotEmpty && oldTransactions.length > 10) oldTransactions.removeAt(0);
+      if (oldTransactions.isNotEmpty && oldTransactions.length >= 10) oldTransactions.removeAt(oldTransactions.length - 1);
 
-      oldTransactions.add(transaction);
+      oldTransactions.insert(0, transaction);
       final newTransactions = oldTransactions.map((t) => TransactionModel.toJSON(t)).toList();
       _preferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(newTransactions));
 

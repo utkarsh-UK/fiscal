@@ -42,7 +42,7 @@ void main() {
     test('should cache transaction when new transaction is added', () async {
       // arrange
       when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
-      when(mockSharedPreferences.getString(any)).thenReturn(json.encode([transactionQuery, transactionQuery]));
+      when(mockSharedPreferences.getString(any)).thenReturn(json.encode([transactionQuery]));
       //act
       await localDataSource.cacheNewTransaction(transaction);
       //assert

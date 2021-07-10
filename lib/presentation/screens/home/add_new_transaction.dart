@@ -1,8 +1,11 @@
 import 'package:fiscal/core/core.dart';
+import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/di/locator.dart';
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/screen_title.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_form.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddNewTransaction extends StatelessWidget {
   const AddNewTransaction({Key? key}) : super(key: key);
@@ -33,7 +36,13 @@ class AddNewTransaction extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-                  child: TransactionForm(key: ValueKey('form'), onSubmit: () {}),
+                  child: TransactionForm(
+                    key: ValueKey('form'),
+                    onSubmit: (String title, TransactionType type, double amount, String category, int account, String date,
+                        String description) {
+                      _addTransaction(title, type, amount, category, account, date, description, context);
+                    },
+                  ),
                 ),
               ],
             ),
@@ -41,5 +50,18 @@ class AddNewTransaction extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _addTransaction(String title, TransactionType type, double amount, String category, int account, String date,
+      String description, BuildContext context) {
+    context.read<TransactionProvider>().addNewTransaction(
+          title: title,
+          amount: amount,
+          type: type,
+          categoryID: category,
+          accountID: account,
+          date: DateTime.now(),
+          description: description,
+        );
   }
 }

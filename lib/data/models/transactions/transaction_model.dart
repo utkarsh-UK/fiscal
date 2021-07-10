@@ -39,8 +39,8 @@ class TransactionModel extends Transaction {
       description: '${data[TransactionTable.description]}',
       transactionType: Converters.convertTransactionTypeString('${data[TransactionTable.transaction_type]}'),
       categoryID: '${data[TransactionTable.category_id]}',
-      accountID: int.parse('${data[TransactionTable.acc_id]}'),
-      date: DateTime.parse('${data[TransactionTable.date]}'),
+      accountID: int.parse('${data[TransactionTable.acc_id] ?? 0}'),
+      date: DateTime.parse('${data[TransactionTable.date] ?? DateTime.now()}'),
     );
   }
 
@@ -71,23 +71,23 @@ class TransactionModel extends Transaction {
   }
 
   static Map<String, Object?> toQuery(TransactionModel model) => {
-    TransactionTable.title: model.title,
-    TransactionTable.description: model.description,
-    TransactionTable.amount: model.amount,
-    TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
-    // TransactionTable.category_id: model.categoryID,
-    // TransactionTable.acc_id: model.accountID,
-    // TransactionTable.date: model.date.toIso8601String(),
-  };
+        TransactionTable.title: model.title,
+        TransactionTable.description: model.description,
+        TransactionTable.amount: model.amount,
+        TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
+        // TransactionTable.category_id: model.categoryID,
+        // TransactionTable.acc_id: model.accountID,
+        // TransactionTable.date: model.date.toIso8601String(),
+      };
 
   static Map<String, dynamic> toJSON(TransactionModel model) => {
-    TransactionTable.id: model.transactionID,
-    TransactionTable.title: model.title,
-    TransactionTable.description: model.description,
-    TransactionTable.amount: model.amount,
-    TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
-    TransactionTable.category_id: model.categoryID,
-    TransactionTable.acc_id: model.accountID,
-    TransactionTable.date: model.date.toIso8601String(),
-  };
+        TransactionTable.id: model.transactionID,
+        TransactionTable.title: model.title,
+        TransactionTable.description: model.description,
+        TransactionTable.amount: model.amount,
+        TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
+        TransactionTable.category_id: model.categoryID,
+        TransactionTable.acc_id: model.accountID,
+        TransactionTable.date: model.date.toIso8601String(),
+      };
 }

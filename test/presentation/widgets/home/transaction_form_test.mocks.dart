@@ -6,6 +6,7 @@ import 'dart:async' as _i3;
 import 'dart:ui' as _i5;
 
 import 'package:fiscal/core/utils/static/enums.dart' as _i4;
+import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
 import 'package:fiscal/presentation/provider/transaction_provider.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -102,5 +103,52 @@ class MockTransactionProvider extends _i1.Mock
   @override
   void notifyListeners() =>
       super.noSuchMethod(Invocation.method(#notifyListeners, []),
+          returnValueForMissingStub: null);
+}
+
+/// A class which mocks [TransactionProviderData].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTransactionProviderData extends _i1.Mock
+    implements _i2.TransactionProviderData {
+  MockTransactionProviderData() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  List<_i6.Transaction> get recentTransactions =>
+      (super.noSuchMethod(Invocation.getter(#recentTransactions),
+          returnValue: <_i6.Transaction>[]) as List<_i6.Transaction>);
+  @override
+  set recentTransactions(List<_i6.Transaction>? _recentTransactions) => super
+      .noSuchMethod(Invocation.setter(#recentTransactions, _recentTransactions),
+          returnValueForMissingStub: null);
+  @override
+  List<_i6.Transaction> get allTransactions =>
+      (super.noSuchMethod(Invocation.getter(#allTransactions),
+          returnValue: <_i6.Transaction>[]) as List<_i6.Transaction>);
+  @override
+  set allTransactions(List<_i6.Transaction>? _allTransactions) =>
+      super.noSuchMethod(Invocation.setter(#allTransactions, _allTransactions),
+          returnValueForMissingStub: null);
+  @override
+  Map<String, Object?> get summary =>
+      (super.noSuchMethod(Invocation.getter(#summary),
+          returnValue: <String, Object?>{}) as Map<String, Object?>);
+  @override
+  set summary(Map<String, Object?>? _summary) =>
+      super.noSuchMethod(Invocation.setter(#summary, _summary),
+          returnValueForMissingStub: null);
+  @override
+  set setRecentTransactions(List<_i6.Transaction>? trans) =>
+      super.noSuchMethod(Invocation.setter(#setRecentTransactions, trans),
+          returnValueForMissingStub: null);
+  @override
+  set setAllTransactions(List<_i6.Transaction>? all) =>
+      super.noSuchMethod(Invocation.setter(#setAllTransactions, all),
+          returnValueForMissingStub: null);
+  @override
+  set setRecentTransaction(Map<String, Object?>? data) =>
+      super.noSuchMethod(Invocation.setter(#setRecentTransaction, data),
           returnValueForMissingStub: null);
 }
