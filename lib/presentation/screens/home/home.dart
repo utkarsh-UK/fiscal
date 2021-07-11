@@ -4,7 +4,8 @@ import 'package:fiscal/presentation/widgets/home/transactions_summary.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  final Function(int) onSeeAllClicked;
+  const Home({Key? key, required this.onSeeAllClicked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class Home extends StatelessWidget {
                 children: [
                   Text('Recent Transactions', style: FiscalTheme.sectionHeadingText),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => onSeeAllClicked(1),
                     splashColor: Colors.grey[400],
                     radius: 30.0,
                     child: Padding(

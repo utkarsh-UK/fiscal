@@ -222,6 +222,8 @@ class _TransactionFormState extends State<TransactionForm> {
                     return CircularProgressIndicator(key: ValueKey('progress'));
                   else if (provider.status == TransactionStatus.ERROR)
                     return ErrorWidget(provider.error);
+                  else if (provider.status == TransactionStatus.COMPLETED)
+                    return _onAddComplete(child!);
                   else
                     return child!;
                 },
@@ -270,6 +272,14 @@ class _TransactionFormState extends State<TransactionForm> {
     if (description == null) return 'Description cannot be null';
 
     return null;
+  }
+
+  Widget _onAddComplete(Widget child) {
+    context.read<TransactionProvider>().getRecentTransactions().then((_) {
+      context.read<TransactionProvider>().getDailySummary();
+    });
+
+    return child;
   }
 }
 

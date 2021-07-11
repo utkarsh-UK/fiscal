@@ -24,7 +24,7 @@ class _LandingState extends State<Landing> {
     requestPermission(Permission.storage);
 
     _screens = [
-      Home(key: ValueKey('home')),
+      Home(key: ValueKey('home'), onSeeAllClicked: (int index) => _changePage(index)),
       Container(key: ValueKey('trans'), child: Text('Transactions Page')),
       Container(key: ValueKey('stats'), child: Text('Stats Page')),
       Container(key: ValueKey('accounts'), child: Text('Accounts Page')),
@@ -32,8 +32,7 @@ class _LandingState extends State<Landing> {
     ];
 
     FLog.info(
-      text:
-          'Exit: Request Permissions and initialized ${_screens.length} screens',
+      text: 'Exit: Request Permissions and initialized ${_screens.length} screens',
       className: CLASS_NAME,
       methodName: 'initState()',
     );
@@ -90,9 +89,7 @@ class _LandingState extends State<Landing> {
             onPressed: () => _changePage(0),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_HOME_ICON,
-              color: _pageIndex == 0
-                  ? FiscalTheme.MENU_PRIMARY_COLOR
-                  : FiscalTheme.MENU_SECONDARY_COLOR,
+              color: _pageIndex == 0 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
             ),
           ),
           IconButton(
@@ -100,36 +97,28 @@ class _LandingState extends State<Landing> {
             onPressed: () => _changePage(1),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_TRANSACTION_ICON,
-              color: _pageIndex == 1
-                  ? FiscalTheme.MENU_PRIMARY_COLOR
-                  : FiscalTheme.MENU_SECONDARY_COLOR,
+              color: _pageIndex == 1 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
             ),
           ),
           IconButton(
             onPressed: () => _changePage(2),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_STATS_ICON,
-              color: _pageIndex == 2
-                  ? FiscalTheme.MENU_PRIMARY_COLOR
-                  : FiscalTheme.MENU_SECONDARY_COLOR,
+              color: _pageIndex == 2 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
             ),
           ),
           IconButton(
             onPressed: () => _changePage(3),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_ACCOUNT_ICON,
-              color: _pageIndex == 3
-                  ? FiscalTheme.MENU_PRIMARY_COLOR
-                  : FiscalTheme.MENU_SECONDARY_COLOR,
+              color: _pageIndex == 3 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
             ),
           ),
           IconButton(
             onPressed: () => _changePage(4),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_SETTINGS_ICON,
-              color: _pageIndex == 4
-                  ? FiscalTheme.MENU_PRIMARY_COLOR
-                  : FiscalTheme.MENU_SECONDARY_COLOR,
+              color: _pageIndex == 4 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
             ),
           ),
         ],

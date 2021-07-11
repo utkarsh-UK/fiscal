@@ -163,7 +163,7 @@ void main() {
       await provider.getDailySummary();
       //assert
       verify(mockGetDailySummary(NoParams()));
-      expect(provider.status, TransactionStatus.COMPLETED);
+      expect(provider.status, TransactionStatus.SUMMARY_LOADED);
     });
 
     test('should mark status ERROR and set error message when summary is failed.', () async {

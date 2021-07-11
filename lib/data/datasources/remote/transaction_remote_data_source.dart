@@ -162,11 +162,12 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getDailySummary()');
 
     try {
+      //TODO Add date later for current day's summary
       final String query = ''
-          'SELECT SUM(amount)'
+          'SELECT ${TransactionTable.transaction_type}, SUM(amount) AS amount '
           'FROM ${TransactionTable.TABLE_NAME} '
-          'GROUP BY ${TransactionTable.transaction_type} '
-          'WHERE ${TransactionTable.date}=DATE()';
+          // 'WHERE ${TransactionTable.date}=DATE() '
+          'GROUP BY ${TransactionTable.transaction_type}';
       final results = await db.rawQuery(query);
 
       if (results.isEmpty) {
@@ -180,13 +181,22 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       }
 
       FLog.info(
-        text: 'Fetched daily summary',
+        text: 'Fetched daily summary ${results.toString()}',
         className: CLASS_NAME,
         methodName: 'getDailySummary()',
       );
+      Map<String, Object?> data = {};
+      double amount1 = num.parse('${results.first['amount'] ?? 0.0}').toDouble();
+      data.putIfAbsent('${results.first[TransactionTable.transaction_type]}', () => amount1);
+
+      if (results.length > 1) {
+        double amount2 = num.parse('${results[1]['amount'] ?? 0.0}').toDouble();
+        data.putIfAbsent('${results[1][TransactionTable.transaction_type]}', () => amount2);
+      }
+
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
 
-      return results.first;
+      return data;
     } catch (e, trace) {
       FLog.error(
         text: 'Exception occurred: Might be due to wrong transaction ID or bad query',

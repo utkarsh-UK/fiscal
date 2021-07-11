@@ -1,12 +1,29 @@
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/screens/home/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
+
+import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
+  late MockTransactionProvider mockTransactionProvider;
 
-  testWidgets('load landing page with home page by default.',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: Landing()));
+  setUp(() {
+    mockTransactionProvider = MockTransactionProvider();
+    when(mockTransactionProvider.hasListeners).thenReturn(false);
+  });
+
+  testWidgets('load landing page with home page by default.', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<TransactionProvider>(create: (_) => mockTransactionProvider),
+        ],
+        child: MaterialApp(home: Landing()),
+      ),
+    );
 
     //find home screen as default screen
     final homeWidget = find.byKey(ValueKey('home'));

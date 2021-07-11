@@ -25,6 +25,10 @@ class TransactionItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final containerSize = size.width - 16.0;
     final bool isIncome = transactionType == TransactionType.INCOME;
+    String desc = '';
+
+    if(description == null) desc = '';
+    else desc = description!.isNotEmpty ? description! : 'N/A';
 
     return Container(
       width: containerSize,
@@ -85,7 +89,7 @@ class TransactionItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4.0),
                 Text(
-                  description ?? 'N/A',
+                  desc,
                   style: FiscalTheme.subTitleText,
                   overflow: TextOverflow.clip,
                   softWrap: false,

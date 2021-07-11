@@ -1,8 +1,10 @@
 import 'package:fiscal/core/core.dart';
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/background_painter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class TransactionsSummary extends StatefulWidget {
   const TransactionsSummary({Key? key}) : super(key: key);
@@ -12,6 +14,15 @@ class TransactionsSummary extends StatefulWidget {
 }
 
 class _TransactionsSummaryState extends State<TransactionsSummary> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      context.read<TransactionProvider>().getDailySummary();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -33,34 +44,50 @@ class _TransactionsSummaryState extends State<TransactionsSummary> {
             color: FiscalTheme.PRIMARY_COLOR,
             borderRadius: BorderRadius.circular(16.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Total Balance', style: FiscalTheme.bodyWhiteText),
-              Text.rich(
-                TextSpan(
+          child: Consumer<TransactionProvider>(
+            builder: (context, provider, child) {
+              if (provider.status == TransactionStatus.REFRESHING)
+                return Center(child: CircularProgressIndicator(key: ValueKey('progress')));
+              else if (provider.status == TransactionStatus.ERROR)
+                return ErrorWidget(provider.error);
+              // else if (provider.status == TransactionStatus.COMPLETED)
+              //   return _onAddComplete(child!);
+              else {
+                double expenseAmount = double.parse('${provider.data.summary['EXPENSE'] ?? 0.0}');
+                double incomeAmount = double.parse('${provider.data.summary['INCOME'] ?? 0.0}');
+                double totalBalance = incomeAmount - expenseAmount;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextSpan(text: 'INR   ', style: FiscalTheme.bodyWhiteText),
-                    TextSpan(
-                      text: '5,300.00',
-                      style: FiscalTheme.bodyWhiteText.copyWith(fontSize: containerWidth * 0.12),
+                    Text('Total Balance', style: FiscalTheme.bodyWhiteText),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: 'INR   ', style: FiscalTheme.bodyWhiteText),
+                          TextSpan(
+                            text: totalBalance.toStringAsFixed(2),
+                            style: FiscalTheme.bodyWhiteText.copyWith(fontSize: containerWidth * 0.12),
+                          ),
+                        ],
+                      ),
+                      key: ValueKey('total_balance'),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                     ),
+                    _buildSummarySplitWidget(containerWidth, containerHeight, incomeAmount, expenseAmount),
                   ],
-                ),
-                key: ValueKey('total_balance'),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-              ),
-              _buildSummarySplitWidget(containerWidth, containerHeight),
-            ],
+                );
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSummarySplitWidget(double containerWidth, double containerHeight) {
+  Widget _buildSummarySplitWidget(double containerWidth, double containerHeight, double income, double expense) {
     return Container(
       width: containerWidth * 0.7,
       height: containerHeight * 0.3,
@@ -90,7 +117,7 @@ class _TransactionsSummaryState extends State<TransactionsSummary> {
               ),
               Expanded(
                 child: Text(
-                  '3,300.00',
+                  income.toStringAsFixed(2),
                   key: ValueKey('income'),
                   style: FiscalTheme.bodyWhiteText.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -118,7 +145,7 @@ class _TransactionsSummaryState extends State<TransactionsSummary> {
                 ),
                 Expanded(
                   child: Text(
-                    '1,500.00',
+                    expense.toStringAsFixed(2),
                     key: ValueKey('expense'),
                     style: FiscalTheme.bodyWhiteText.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
