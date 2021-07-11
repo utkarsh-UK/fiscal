@@ -2,6 +2,7 @@ import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/routing/navigation_service.dart';
 import 'package:fiscal/di/locator.dart' as di;
+import 'package:fiscal/flavor_config.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/screens/home/landing.dart';
 import 'package:flutter/material.dart';
@@ -27,22 +28,24 @@ void initLogConfig() {
   FLog.applyConfigurations(config);
 }
 
-void main() async {
+void mainCommon(FlavorConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   initLogConfig();
-  runApp(MyApp());
+  runApp(MyApp(config: config));
 }
 
 class MyApp extends StatelessWidget {
+  final FlavorConfig config;
+
+  const MyApp({Key? key, required this.config}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<TransactionProvider>(create: (_) => di.locator<TransactionProvider>())
-      ],
+      providers: [ChangeNotifierProvider<TransactionProvider>(create: (_) => di.locator<TransactionProvider>())],
       child: MaterialApp(
-        title: 'Fiscal',
+        title: config.appTitle,
         debugShowCheckedModeBanner: false,
         navigatorKey: di.locator.get<NavigationService>().navigatorKey,
         onGenerateRoute: generateRoute,

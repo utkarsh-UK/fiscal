@@ -34,11 +34,37 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.utkarshkore.fiscal"
+        applicationId "dev.utkarshkore.fiscal"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev
+                {
+                    dimension "app"
+                    applicationId "dev.utkarshkore.fiscal"
+                    versionCode 1
+                    versionName "1.0.0-dev"
+                }
+        preprod
+                {
+                    dimension "app"
+                    applicationId "preprod.utkarshkore.fiscal"
+                    versionCode 1
+                    versionName "1.0.0-test"
+                }
+        prod
+                {
+                    dimension "app"
+                    applicationId "com.utkarshkore.fiscal"
+                    versionCode 1
+                    versionName "1.0.0"
+                }
     }
 
     buildTypes {
