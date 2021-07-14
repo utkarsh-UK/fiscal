@@ -182,6 +182,17 @@ void main() {
       expect(result, summary);
     });
 
+    test('should return 0 value as summary when no records are present', () async {
+      // arrange
+      when(mockDatabase.rawQuery(query)).thenAnswer((_) async => []);
+      //act
+      final expectedResult = {'EXPENSE': 0.0, 'INCOME': 0.0};
+      final result = await dataSourceImpl.getDailySummary();
+      //assert
+      verify(mockDatabase.rawQuery(query, [10]));
+      expect(result, expectedResult);
+    });
+
     test('should throw DataException when adding data fails', () async {
       //act
       final call = dataSourceImpl.getDailySummary;

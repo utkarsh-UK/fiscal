@@ -18,6 +18,7 @@ export './theme/fiscal_theme.dart';
 
 // extensions
 export './utils/extensions/string_extensions.dart';
+export './utils/extensions/date_extensions.dart';
 
 // route
 export './utils/routing/router.dart';

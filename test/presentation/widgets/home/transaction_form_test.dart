@@ -31,7 +31,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String title, TransactionType type, double amount, String category, int account, String date,
+                  onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
                       String description) {}),
             ),
           ),
@@ -65,7 +65,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                onSubmit: (String title, TransactionType type, double amount, String category, int account, String date,
+                onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
                     String description) {},
               ),
             ),

@@ -35,6 +35,7 @@ class FiscalDatabase {
           CREATE TABLE ${TransactionTable.TABLE_NAME} ( 
             ${TransactionTable.id} $idType,
             ${TransactionTable.title} $textType CHECK(LENGTH(${TransactionTable.title}) > 0),
+            ${TransactionTable.date} $textType,
             ${TransactionTable.description} $textType,
             ${TransactionTable.amount} $realType CHECK(${TransactionTable.amount} > 0),
             ${TransactionTable.transaction_type} $enumType,

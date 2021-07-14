@@ -77,7 +77,7 @@ class TransactionModel extends Transaction {
         TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
         // TransactionTable.category_id: model.categoryID,
         // TransactionTable.acc_id: model.accountID,
-        // TransactionTable.date: model.date.toIso8601String(),
+        TransactionTable.date: model.date.toIso8601String(),
       };
 
   static Map<String, dynamic> toJSON(TransactionModel model) => {

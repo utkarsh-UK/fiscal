@@ -177,7 +177,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
           methodName: 'getDailySummary()',
         );
 
-        throw DataException(message: 'Could not fetch summary.');
+        return {'EXPENSE': 0.0, 'INCOME': 0.0};
       }
 
       FLog.info(

@@ -2,11 +2,10 @@ import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TransactionForm extends StatefulWidget {
-  final Function(String, TransactionType, double, String, int, String, String) onSubmit;
+  final Function(String, TransactionType, double, String, int, DateTime, String) onSubmit;
 
   const TransactionForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -20,11 +19,14 @@ class _TransactionFormState extends State<TransactionForm> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _amountController;
+  late TextEditingController _dateController;
 
   String _title = '';
   String _description = '';
   double _amount = 0.0;
   String _typeDropdownValue = 'EXPENSE';
+  DateTime _transactionDate = DateTime.now();
+  String formattedDate = '';
   TransactionType _transactionType = TransactionType.EXPENSE;
 
   @override
@@ -34,6 +36,7 @@ class _TransactionFormState extends State<TransactionForm> {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
     _amountController = TextEditingController();
+    _dateController = TextEditingController();
   }
 
   @override
@@ -43,6 +46,7 @@ class _TransactionFormState extends State<TransactionForm> {
     _titleController.dispose();
     _descriptionController.dispose();
     _amountController.dispose();
+    _dateController.dispose();
   }
 
   @override
@@ -72,7 +76,7 @@ class _TransactionFormState extends State<TransactionForm> {
               ),
               style: FiscalTheme.inputText,
               textCapitalization: TextCapitalization.words,
-              validator: (title) => title!.trim().isEmpty ? 'Title cannot be null or empty' : null,
+              validator: (title) => title!.trim().isEmpty ? 'Please provide title for transaction' : null,
               onSaved: (title) => _title = title == null ? '' : title.trim(),
             ),
             const SizedBox(height: 16.0),
@@ -128,9 +132,9 @@ class _TransactionFormState extends State<TransactionForm> {
                 if (amount == null)
                   return 'Please enter valid positive amount';
                 else if (amount.isEmpty)
-                  return 'Amount cannot be empty';
+                  return 'Amount is mandatory';
                 else if (double.parse(amount) <= 0.0)
-                  return 'Amount cannot be null or negative';
+                  return 'Amount cannot be negative';
                 else
                   return null;
               },
@@ -176,7 +180,8 @@ class _TransactionFormState extends State<TransactionForm> {
             InputTitle(title: 'Date:'),
             const SizedBox(height: 12.0),
             TextFormField(
-              initialValue: DateFormat.MMMMd().format(DateTime.now()),
+              controller: _dateController,
+              showCursor: false,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
@@ -187,6 +192,13 @@ class _TransactionFormState extends State<TransactionForm> {
                   borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                suffixIcon: IconButton(
+                  onPressed: _handleDateSelector,
+                  icon: Icon(
+                    Icons.calendar_today_rounded,
+                    color: Color(0xFF57335D),
+                  ),
+                ),
               ),
               keyboardType: TextInputType.text,
             ),
@@ -257,29 +269,62 @@ class _TransactionFormState extends State<TransactionForm> {
     _formKey.currentState!.save();
     _transactionType = Converters.convertTransactionTypeString(_typeDropdownValue);
 
-    final String? result = _validateInputs(_title, _transactionType, _amount, _description);
+    final bool result = _validateInputs(_title, _transactionType, _amount, _description);
 
-    if (result != null) return;
+    if (!result) return;
 
     // call onSubmit
-    widget.onSubmit(_title, _transactionType, _amount, '', 0, '', _description);
+    widget.onSubmit(_title, _transactionType, _amount, '', 0, _transactionDate, _description);
   }
 
-  String? _validateInputs(String? title, TransactionType? type, double? amount, String? description) {
-    if (title == null || title.isEmpty) return 'Title cannot be null or empty';
-    if (type == null) return 'Transaction type cannot be null';
-    if (amount == null || amount <= 0.0) return 'Amount cannot be null or negative';
-    if (description == null) return 'Description cannot be null';
+  bool _validateInputs(String? title, TransactionType? type, double? amount, String? description) {
+    if (title == null || title.isEmpty) return false;
+    if (type == null) return false;
+    if (amount == null || amount <= 0.0) return false;
+    if (description == null) return false;
 
-    return null;
+    return true;
   }
 
   Widget _onAddComplete(Widget child) {
+    _clearInputs();
     context.read<TransactionProvider>().getRecentTransactions().then((_) {
       context.read<TransactionProvider>().getDailySummary();
     });
 
     return child;
+  }
+
+  Future<void> _handleDateSelector() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 1)),
+    );
+
+    // Cancelled the date selector
+    if (date == null) return;
+
+    // User has selected date. Show time picker
+    final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+
+    // Cancelled the time picker
+    if (time == null) return;
+
+    // User has selected time. Build actual transaction time
+    final transDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+    _dateController.text = transDate.getFullStringDate;
+    setState(() => _transactionDate = transDate);
+  }
+
+  void _clearInputs() {
+    _titleController.clear();
+    _amountController.clear();
+    _dateController.clear();
+    _descriptionController.clear();
+    setState(() {});
   }
 }
 

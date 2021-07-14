@@ -38,7 +38,7 @@ class AddNewTransaction extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                   child: TransactionForm(
                     key: ValueKey('form'),
-                    onSubmit: (String title, TransactionType type, double amount, String category, int account, String date,
+                    onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
                         String description) {
                       _addTransaction(title, type, amount, category, account, date, description, context);
                     },
@@ -52,7 +52,7 @@ class AddNewTransaction extends StatelessWidget {
     );
   }
 
-  void _addTransaction(String title, TransactionType type, double amount, String category, int account, String date,
+  void _addTransaction(String title, TransactionType type, double amount, String category, int account, DateTime date,
       String description, BuildContext context) {
     context.read<TransactionProvider>().addNewTransaction(
           title: title,
@@ -60,7 +60,7 @@ class AddNewTransaction extends StatelessWidget {
           type: type,
           categoryID: category,
           accountID: account,
-          date: DateTime.now(),
+          date: date,
           description: description,
         );
   }

@@ -115,7 +115,7 @@ class TransactionProvider extends ChangeNotifier {
   }) async {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
     FLog.info(
-      text: 'Parameters: [$title], [$description], [$amount], [$type], [$categoryID], [$accountID], [$date]',
+      text: 'Parameters: [$title], [$description], [$amount], [$type], [$categoryID], [$accountID], [${date.getFullStringDate}]',
       className: CLASS_NAME,
       methodName: 'addNewTransaction()',
     );
