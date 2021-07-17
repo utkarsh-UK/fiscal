@@ -48,3 +48,4 @@ app.*.map.json
 # tooling
 sonar-project.properties
 .scannerwork/
+test_commands/

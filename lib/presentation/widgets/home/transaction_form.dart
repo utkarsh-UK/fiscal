@@ -56,12 +56,14 @@ class _TransactionFormState extends State<TransactionForm> {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
+        key: ValueKey('scroller'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InputTitle(title: 'Title:'),
             const SizedBox(height: 12.0),
             TextFormField(
+              key: ValueKey('trans_title'),
               controller: _titleController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -82,38 +84,42 @@ class _TransactionFormState extends State<TransactionForm> {
             const SizedBox(height: 16.0),
             InputTitle(title: 'Type:'),
             const SizedBox(height: 12.0),
-            DropdownButtonFormField<String>(
-              onChanged: (type) => setState(() => _typeDropdownValue = type ?? 'EXPENSE'),
-              value: _typeDropdownValue,
-              onSaved: (type) => _typeDropdownValue = type ?? 'EXPENSE',
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+            SizedBox(
+              width: size.width * 0.9,
+              child: DropdownButtonFormField<String>(
+                onChanged: (type) => setState(() => _typeDropdownValue = type ?? 'EXPENSE'),
+                value: _typeDropdownValue,
+                onSaved: (type) => _typeDropdownValue = type ?? 'EXPENSE',
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 ),
-                fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
-                filled: true,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                iconSize: 25.0,
+                style: FiscalTheme.inputText,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'EXPENSE',
+                    child: Text('Expense'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'INCOME',
+                    child: Text('Income'),
+                  ),
+                ],
               ),
-              iconSize: 25.0,
-              style: FiscalTheme.inputText,
-              items: [
-                DropdownMenuItem<String>(
-                  value: 'EXPENSE',
-                  child: Text('Expense'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'INCOME',
-                  child: Text('Income'),
-                ),
-              ],
             ),
             const SizedBox(height: 16.0),
             InputTitle(title: 'Amount:'),
             const SizedBox(height: 12.0),
             TextFormField(
+              key: ValueKey('trans_amount'),
               controller: _amountController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -206,6 +212,7 @@ class _TransactionFormState extends State<TransactionForm> {
             InputTitle(title: 'Description:'),
             const SizedBox(height: 12.0),
             TextFormField(
+              key: ValueKey('description'),
               controller: _descriptionController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -234,7 +241,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     return CircularProgressIndicator(key: ValueKey('progress'));
                   else if (provider.status == TransactionStatus.ERROR)
                     return ErrorWidget(provider.error);
-                  else if (provider.status == TransactionStatus.COMPLETED)
+                  else if (provider.status == TransactionStatus.ADDED)
                     return _onAddComplete(child!);
                   else
                     return child!;
@@ -287,7 +294,7 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   Widget _onAddComplete(Widget child) {
-    _clearInputs();
+    // _clearInputs();
     context.read<TransactionProvider>().getRecentTransactions().then((_) {
       context.read<TransactionProvider>().getDailySummary();
     });

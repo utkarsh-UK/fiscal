@@ -40,19 +40,19 @@ void main() {
     );
 
     //find input labels
-    final inputLabels = find.byType(InputTitle);
+    final inputLabels = find.byType(InputTitle, skipOffstage: false);
     expect(inputLabels, findsNWidgets(7));
 
     //find inputs
-    final inputs = find.byType(TextField);
-    expect(inputs, findsNWidgets(6));
+    final inputFields = find.byType(TextField, skipOffstage: false);
+    expect(inputFields, findsNWidgets(6));
 
     //find save btn
     final save = find.byKey(ValueKey('save'));
     expect(save, findsOneWidget);
   });
 
-  testWidgets('render progress indicator when adding transaction is not completed.', (WidgetTester tester) async {
+  testWidgets('should render progress indicator when state is LOADING.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.LOADING);
 
     await tester.pumpWidget(
@@ -65,9 +65,8 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
-                    String description) {},
-              ),
+                  onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
+                      String description) {}),
             ),
           ),
         ),
@@ -75,19 +74,51 @@ void main() {
     );
 
     //find input labels
-    final inputLabels = find.byType(InputTitle);
+    final inputLabels = find.byType(InputTitle, skipOffstage: false);
     expect(inputLabels, findsNWidgets(7));
 
     //find inputs
-    final inputs = find.byType(TextField);
-    expect(inputs, findsNWidgets(6));
+    final inputFields = find.byType(TextField, skipOffstage: false);
+    expect(inputFields, findsNWidgets(6));
 
     //find progress indicator
     final progress = find.byKey(ValueKey('progress'));
-    expect(progress, findsOneWidget);
-
-    //find save btn
     final save = find.byKey(ValueKey('save'));
+    expect(progress, findsOneWidget);
     expect(save, findsNothing);
   });
+
+  // testWidgets('should scroll input fields on smaller screens.', (WidgetTester tester) async {
+  //   //change screen size
+  //   tester.binding.window.physicalSizeTestValue = Size(320, 420);
+  //
+  //   when(mockTransactionProvider.status).thenReturn(TransactionStatus.INITIAL);
+  //
+  //   await tester.pumpWidget(
+  //     MediaQuery(
+  //       data: MediaQueryData(),
+  //       child: MultiProvider(
+  //         providers: [
+  //           ChangeNotifierProvider<TransactionProvider>(create: (_) => mockTransactionProvider),
+  //         ],
+  //         child: MaterialApp(
+  //           home: Scaffold(
+  //             body: TransactionForm(
+  //               onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
+  //                   String description) {},
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  //
+  //   final descField = find.byKey(ValueKey('description'));
+  //   final save = find.byKey(ValueKey('save'));
+  //   await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -400));
+  //   await tester.pump();
+  //
+  //   expect(descField, findsOneWidget);
+  //   expect(save, findsOneWidget);
+  // });
 }

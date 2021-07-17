@@ -34,7 +34,7 @@ class _RecentTransactionsState extends State<RecentTransactions> {
       );
 
   Widget _buildList(List<Transaction> transactions) => transactions.isEmpty
-      ? Center(child: Text('No Transactions Yet'))
+      ? Center(child: Text('No Transactions Yet', key: ValueKey('empty_trans')))
       : ListView.builder(
           physics: const BouncingScrollPhysics(),
           itemCount: transactions.length,

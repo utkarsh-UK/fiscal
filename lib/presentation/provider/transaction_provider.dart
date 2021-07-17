@@ -7,7 +7,7 @@ import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:flutter/foundation.dart';
 
-enum TransactionStatus { REFRESHING, LOADING, COMPLETED, SUMMARY_LOADED, ERROR, INITIAL }
+enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ADDED, SUMMARY_LOADED, ERROR, INITIAL }
 
 class TransactionProvider extends ChangeNotifier {
   static const String CLASS_NAME = 'TransactionProvider';
@@ -149,7 +149,7 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'addNewTransaction()',
       );
     }, (fetchedTransactions) {
-      _status = TransactionStatus.COMPLETED;
+      _status = TransactionStatus.ADDED;
       notifyListeners();
 
       FLog.info(

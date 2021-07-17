@@ -131,7 +131,7 @@ void main() {
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
-      expect(provider.status, TransactionStatus.COMPLETED);
+      expect(provider.status, TransactionStatus.ADDED);
     });
 
     test('should mark status ERROR and set error message when transactions are failed.', () async {
@@ -153,7 +153,7 @@ void main() {
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
     });
   });
-  group('addNewTransaction', () {
+  group('getDailySummary', () {
     Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
 
     test('should get summary and set status to COMPLETED when data is fetched', () async {

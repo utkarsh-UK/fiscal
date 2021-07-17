@@ -25,6 +25,7 @@ class AddNewTransaction extends StatelessWidget {
                   title: 'Add Transaction',
                   actions: [
                     IconButton(
+                      key: ValueKey('close'),
                       onPressed: locator.get<NavigationService>().navigateBack,
                       icon: Icon(
                         Icons.close_rounded,
