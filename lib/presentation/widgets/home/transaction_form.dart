@@ -199,6 +199,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 suffixIcon: IconButton(
+                  key: ValueKey('date_picker'),
                   onPressed: _handleDateSelector,
                   icon: Icon(
                     Icons.calendar_today_rounded,

@@ -43,6 +43,11 @@ class FiscalTheme {
     fontSize: 24.0,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle screenActionTitleText = TextStyle(
+    color: FiscalTheme.PRIMARY_COLOR,
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle inputText = TextStyle(
     color: FiscalTheme.FONT_DARK_PRIMARY_COLOR,
     fontSize: 16.0,

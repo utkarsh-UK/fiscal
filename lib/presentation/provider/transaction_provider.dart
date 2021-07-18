@@ -71,6 +71,7 @@ class TransactionProvider extends ChangeNotifier {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAllTransactions()');
     FLog.info(text: 'Parameters: [$lastTransactionID], [$timestamp]', className: CLASS_NAME, methodName: 'getAllTransactions()');
 
+    if (lastTransactionID.isEmpty) data.allTransactions = [];
     _status = TransactionStatus.LOADING;
     notifyListeners();
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,21 +13,35 @@ void main() {
     final addTransactionScreen = find.text('Add Transaction');
     final titleInputField = find.byValueKey('trans_title');
     final amountInputField = find.byValueKey('trans_amount');
+    final dateInputField = find.byValueKey('date_picker');
+    final dateValue = find.text('10');
+    final okButton = find.text('OK');
     final descInputField = find.byValueKey('description');
     final saveButton = find.byValueKey('save');
     final progressIndicator = find.byValueKey('progress');
     final closeButton = find.byValueKey('close');
     final recentTransTitle = find.text('First Transaction');
-    final recentTransType = find.text('Expense');
+    final recentTransType = find.byValueKey('type');
 
     late FlutterDriver driver;
 
     setUpAll(() async {
-      final Map<String, String> envVars = Platform.environment;
       final String adbPath = 'C:/Users/utkar/AppData/Local/Android/Sdk/platform-tools/adb.exe';
 
-      await Process.run(adbPath, ['shell', 'pm', 'grant', 'dev.utkarshkore.fiscal', 'android.permission.READ_EXTERNAL_STORAGE']);
-      await Process.run(adbPath, ['shell', 'pm', 'grant', 'dev.utkarshkore.fiscal', 'android.permission.WRITE_EXTERNAL_STORAGE']);
+      await Process.run(adbPath, [
+        'shell',
+        'pm',
+        'grant',
+        'integration.utkarshkore.fiscal',
+        'android.permission.READ_EXTERNAL_STORAGE',
+      ]);
+      await Process.run(adbPath, [
+        'shell',
+        'pm',
+        'grant',
+        'integration.utkarshkore.fiscal',
+        'android.permission.WRITE_EXTERNAL_STORAGE',
+      ]);
 
       driver = await FlutterDriver.connect();
       await driver.waitUntilFirstFrameRasterized();
@@ -53,6 +68,8 @@ void main() {
 
     test('Fill transaction details and save', () async {
       await driver.runUnsynchronized(() async {
+        //arrange
+        final currentMonth = DateFormat('MMMM').format(DateTime.now());
         //act
         // enter title
         await driver.tap(titleInputField);
@@ -61,6 +78,12 @@ void main() {
         //enter amount
         await driver.tap(amountInputField);
         await driver.enterText('125.50');
+
+        //enter date
+        await driver.tap(dateInputField);
+        await driver.tap(dateValue);
+        await driver.tap(okButton);
+        await driver.tap(okButton);
 
         //enter description
         await driver.tap(descInputField);
@@ -83,7 +106,8 @@ void main() {
         expect(await driver.getText(income), '0.00');
         expect(await driver.getText(expense), '125.50');
         expect(await driver.getText(recentTransTitle), 'First Transaction');
-        // expect(await driver.getText(find.text('Expense')), 'Expense');
+        expect(await driver.getText(recentTransType), 'Expense');
+        expect(await driver.getText(find.text('$currentMonth 10')), '$currentMonth 10');
       });
     });
   });

@@ -19,9 +19,12 @@ class ScreenTitle extends StatelessWidget {
       width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(title.titleCase, style: FiscalTheme.screenTitleText, key: ValueKey('screen_title')),
-          actions.isEmpty ? SizedBox.shrink() : Row(key: ValueKey('actions'), children: actions),
+          actions.isEmpty
+              ? SizedBox.shrink()
+              : Row(key: ValueKey('actions'), crossAxisAlignment: CrossAxisAlignment.center, children: actions),
         ],
       ),
     );

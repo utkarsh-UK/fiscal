@@ -1,1 +1,1 @@
-flutter driver --target=test_driver/add_transaction.dart --flavor dev
+flutter driver --target=test_driver/add_transaction.dart --flavor integration

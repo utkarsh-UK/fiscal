@@ -8,7 +8,7 @@ void main() {
 
   //Call main function of the app
   final config = FlavorConfig()
-    ..appTitle = 'Fiscal Dev'
+    ..appTitle = 'Fiscal Integration'
     ..imageLocation = 'assets/';
   app.mainCommon(config);
 }

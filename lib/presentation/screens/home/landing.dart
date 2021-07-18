@@ -1,10 +1,14 @@
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/di/locator.dart';
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
+import 'package:fiscal/presentation/screens/transactions/all_transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -24,8 +28,8 @@ class _LandingState extends State<Landing> {
     requestPermission(Permission.storage);
 
     _screens = [
-      Home(key: ValueKey('home'), onSeeAllClicked: (int index) => _changePage(index)),
-      Container(key: ValueKey('trans'), child: Text('Transactions Page')),
+      Home(key: ValueKey('home'), onSeeAllClicked: (int index) => _fetchAllTransactions(index)),
+      AllTransactions(key: ValueKey('trans')),
       Container(key: ValueKey('stats'), child: Text('Stats Page')),
       Container(key: ValueKey('accounts'), child: Text('Accounts Page')),
       Container(key: ValueKey('settings'), child: Text('Settings Page')),
@@ -94,7 +98,7 @@ class _LandingState extends State<Landing> {
           ),
           IconButton(
             key: ValueKey('tran_menu'),
-            onPressed: () => _changePage(1),
+            onPressed: () => _fetchAllTransactions(1),
             icon: SvgPicture.asset(
               FiscalAssets.MENU_TRANSACTION_ICON,
               color: _pageIndex == 1 ? FiscalTheme.MENU_PRIMARY_COLOR : FiscalTheme.MENU_SECONDARY_COLOR,
@@ -127,6 +131,12 @@ class _LandingState extends State<Landing> {
   }
 
   void _changePage(int index) => setState(() => _pageIndex = index);
+
+  void _fetchAllTransactions(int index) {
+    _changePage(1);
+    final String currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
+    context.read<TransactionProvider>().getAllTransactions(lastTransactionID: '', timestamp: '$currentMonth%');
+  }
 
   Future<void> requestPermission(Permission permission) => permission.request();
 }

@@ -51,19 +51,19 @@ android {
                     versionCode 1
                     versionName "1.0.0-dev"
                 }
+        integration
+                {
+                    dimension "app"
+                    applicationId "integration.utkarshkore.fiscal"
+                    versionCode 1
+                    versionName "1.0.0-int"
+                }
         preprod
                 {
                     dimension "app"
                     applicationId "preprod.utkarshkore.fiscal"
                     versionCode 1
                     versionName "1.0.0-test"
-                }
-        prod
-                {
-                    dimension "app"
-                    applicationId "com.utkarshkore.fiscal"
-                    versionCode 1
-                    versionName "1.0.0"
                 }
     }
 
