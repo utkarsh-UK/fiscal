@@ -10,16 +10,22 @@ import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../fixtures/transactions/transaction.dart';
+import 'database.mocks.dart';
 import 'transaction_remote_data_source_impl_test.mocks.dart';
 
-@GenerateMocks([Database, DatabaseExecutor])
+@GenerateMocks([], customMocks: [
+  MockSpec<Database>(returnNullOnMissingStub: true),
+  MockSpec<DatabaseExecutor>(returnNullOnMissingStub: true),
+])
 void main() {
   late TransactionRemoteDataSourceImpl dataSourceImpl;
   late MockDatabase mockDatabase;
+  late DatabaseMock databaseMock;
 
   setUp(() {
     mockDatabase = MockDatabase();
-    dataSourceImpl = TransactionRemoteDataSourceImpl(db: mockDatabase);
+    databaseMock = DatabaseMock();
+    dataSourceImpl = TransactionRemoteDataSourceImpl(db: databaseMock);
   });
 
   group('getAllTransactions', () {
@@ -45,11 +51,11 @@ void main() {
       // arrange
       String query = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
-      when(mockDatabase.rawQuery(query, ['', time, batchSize])).thenAnswer((_) async => queryResult);
+      when(databaseMock.rawQuery(query, ['', time, batchSize])).thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.getAllTransactions('', time);
       //assert
-      verify(mockDatabase.rawQuery(query, [batchSize]));
+      verify(databaseMock.rawQuery(query, [batchSize]));
       expect(result, {'data': transactions});
     });
 
@@ -58,12 +64,12 @@ void main() {
       String paginatedQuery = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? and  '
           '${TransactionTable.id} < ? ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
-      when(mockDatabase.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]))
+      when(databaseMock.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]))
           .thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.getAllTransactions(lastFetchedTransactionID, time);
       //assert
-      verify(mockDatabase.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]));
+      verify(databaseMock.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]));
       expect(result, {'data': transactions});
     });
 
@@ -95,11 +101,11 @@ void main() {
 
     test('should fetch recent transactions from database', () async {
       // arrange
-      when(mockDatabase.rawQuery(query, [10])).thenAnswer((_) async => queryResult);
+      when(databaseMock.rawQuery(query, [10])).thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.getRecentTransactions();
       //assert
-      verify(mockDatabase.rawQuery(query, [10]));
+      verify(databaseMock.rawQuery(query, [10]));
       expect(result, transactions);
     });
 
@@ -131,18 +137,18 @@ void main() {
     test('should add new transaction to the database and return inserted row ID', () async {
       // arrange
       int transactionID = 1;
-      when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction)))
+      when(databaseMock.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction)))
           .thenAnswer((_) async => transactionID);
-      when(mockDatabase.rawQuery(lastInsertedRowIDQuery)).thenAnswer((_) async => lastInsertedRowResult);
+      when(databaseMock.rawQuery(lastInsertedRowIDQuery)).thenAnswer((_) async => lastInsertedRowResult);
       //act
       final result = await dataSourceImpl.addNewTransaction(transaction);
       //assert
-      verify(mockDatabase.insert(
+      verify(databaseMock.insert(
         TransactionTable.TABLE_NAME,
         TransactionModel.toQuery(transaction),
         conflictAlgorithm: ConflictAlgorithm.fail,
       ));
-      verify(mockDatabase.rawQuery(lastInsertedRowIDQuery));
+      verify(databaseMock.rawQuery(lastInsertedRowIDQuery));
       expect(result, '$transactionID');
     });
 
@@ -155,7 +161,7 @@ void main() {
 
     test('should throw DataException when insert returns 0 row count.', () async {
       // arrange
-      when(mockDatabase.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction))).thenAnswer((_) async => 0);
+      when(databaseMock.insert(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction))).thenAnswer((_) async => 0);
       //act
       final call = dataSourceImpl.addNewTransaction;
       //assert
@@ -164,32 +170,38 @@ void main() {
   });
 
   group('getDailySummary', () {
-    Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
+    Map<String, Object?> dbResult = {'transaction_type': 'EXPENSE', 'amount': 7316.0};
+    Map<String, Object?> summary = {'EXPENSE': 7316.0};
+    // final String query = ''
+    //     'SELECT SUM(amount)'
+    //     'FROM ${TransactionTable.TABLE_NAME} '
+    //     'GROUP BY ${TransactionTable.transaction_type} '
+    //     'WHERE ${TransactionTable.date}=DATE()';
     final String query = ''
-        'SELECT SUM(amount)'
+        'SELECT ${TransactionTable.transaction_type}, SUM(amount) AS amount '
         'FROM ${TransactionTable.TABLE_NAME} '
-        'GROUP BY ${TransactionTable.transaction_type} '
-        'WHERE ${TransactionTable.date}=DATE()';
-    final rows = [summary];
+        // 'WHERE ${TransactionTable.date}=DATE() '
+        'GROUP BY ${TransactionTable.transaction_type}';
+    final rows = [dbResult];
 
     test('should get daily summary data for current day', () async {
       // arrange
-      when(mockDatabase.rawQuery(query)).thenAnswer((_) async => rows);
+      when(databaseMock.rawQuery(query)).thenAnswer((_) async => rows);
       //act
       final result = await dataSourceImpl.getDailySummary();
       //assert
-      verify(mockDatabase.rawQuery(query, [10]));
+      verify(databaseMock.rawQuery(query, [10]));
       expect(result, summary);
     });
 
     test('should return 0 value as summary when no records are present', () async {
       // arrange
-      when(mockDatabase.rawQuery(query)).thenAnswer((_) async => []);
+      when(databaseMock.rawQuery(query)).thenAnswer((_) async => []);
       //act
       final expectedResult = {'EXPENSE': 0.0, 'INCOME': 0.0};
       final result = await dataSourceImpl.getDailySummary();
       //assert
-      verify(mockDatabase.rawQuery(query, [10]));
+      verify(databaseMock.rawQuery(query, [10]));
       expect(result, expectedResult);
     });
 

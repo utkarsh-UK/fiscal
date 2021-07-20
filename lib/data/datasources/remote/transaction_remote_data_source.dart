@@ -188,6 +188,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         className: CLASS_NAME,
         methodName: 'getDailySummary()',
       );
+      print(results[0]);
       Map<String, Object?> data = {};
       double amount1 = num.parse('${results.first['amount'] ?? 0.0}').toDouble();
       data.putIfAbsent('${results.first[TransactionTable.transaction_type]}', () => amount1);
@@ -198,7 +199,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       }
 
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
-
+      print(data);
       return data;
     } catch (e, trace) {
       FLog.error(
