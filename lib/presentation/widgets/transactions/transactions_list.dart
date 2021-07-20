@@ -10,23 +10,30 @@ class TransactionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TransactionProvider>(
       builder: (context, provider, child) {
-        final transactions = provider.data.allTransactions;
+        if (provider.status == TransactionStatus.LOADING)
+          return CircularProgressIndicator(key: ValueKey('progress'));
+        else if (provider.status == TransactionStatus.ERROR)
+          return ErrorWidget(provider.error);
+        else if (provider.status == TransactionStatus.COMPLETED) {
+          final transactions = provider.data.allTransactions;
 
-        if (transactions.isEmpty) return CircularProgressIndicator();
+          if (transactions.isEmpty) return Center(child: Text('No transactions'));
 
-        return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: transactions.length,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext ctx, int index) => TransactionItem(
-            key: ValueKey('all_trans_$index'),
-            title: transactions[index].title,
-            description: transactions[index].description,
-            transactionType: transactions[index].transactionType,
-            transactionDate: transactions[index].date,
-            amount: transactions[index].amount,
-          ),
-        );
+          return ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            itemCount: transactions.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext ctx, int index) => TransactionItem(
+              key: ValueKey('all_trans_$index'),
+              title: transactions[index].title,
+              description: transactions[index].description,
+              transactionType: transactions[index].transactionType,
+              transactionDate: transactions[index].date,
+              amount: transactions[index].amount,
+            ),
+          );
+        } else
+          return SizedBox.shrink();
       },
     );
   }

@@ -38,7 +38,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         queryData = await db.rawQuery(
           'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ?  ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?',
-          [time, batchSize],
+          ['$time%', batchSize],
         );
       } else {
         //subsequent fetch request
@@ -47,13 +47,16 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
           'ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?'
           '',
-          [time, lastFetchedTransactionID, batchSize],
+          ['$time%', lastFetchedTransactionID, batchSize],
         );
       }
-      final queryList = queryData.map((transaction) => TransactionModel.fromQueryResult(transaction)).toList();
+      final queryList = queryData.map((transaction) => TransactionModel.fromQueryResult(transaction)).toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
 
       FLog.info(
-        text: 'Fetched ${queryList.length} transactions for [lastTransactionID: $lastFetchedTransactionID] from database',
+        text:
+            'Fetched ${queryData.toString()} ${queryList.length} transactions for [lastTransactionID: $lastFetchedTransactionID] from '
+            'database',
         className: CLASS_NAME,
         methodName: 'getAllTransactions()',
       );

@@ -135,7 +135,7 @@ class _LandingState extends State<Landing> {
   void _fetchAllTransactions(int index) {
     _changePage(1);
     final String currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
-    context.read<TransactionProvider>().getAllTransactions(lastTransactionID: '', timestamp: '$currentMonth%');
+    context.read<TransactionProvider>().getAllTransactions(lastTransactionID: '', timestamp: currentMonth);
   }
 
   Future<void> requestPermission(Permission permission) => permission.request();
