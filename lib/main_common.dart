@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/routing/navigation_service.dart';
@@ -32,7 +33,7 @@ void mainCommon(FlavorConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   initLogConfig();
-  runApp(MyApp(config: config));
+  runApp(DevicePreview(builder: (_) => MyApp(config: config), enabled: true));
 }
 
 class MyApp extends StatelessWidget {
@@ -45,6 +46,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [ChangeNotifierProvider<TransactionProvider>(create: (_) => di.locator<TransactionProvider>())],
       child: MaterialApp(
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
         title: config.appTitle,
         debugShowCheckedModeBanner: false,
         navigatorKey: di.locator.get<NavigationService>().navigatorKey,

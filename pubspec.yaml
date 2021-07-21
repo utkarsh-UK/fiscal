@@ -40,6 +40,8 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test:
+  flutter_launcher_icons: ^0.9.0
+  device_preview: ^0.7.4
 
   #tdd
   mockito: ^5.0.7

@@ -93,6 +93,7 @@ class _TransactionsSummaryState extends State<TransactionsSummary> {
       height: containerHeight * 0.3,
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       decoration: BoxDecoration(color: Color(0xFF680E74), borderRadius: BorderRadius.circular(14.0)),
+      alignment: Alignment.center,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
