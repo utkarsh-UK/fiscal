@@ -7,15 +7,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/provider.mocks.dart';
 import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
   late MockTransactionProviderData mockTransactionProviderData;
+  late ProviderMock providerMock;
 
   setUp(() {
     mockTransactionProvider = MockTransactionProvider();
     mockTransactionProviderData = MockTransactionProviderData();
+    providerMock = ProviderMock();
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });
 
@@ -41,16 +44,13 @@ void main() {
   ];
 
   testWidgets('show summary and recent transactions when app is loaded.', (WidgetTester tester) async {
-    when(mockTransactionProvider.status).thenReturn(TransactionStatus.COMPLETED);
-    mockTransactionProviderData.recentTransactions = _transactions;
-    when(mockTransactionProviderData.recentTransactions).thenReturn(_transactions);
-    when(mockTransactionProvider.data).thenReturn(mockTransactionProviderData);
-    when(mockTransactionProvider.data.recentTransactions).thenReturn(_transactions);
+    when(providerMock.status).thenReturn(TransactionStatus.COMPLETED);
+    when(providerMock.getRecentTransactions()).thenAnswer((_) => Future.value());
 
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider<TransactionProvider>(create: (_) => mockTransactionProvider),
+          ChangeNotifierProvider<TransactionProvider>(create: (_) => providerMock),
         ],
         child: MaterialApp(
             home: Home(

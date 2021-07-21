@@ -9,51 +9,29 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/provider.mocks.dart';
 import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
   late MockTransactionProviderData mockTransactionProviderData;
+  late ProviderMock providerMock;
 
   setUp(() {
     GetIt.instance.registerSingleton<NavigationService>(NavigationService());
     mockTransactionProvider = MockTransactionProvider();
     mockTransactionProviderData = MockTransactionProviderData();
+    providerMock = ProviderMock();
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });
 
-  final _transactions = [
-    Transaction(
-        transactionID: '1',
-        title: 'Invested in Stocks And Mutual Funds',
-        amount: 1765.6,
-        transactionType: TransactionType.INCOME,
-        categoryID: '12',
-        accountID: 2,
-        date: DateTime.now(),
-        description: 'Investment Description'),
-    Transaction(
-        transactionID: '2',
-        title: 'React Course',
-        amount: 2000.6,
-        transactionType: TransactionType.EXPENSE,
-        categoryID: '12',
-        accountID: 2,
-        date: DateTime.now(),
-        description: 'Bought Udemy Course with long descriptin'),
-  ];
-
   testWidgets('should render all transactions list.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.COMPLETED);
-    mockTransactionProviderData.allTransactions = _transactions;
-    when(mockTransactionProviderData.allTransactions).thenReturn(_transactions);
-    when(mockTransactionProvider.data).thenReturn(mockTransactionProviderData);
-    when(mockTransactionProvider.data.allTransactions).thenReturn(_transactions);
 
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider<TransactionProvider>(create: (_) => mockTransactionProvider),
+          ChangeNotifierProvider<TransactionProvider>(create: (_) => providerMock),
         ],
         child: MaterialApp(
           home: AllTransactions(),

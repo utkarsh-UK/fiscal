@@ -29,7 +29,7 @@ class _RecentTransactionsState extends State<RecentTransactions> {
           else if (provider.status == TransactionStatus.ERROR)
             return ErrorWidget(provider.error);
           else
-            return _buildList(provider.data.recentTransactions);
+            return _buildList(provider.providerData.recentTransactions);
         },
       );
 

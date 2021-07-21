@@ -5,23 +5,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/provider.mocks.dart';
 import 'transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
+  late ProviderMock providerMock;
 
   setUp(() {
     mockTransactionProvider = MockTransactionProvider();
+    providerMock = ProviderMock();
   });
 
   testWidgets('render transaction summary widget with correct values.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.SUMMARY_LOADED);
-    when(mockTransactionProvider.data.summary).thenReturn({'INCOME': '3300', 'EXPENSE': '1500'});
 
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider<TransactionProvider>(create: (_) => mockTransactionProvider),
+          ChangeNotifierProvider<TransactionProvider>(create: (_) => providerMock),
         ],
         child: MaterialApp(
           home: TransactionsSummary(),

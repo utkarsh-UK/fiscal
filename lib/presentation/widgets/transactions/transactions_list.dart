@@ -15,7 +15,7 @@ class TransactionsList extends StatelessWidget {
         else if (provider.status == TransactionStatus.ERROR)
           return ErrorWidget(provider.error);
         else if (provider.status == TransactionStatus.COMPLETED) {
-          final transactions = provider.data.allTransactions;
+          final transactions = provider.providerData.allTransactions;
 
           if (transactions.isEmpty) return Center(child: Text('No transactions'));
 

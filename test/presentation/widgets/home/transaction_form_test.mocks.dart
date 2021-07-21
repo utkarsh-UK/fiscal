@@ -30,12 +30,12 @@ class MockTransactionProvider extends _i1.Mock
   }
 
   @override
-  _i2.TransactionProviderData get data =>
+  _i2.TransactionProviderData get providerData =>
       (super.noSuchMethod(Invocation.getter(#data),
               returnValue: _FakeTransactionProviderData())
           as _i2.TransactionProviderData);
   @override
-  set data(_i2.TransactionProviderData? _data) =>
+  set providerData(_i2.TransactionProviderData? _data) =>
       super.noSuchMethod(Invocation.setter(#data, _data),
           returnValueForMissingStub: null);
   @override

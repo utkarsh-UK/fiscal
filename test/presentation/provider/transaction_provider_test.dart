@@ -56,7 +56,7 @@ void main() {
       //assert
       verify(mockGetRecentTransactions(NoParams()));
       expect(provider.status, TransactionStatus.COMPLETED);
-      expect(provider.data.recentTransactions, transactions);
+      expect(provider.providerData.recentTransactions, transactions);
     });
 
     test('should mark status ERROR and set error message when transactions are failed.', () async {
@@ -68,7 +68,7 @@ void main() {
       verify(mockGetRecentTransactions(NoParams()));
       expect(provider.status, TransactionStatus.ERROR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
-      expect(provider.data.recentTransactions, isEmpty);
+      expect(provider.providerData.recentTransactions, isEmpty);
     });
   });
 
@@ -86,7 +86,7 @@ void main() {
       verify(mockGetAllTransactions(
           Params(transactionParam: TransactionParam(time: date, lastFetchedTransactionID: lastTransactionID))));
       expect(provider.status, TransactionStatus.COMPLETED);
-      expect(provider.data.allTransactions, transactions);
+      expect(provider.providerData.allTransactions, transactions);
     });
 
     test('should mark status ERROR and set error message when transactions are failed.', () async {
@@ -99,7 +99,7 @@ void main() {
           Params(transactionParam: TransactionParam(time: date, lastFetchedTransactionID: lastTransactionID))));
       expect(provider.status, TransactionStatus.ERROR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
-      expect(provider.data.allTransactions, isEmpty);
+      expect(provider.providerData.allTransactions, isEmpty);
     });
   });
 

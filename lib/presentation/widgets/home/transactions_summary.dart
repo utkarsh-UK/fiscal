@@ -53,8 +53,8 @@ class _TransactionsSummaryState extends State<TransactionsSummary> {
               // else if (provider.status == TransactionStatus.COMPLETED)
               //   return _onAddComplete(child!);
               else {
-                double expenseAmount = double.parse('${provider.data.summary['EXPENSE'] ?? 0.0}');
-                double incomeAmount = double.parse('${provider.data.summary['INCOME'] ?? 0.0}');
+                double expenseAmount = double.parse('${provider.providerData.summary['EXPENSE'] ?? 0.0}');
+                double incomeAmount = double.parse('${provider.providerData.summary['INCOME'] ?? 0.0}');
                 double totalBalance = incomeAmount - expenseAmount;
 
                 return Column(

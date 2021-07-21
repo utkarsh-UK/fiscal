@@ -29,7 +29,9 @@ class TransactionProvider extends ChangeNotifier {
 
   TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
-  TransactionProviderData data = TransactionProviderData();
+  TransactionProviderData providerData = TransactionProviderData();
+
+  TransactionProviderData get data => providerData;
 
   TransactionStatus get status => _status;
 
@@ -54,7 +56,7 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'getRecentTransactions()',
       );
     }, (fetchedTransactions) {
-      data.recentTransactions = fetchedTransactions;
+      providerData.recentTransactions = fetchedTransactions;
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
 
@@ -71,7 +73,7 @@ class TransactionProvider extends ChangeNotifier {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAllTransactions()');
     FLog.info(text: 'Parameters: [$lastTransactionID], [$timestamp]', className: CLASS_NAME, methodName: 'getAllTransactions()');
 
-    if (lastTransactionID.isEmpty) data.allTransactions = [];
+    if (lastTransactionID.isEmpty) providerData.allTransactions = [];
     _status = TransactionStatus.LOADING;
     notifyListeners();
 
@@ -92,7 +94,7 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'getAllTransactions()',
       );
     }, (fetchedTransactions) {
-      data.allTransactions = [...data.allTransactions, ...fetchedTransactions['data']!];
+      providerData.allTransactions = [...providerData.allTransactions, ...fetchedTransactions['data']!];
       _status = TransactionStatus.COMPLETED;
       notifyListeners();
 
@@ -181,7 +183,7 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'getDailySummary()',
       );
     }, (fetchedSummary) {
-      data.summary = fetchedSummary;
+      providerData.summary = fetchedSummary;
       _status = TransactionStatus.SUMMARY_LOADED;
       notifyListeners();
 
