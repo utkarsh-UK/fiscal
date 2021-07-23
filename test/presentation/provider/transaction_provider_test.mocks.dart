@@ -7,7 +7,9 @@ import 'dart:async' as _i4;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:fiscal/core/error/failure.dart' as _i5;
 import 'package:fiscal/core/usecase/usecase.dart' as _i7;
+import 'package:fiscal/domain/enitities/core/category.dart' as _i12;
 import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
+import 'package:fiscal/domain/usecases/core/get_categories.dart' as _i11;
 import 'package:fiscal/domain/usecases/transactions/add_new_transaction.dart'
     as _i9;
 import 'package:fiscal/domain/usecases/transactions/get_all_transactions.dart'
@@ -98,4 +100,22 @@ class MockGetDailySummary extends _i1.Mock implements _i10.GetDailySummary {
                   Future<_i2.Either<_i5.Failure, Map<String, Object?>>>.value(
                       _FakeEither<_i5.Failure, Map<String, Object?>>()))
           as _i4.Future<_i2.Either<_i5.Failure, Map<String, Object?>>>);
+}
+
+/// A class which mocks [GetCategories].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetCategories extends _i1.Mock implements _i11.GetCategories {
+  MockGetCategories() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, List<_i12.Category>>> call(
+          _i7.Params? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue:
+                  Future<_i2.Either<_i5.Failure, List<_i12.Category>>>.value(
+                      _FakeEither<_i5.Failure, List<_i12.Category>>()))
+          as _i4.Future<_i2.Either<_i5.Failure, List<_i12.Category>>>);
 }

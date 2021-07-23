@@ -7,6 +7,7 @@ import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -179,6 +180,36 @@ void main() {
       final result = await repository.getDailySummary();
       //assert
       verify(mockTransactionRemoteDataSource.getDailySummary());
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
+
+  group('getCategories', () {
+    DateTime createdAt = DateTime(2021, 05, 12);
+    CategoryModel category =
+        CategoryModel(categoryID: 1, name: 'category', icon: 'category', color: 'color', createdAt: createdAt);
+
+    final categories = [category];
+    final type = TransactionType.EXPENSE;
+    final convertedType = 'EXPENSE';
+
+    test('should return all categories when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getCategories(convertedType)).thenAnswer((_) async => categories);
+      //act
+      final result = await repository.getCategories(type);
+      //assert
+      verify(mockTransactionRemoteDataSource.getCategories(convertedType));
+      expect(result, Right(categories));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getCategories(convertedType)).thenThrow(DataException());
+      //act
+      final result = await repository.getCategories(type);
+      //assert
+      verify(mockTransactionRemoteDataSource.getCategories(convertedType));
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });

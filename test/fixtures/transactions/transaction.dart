@@ -8,3 +8,12 @@ Map<String, Object?> transactionQuery = {
   "category_id": "category",
   "acc_id": 1
 };
+
+Map<String, Object?> categoryQuery = {
+  "category_id": 1,
+  "created_at": "2021-05-14T14:13:29.104",
+  "name": "category",
+  "icon": "category",
+  "color": 'color',
+  "transaction_type": "EXPENSE",
+};

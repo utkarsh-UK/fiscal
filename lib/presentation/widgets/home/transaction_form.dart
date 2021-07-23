@@ -1,5 +1,6 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +22,13 @@ class _TransactionFormState extends State<TransactionForm> {
   late TextEditingController _amountController;
   late TextEditingController _dateController;
 
+  List<Category> _categories = [];
+
   String _title = '';
   String _description = '';
   double _amount = 0.0;
   String _typeDropdownValue = 'EXPENSE';
+  int _categoryDropdownValue = -1;
   DateTime _transactionDate = DateTime.now();
   String formattedDate = '';
   TransactionType _transactionType = TransactionType.EXPENSE;
@@ -37,6 +41,11 @@ class _TransactionFormState extends State<TransactionForm> {
     _descriptionController = TextEditingController();
     _amountController = TextEditingController();
     _dateController = TextEditingController();
+
+    context.read<TransactionProvider>().getCategories(TransactionType.EXPENSE).then((cat) {
+      _categoryDropdownValue = cat.first.categoryID;
+      setState(() => _categories = cat);
+    });
   }
 
   @override
@@ -87,6 +96,7 @@ class _TransactionFormState extends State<TransactionForm> {
             SizedBox(
               width: size.width * 0.9,
               child: DropdownButtonFormField<String>(
+                key: ValueKey('type_dropdown'),
                 onChanged: (type) => setState(() => _typeDropdownValue = type ?? 'EXPENSE'),
                 value: _typeDropdownValue,
                 onSaved: (type) => _typeDropdownValue = type ?? 'EXPENSE',
@@ -149,21 +159,34 @@ class _TransactionFormState extends State<TransactionForm> {
             const SizedBox(height: 16.0),
             InputTitle(title: 'Category:'),
             const SizedBox(height: 12.0),
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+            SizedBox(
+              width: size.width * 0.9,
+              child: DropdownButtonFormField<int>(
+                key: ValueKey('categories_dropdown'),
+                onChanged: (cat) => setState(() => _categoryDropdownValue = cat ?? -1),
+                value: _categoryDropdownValue,
+                onSaved: (cat) => _categoryDropdownValue = cat ?? -1,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 ),
-                fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
-                filled: true,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                iconSize: 25.0,
+                style: FiscalTheme.inputText,
+                items: _categories
+                    .map((cat) => DropdownMenuItem<int>(
+                          key: ValueKey('cat_${cat.categoryID}'),
+                          value: cat.categoryID,
+                          child: Text(cat.name),
+                        ))
+                    .toList(),
               ),
-              keyboardType: TextInputType.text,
-              textCapitalization: TextCapitalization.words,
-              style: FiscalTheme.inputText,
             ),
             const SizedBox(height: 16.0),
             InputTitle(title: 'Account:'),
@@ -277,19 +300,20 @@ class _TransactionFormState extends State<TransactionForm> {
     _formKey.currentState!.save();
     _transactionType = Converters.convertTransactionTypeString(_typeDropdownValue);
 
-    final bool result = _validateInputs(_title, _transactionType, _amount, _description);
+    final bool result = _validateInputs(_title, _transactionType, _amount, _description, _categoryDropdownValue);
 
     if (!result) return;
 
     // call onSubmit
-    widget.onSubmit(_title, _transactionType, _amount, '', 0, _transactionDate, _description);
+    widget.onSubmit(_title, _transactionType, _amount, '$_categoryDropdownValue', 0, _transactionDate, _description);
   }
 
-  bool _validateInputs(String? title, TransactionType? type, double? amount, String? description) {
+  bool _validateInputs(String? title, TransactionType? type, double? amount, String? description, int category) {
     if (title == null || title.isEmpty) return false;
     if (type == null) return false;
     if (amount == null || amount <= 0.0) return false;
     if (description == null) return false;
+    if (category <= 0) return false;
 
     return true;
   }

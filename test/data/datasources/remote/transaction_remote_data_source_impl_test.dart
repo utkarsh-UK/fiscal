@@ -212,4 +212,33 @@ void main() {
       expect(() => call(), throwsA(TypeMatcher<DataException>()));
     });
   });
+
+  group('getCategories', () {
+    String query = 'SELECT * FROM ${CategoryTable.TABLE_NAME} WHERE ${CategoryTable.transactionType}=?';
+
+    List<Map<String, Object?>> queryResult = [categoryQuery];
+    DateTime createdAt = DateTime(2021, 05, 12);
+    CategoryModel category =
+        CategoryModel(categoryID: 1, name: 'category', icon: 'category', color: 'color', createdAt: createdAt);
+
+    final categories = [category];
+    final String type = 'EXPENSE';
+
+    test('should fetch recent transactions from database', () async {
+      // arrange
+      when(databaseMock.rawQuery(query, ['EXPENSE'])).thenAnswer((_) async => queryResult);
+      //act
+      final result = await dataSourceImpl.getCategories(type);
+      //assert
+      verify(databaseMock.rawQuery(query, ['EXPENSE']));
+      expect(result, categories);
+    });
+
+    test('should throw DataException when fetching data fails', () async {
+      //act
+      final call = dataSourceImpl.getCategories;
+      //assert
+      expect(() => call(type), throwsA(TypeMatcher<DataException>()));
+    });
+  });
 }

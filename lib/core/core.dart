@@ -1,6 +1,8 @@
 // utils
 /* tables */
 export './utils/tables/transaction_table.dart';
+export './utils/tables/category_table.dart';
+export './utils/tables/accounts_table.dart';
 
 // helpers
 /* utility*/

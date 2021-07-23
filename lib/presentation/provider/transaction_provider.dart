@@ -4,8 +4,9 @@ import 'package:fiscal/core/usecase/transaction_param.dart';
 import 'package:fiscal/core/usecase/usecase.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
+import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide Category;
 
 enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ADDED, SUMMARY_LOADED, ERROR, INITIAL }
 
@@ -16,16 +17,19 @@ class TransactionProvider extends ChangeNotifier {
   final GetRecentTransactions _getRecentTransactions;
   final AddNewTransaction _addNewTransaction;
   final GetDailySummary _getDailySummary;
+  final GetCategories _getCategories;
 
   TransactionProvider({
     required GetAllTransactions getAllTransactions,
     required GetRecentTransactions getRecentTransactions,
     required AddNewTransaction addNewTransaction,
     required GetDailySummary getDailySummary,
+    required GetCategories getCategories,
   })  : _getAllTransactions = getAllTransactions,
         _getRecentTransactions = getRecentTransactions,
         _addNewTransaction = addNewTransaction,
-        _getDailySummary = getDailySummary;
+        _getDailySummary = getDailySummary,
+        _getCategories = getCategories;
 
   TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
@@ -194,6 +198,35 @@ class TransactionProvider extends ChangeNotifier {
       );
     });
     FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
+  }
+
+  Future<List<Category>> getCategories(TransactionType type) async {
+    late List<Category> categories;
+
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getCategories()');
+
+    final failureOrCategories = await _getCategories(Params(transactionParam: TransactionParam(transactionType: type)));
+
+    failureOrCategories.fold((failure) {
+      categories = [];
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'getCategories()',
+      );
+    }, (fetchedCategories) {
+      categories = fetchedCategories;
+
+      FLog.info(
+        text: 'Fetched categories and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'getCategories()',
+      );
+    });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getCategories()');
+
+    return categories;
   }
 }
 

@@ -1,10 +1,15 @@
 import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/error/exceptions.dart';
+import 'package:fiscal/core/utils/tables/category_table.dart';
 import 'package:fiscal/core/utils/tables/transaction_table.dart';
 import 'package:fiscal/data/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class TransactionRemoteDataSource {
+  /// Fetches 10 most recent transactions.
+  ///
+  /// Method calls [LocalDataSource] for cached transactions. If
+  /// no cache present, then gets the data from [RemoteDataSource].
   Future<List<TransactionModel>> getRecentTransactions();
 
   /// Fetches paginated transactions for given [batchSize].
@@ -14,9 +19,15 @@ abstract class TransactionRemoteDataSource {
   Future<Map<String, List<TransactionModel>>> getAllTransactions(String lastFetchedTransactionID, String time,
       [int batchSize = 10]);
 
+  /// Adds new transaction to database and cached this [transaction]
+  /// into local cache.
   Future<String> addNewTransaction(TransactionModel transaction);
 
+  /// Fetch monthly summary for current month.
   Future<Map<String, Object?>> getDailySummary();
+
+  /// Fetches all categories for [type] transaction.
+  Future<List<CategoryModel>> getCategories(String type);
 }
 
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
@@ -206,6 +217,38 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         text: 'Exception occurred: Might be due to wrong transaction ID or bad query',
         className: CLASS_NAME,
         methodName: 'getDailySummary()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getCategories(String type) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getCategories()');
+
+    try {
+      final queryData = await db.rawQuery(
+        'SELECT * FROM ${CategoryTable.TABLE_NAME} WHERE ${CategoryTable.transactionType}=?',
+        [type],
+      );
+
+      final queryList = queryData.map((category) => CategoryModel.fromQueryResult(category)).toList();
+
+      FLog.info(
+        text: 'Fetched ${queryList.length} categories from database',
+        className: CLASS_NAME,
+        methodName: 'getCategories()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getCategories()');
+
+      return queryList;
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred: $type',
+        className: CLASS_NAME,
+        methodName: 'getCategories()',
         exception: e,
         stacktrace: trace,
       );

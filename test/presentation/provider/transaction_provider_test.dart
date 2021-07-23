@@ -5,6 +5,7 @@ import 'package:fiscal/core/usecase/usecase.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/core/utils/static/messages.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
+import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,25 +14,29 @@ import 'package:mockito/mockito.dart';
 
 import 'transaction_provider_test.mocks.dart';
 
-@GenerateMocks([GetAllTransactions, GetRecentTransactions, AddNewTransaction, GetDailySummary])
+@GenerateMocks([GetAllTransactions, GetRecentTransactions, AddNewTransaction, GetDailySummary, GetCategories])
 void main() {
   late TransactionProvider provider;
   late MockGetAllTransactions mockGetAllTransactions;
   late MockGetRecentTransactions mockGetRecentTransactions;
   late MockAddNewTransaction mockAddNewTransaction;
   late MockGetDailySummary mockGetDailySummary;
+  late MockGetCategories mockGetCategories;
 
   setUp(() {
     mockGetAllTransactions = MockGetAllTransactions();
     mockGetRecentTransactions = MockGetRecentTransactions();
     mockAddNewTransaction = MockAddNewTransaction();
     mockGetDailySummary = MockGetDailySummary();
+    mockGetCategories = MockGetCategories();
 
     provider = TransactionProvider(
-        getAllTransactions: mockGetAllTransactions,
-        getRecentTransactions: mockGetRecentTransactions,
-        addNewTransaction: mockAddNewTransaction,
-        getDailySummary: mockGetDailySummary);
+      getAllTransactions: mockGetAllTransactions,
+      getRecentTransactions: mockGetRecentTransactions,
+      addNewTransaction: mockAddNewTransaction,
+      getDailySummary: mockGetDailySummary,
+      getCategories: mockGetCategories,
+    );
   });
 
   DateTime transactionDate = DateTime(2021, 05, 12);
@@ -153,6 +158,7 @@ void main() {
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
     });
   });
+
   group('getDailySummary', () {
     Map<String, Object?> summary = {'total': 100.00, 'income': 50.04, 'expense': 56.23};
 
@@ -175,6 +181,34 @@ void main() {
       verify(mockGetDailySummary(NoParams()));
       expect(provider.status, TransactionStatus.ERROR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
+    });
+  });
+
+  group('getCategories', () {
+    DateTime createdAt = DateTime(2021, 05, 12);
+    Category category = Category(categoryID: 1, name: 'category', icon: 'category', color: 'color', createdAt: createdAt);
+
+    final categories = [category];
+    final type = TransactionType.EXPENSE;
+
+    test('should fetch categories when usecase call is successful.', () async {
+      // arrange
+      when(mockGetCategories(any)).thenAnswer((_) async => Right(categories));
+      //act
+      final result = await provider.getCategories(type);
+      //assert
+      verify(mockGetCategories(Params(transactionParam: TransactionParam(transactionType: type))));
+      expect(result, categories);
+    });
+
+    test('should return empty list when fetching categories is failed.', () async {
+      // arrange
+      when(mockGetCategories(any)).thenAnswer((_) async => Left(DataFailure()));
+      //act
+      final result = await provider.getCategories(type);
+      //assert
+      verify(mockGetCategories(Params(transactionParam: TransactionParam(transactionType: type))));
+      expect(result, isEmpty);
     });
   });
 }

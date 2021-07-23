@@ -5,9 +5,10 @@
 import 'dart:async' as _i3;
 
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart'
-    as _i5;
+    as _i6;
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart'
     as _i2;
+import 'package:fiscal/data/models/core/category_model.dart' as _i5;
 import 'package:fiscal/data/models/transactions/transaction_model.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -52,13 +53,19 @@ class MockTransactionRemoteDataSource extends _i1.Mock
           Invocation.method(#getDailySummary, []),
           returnValue: Future<Map<String, Object?>>.value(<String, Object?>{}))
       as _i3.Future<Map<String, Object?>>);
+  @override
+  _i3.Future<List<_i5.CategoryModel>> getCategories(String? type) =>
+      (super.noSuchMethod(Invocation.method(#getCategories, [type]),
+              returnValue:
+                  Future<List<_i5.CategoryModel>>.value(<_i5.CategoryModel>[]))
+          as _i3.Future<List<_i5.CategoryModel>>);
 }
 
 /// A class which mocks [TransactionLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionLocalDataSource extends _i1.Mock
-    implements _i5.TransactionLocalDataSource {
+    implements _i6.TransactionLocalDataSource {
   MockTransactionLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }

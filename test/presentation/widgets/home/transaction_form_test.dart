@@ -1,4 +1,5 @@
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_form.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,14 @@ void main() {
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });
 
+  DateTime createdAt = DateTime(2021, 05, 12);
+  Category category = Category(categoryID: 1, name: 'category', icon: 'category', color: 'color', createdAt: createdAt);
+
+  final categories = [category];
+
   testWidgets('render transaction form with correct fields.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.INITIAL);
+    when(mockTransactionProvider.getCategories(TransactionType.EXPENSE)).thenAnswer((_) async => categories);
 
     await tester.pumpWidget(
       MediaQuery(
@@ -45,7 +52,15 @@ void main() {
 
     //find inputs
     final inputFields = find.byType(TextField, skipOffstage: false);
-    expect(inputFields, findsNWidgets(6));
+    expect(inputFields, findsNWidgets(5));
+
+    //find type dropdown
+    final typeDropdown = find.byKey(ValueKey('type_dropdown'));
+    expect(typeDropdown, findsOneWidget);
+
+    //find category dropdown
+    final categoryDropdown = find.byKey(ValueKey('categories_dropdown'));
+    expect(categoryDropdown, findsOneWidget);
 
     //find save btn
     final save = find.byKey(ValueKey('save'));
@@ -54,6 +69,7 @@ void main() {
 
   testWidgets('should render progress indicator when state is LOADING.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.LOADING);
+    when(mockTransactionProvider.getCategories(TransactionType.EXPENSE)).thenAnswer((_) async => categories);
 
     await tester.pumpWidget(
       MediaQuery(
@@ -79,7 +95,7 @@ void main() {
 
     //find inputs
     final inputFields = find.byType(TextField, skipOffstage: false);
-    expect(inputFields, findsNWidgets(6));
+    expect(inputFields, findsNWidgets(5));
 
     //find progress indicator
     final progress = find.byKey(ValueKey('progress'));

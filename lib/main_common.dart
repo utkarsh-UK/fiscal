@@ -33,7 +33,7 @@ void mainCommon(FlavorConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   initLogConfig();
-  runApp(DevicePreview(builder: (_) => MyApp(config: config), enabled: true));
+  runApp(DevicePreview(builder: (_) => MyApp(config: config), enabled: false));
 }
 
 class MyApp extends StatelessWidget {

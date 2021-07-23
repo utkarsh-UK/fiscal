@@ -10,6 +10,7 @@ class TransactionTable {
   static const String transaction_type = 'transaction_type';
   static const String category_id = 'category_id';
   static const String acc_id = 'acc_id';
+
   static const String income_value = 'INCOME';
   static const String expense_value = 'EXPENSE';
 }

@@ -75,8 +75,8 @@ class TransactionModel extends Transaction {
         TransactionTable.description: model.description,
         TransactionTable.amount: model.amount,
         TransactionTable.transaction_type: Converters.convertTransactionTypeEnum(model.transactionType),
-        // TransactionTable.category_id: model.categoryID,
-        // TransactionTable.acc_id: model.accountID,
+        TransactionTable.category_id: num.parse('${model.categoryID}').toInt(),
+        TransactionTable.acc_id: model.accountID,
         TransactionTable.date: model.date.toIso8601String(),
       };
 

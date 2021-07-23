@@ -2,9 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/error/exceptions.dart';
 import 'package:fiscal/core/error/failure.dart';
+import 'package:fiscal/core/utils/helpers/converters.dart';
+import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/models/models.dart';
+import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/domain/repositories/transaction_repository.dart';
 
@@ -111,6 +114,28 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return Right(summary);
     } on DataException catch (d) {
       FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getDailySummary()');
+      return Left(DataFailure(message: d.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> getCategories(TransactionType type) async {
+    try {
+      FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getCategories()');
+
+      final convertedType = Converters.convertTransactionTypeEnum(type);
+      final categories = await remoteDataSource.getCategories(convertedType);
+
+      FLog.info(
+        text: 'Fetched ${categories.length} from database for $type.',
+        className: CLASS_NAME,
+        methodName: 'getCategories()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getCategories()');
+
+      return Right(categories);
+    } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getCategories()');
       return Left(DataFailure(message: d.message));
     }
   }

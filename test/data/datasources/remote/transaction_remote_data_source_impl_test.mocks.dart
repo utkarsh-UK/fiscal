@@ -22,37 +22,42 @@ class _FakeBatch extends _i1.Fake implements _i2.Batch {}
 /// See the documentation for Mockito's code generation for more information.
 class MockDatabase extends _i1.Mock implements _i2.Database {
   @override
-  String get path => (super.noSuchMethod(Invocation.getter(#path), returnValue: '') as String);
-
+  String get path =>
+      (super.noSuchMethod(Invocation.getter(#path), returnValue: '') as String);
   @override
-  bool get isOpen => (super.noSuchMethod(Invocation.getter(#isOpen), returnValue: false) as bool);
-
+  bool get isOpen =>
+      (super.noSuchMethod(Invocation.getter(#isOpen), returnValue: false)
+          as bool);
   @override
   _i3.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
-      returnValue: Future<void>.value(null), returnValueForMissingStub: Future.value()) as _i3.Future<void>);
-
+      returnValue: Future<void>.value(null),
+      returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
-  _i3.Future<T> transaction<T>(_i3.Future<T> Function(_i2.Transaction)? action, {bool? exclusive}) =>
-      (super.noSuchMethod(Invocation.method(#transaction, [action], {#exclusive: exclusive}), returnValue: Future<T>.value(null))
-          as _i3.Future<T>);
-
+  _i3.Future<T> transaction<T>(_i3.Future<T> Function(_i2.Transaction)? action,
+          {bool? exclusive}) =>
+      (super.noSuchMethod(
+          Invocation.method(#transaction, [action], {#exclusive: exclusive}),
+          returnValue: Future<T>.value(null)) as _i3.Future<T>);
   @override
   _i3.Future<int> getVersion() =>
-      (super.noSuchMethod(Invocation.method(#getVersion, []), returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
+      (super.noSuchMethod(Invocation.method(#getVersion, []),
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
-  _i3.Future<void> setVersion(int? version) => (super.noSuchMethod(Invocation.method(#setVersion, [version]),
-      returnValue: Future<void>.value(null), returnValueForMissingStub: Future.value()) as _i3.Future<void>);
-
+  _i3.Future<void> setVersion(int? version) =>
+      (super.noSuchMethod(Invocation.method(#setVersion, [version]),
+          returnValue: Future<void>.value(null),
+          returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
   _i3.Future<T> devInvokeMethod<T>(String? method, [dynamic arguments]) =>
-      (super.noSuchMethod(Invocation.method(#devInvokeMethod, [method, arguments]), returnValue: Future<T>.value(null))
-          as _i3.Future<T>);
-
+      (super.noSuchMethod(
+          Invocation.method(#devInvokeMethod, [method, arguments]),
+          returnValue: Future<T>.value(null)) as _i3.Future<T>);
   @override
-  _i3.Future<T> devInvokeSqlMethod<T>(String? method, String? sql, [List<Object?>? arguments]) =>
-      (super.noSuchMethod(Invocation.method(#devInvokeSqlMethod, [method, sql, arguments]), returnValue: Future<T>.value(null))
-          as _i3.Future<T>);
+  _i3.Future<T> devInvokeSqlMethod<T>(String? method, String? sql,
+          [List<Object?>? arguments]) =>
+      (super.noSuchMethod(
+          Invocation.method(#devInvokeSqlMethod, [method, sql, arguments]),
+          returnValue: Future<T>.value(null)) as _i3.Future<T>);
 }
 
 /// A class which mocks [DatabaseExecutor].
@@ -62,19 +67,24 @@ class MockDatabaseExecutor extends _i1.Mock implements _i2.DatabaseExecutor {
   @override
   _i3.Future<void> execute(String? sql, [List<Object?>? arguments]) =>
       (super.noSuchMethod(Invocation.method(#execute, [sql, arguments]),
-          returnValue: Future<void>.value(null), returnValueForMissingStub: Future.value()) as _i3.Future<void>);
-
+          returnValue: Future<void>.value(null),
+          returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
   _i3.Future<int> rawInsert(String? sql, [List<Object?>? arguments]) =>
-      (super.noSuchMethod(Invocation.method(#rawInsert, [sql, arguments]), returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
+      (super.noSuchMethod(Invocation.method(#rawInsert, [sql, arguments]),
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
   _i3.Future<int> insert(String? table, Map<String, Object?>? values,
           {String? nullColumnHack, _i4.ConflictAlgorithm? conflictAlgorithm}) =>
       (super.noSuchMethod(
-          Invocation.method(#insert, [table, values], {#nullColumnHack: nullColumnHack, #conflictAlgorithm: conflictAlgorithm}),
+          Invocation.method(#insert, [
+            table,
+            values
+          ], {
+            #nullColumnHack: nullColumnHack,
+            #conflictAlgorithm: conflictAlgorithm
+          }),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
   @override
   _i3.Future<List<Map<String, Object?>>> query(String? table,
           {bool? distinct,
@@ -100,36 +110,47 @@ class MockDatabaseExecutor extends _i1.Mock implements _i2.DatabaseExecutor {
                 #limit: limit,
                 #offset: offset
               }),
-              returnValue: Future<List<Map<String, Object?>>>.value(<Map<String, Object?>>[]))
+              returnValue: Future<List<Map<String, Object?>>>.value(
+                  <Map<String, Object?>>[]))
           as _i3.Future<List<Map<String, Object?>>>);
-
   @override
-  _i3.Future<List<Map<String, Object?>>> rawQuery(String? sql, [List<Object?>? arguments]) => (super.noSuchMethod(
-      Invocation.method(#rawQuery, [sql, arguments]),
-      returnValueForMissingStub: null,
-      returnValue: Future<List<Map<String, Object?>>>.value(<Map<String, Object?>>[])) as _i3.Future<List<Map<String, Object?>>>);
-
+  _i3.Future<List<Map<String, Object?>>> rawQuery(String? sql,
+          [List<Object?>? arguments]) =>
+      (super.noSuchMethod(Invocation.method(#rawQuery, [sql, arguments]),
+              returnValue: Future<List<Map<String, Object?>>>.value(
+                  <Map<String, Object?>>[]))
+          as _i3.Future<List<Map<String, Object?>>>);
   @override
   _i3.Future<int> rawUpdate(String? sql, [List<Object?>? arguments]) =>
-      (super.noSuchMethod(Invocation.method(#rawUpdate, [sql, arguments]), returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
+      (super.noSuchMethod(Invocation.method(#rawUpdate, [sql, arguments]),
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
   @override
   _i3.Future<int> update(String? table, Map<String, Object?>? values,
-          {String? where, List<Object?>? whereArgs, _i4.ConflictAlgorithm? conflictAlgorithm}) =>
+          {String? where,
+          List<Object?>? whereArgs,
+          _i4.ConflictAlgorithm? conflictAlgorithm}) =>
       (super.noSuchMethod(
-          Invocation.method(
-              #update, [table, values], {#where: where, #whereArgs: whereArgs, #conflictAlgorithm: conflictAlgorithm}),
+          Invocation.method(#update, [
+            table,
+            values
+          ], {
+            #where: where,
+            #whereArgs: whereArgs,
+            #conflictAlgorithm: conflictAlgorithm
+          }),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
   @override
   _i3.Future<int> rawDelete(String? sql, [List<Object?>? arguments]) =>
-      (super.noSuchMethod(Invocation.method(#rawDelete, [sql, arguments]), returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
-  @override
-  _i3.Future<int> delete(String? table, {String? where, List<Object?>? whereArgs}) =>
-      (super.noSuchMethod(Invocation.method(#delete, [table], {#where: where, #whereArgs: whereArgs}),
+      (super.noSuchMethod(Invocation.method(#rawDelete, [sql, arguments]),
           returnValue: Future<int>.value(0)) as _i3.Future<int>);
-
   @override
-  _i2.Batch batch() => (super.noSuchMethod(Invocation.method(#batch, []), returnValue: _FakeBatch()) as _i2.Batch);
+  _i3.Future<int> delete(String? table,
+          {String? where, List<Object?>? whereArgs}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #delete, [table], {#where: where, #whereArgs: whereArgs}),
+          returnValue: Future<int>.value(0)) as _i3.Future<int>);
+  @override
+  _i2.Batch batch() => (super.noSuchMethod(Invocation.method(#batch, []),
+      returnValue: _FakeBatch()) as _i2.Batch);
 }

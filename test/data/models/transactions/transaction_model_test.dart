@@ -3,7 +3,7 @@ import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../fixtures/transactions/transaction.dart';
+import '../../../fixtures/transactions/transaction.dart';
 
 void main() {
   late TransactionModel model;
@@ -60,6 +60,7 @@ void main() {
     final result = TransactionModel.toQuery(model);
     //assert
     final expectedMap = transactionQuery;
+    expectedMap.remove('transaction_id');
     expect(result, expectedMap);
   });
 

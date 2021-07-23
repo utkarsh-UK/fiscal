@@ -1,4 +1,5 @@
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:mockito/mockito.dart';
@@ -100,6 +101,15 @@ class ProviderMock extends Mock implements TransactionProvider {
       Invocation.method(#getRecentTransactions, null),
       returnValue: Future.value(),
       returnValueForMissingStub: Future.value(),
+    );
+  }
+
+  @override
+  Future<List<Category>> getCategories(TransactionType type) {
+    return super.noSuchMethod(
+      Invocation.method(#getCategories, null),
+      returnValue: Future.value(<Category>[]),
+      returnValueForMissingStub: Future.value(<Category>[]),
     );
   }
 }

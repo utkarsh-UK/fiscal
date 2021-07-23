@@ -13,6 +13,7 @@ void main() {
     final addTransactionScreen = find.text('Add Transaction');
     final titleInputField = find.byValueKey('trans_title');
     final amountInputField = find.byValueKey('trans_amount');
+    final catDropdownInputField = find.byValueKey('categories_dropdown');
     final dateInputField = find.byValueKey('date_picker');
     final dateValue = find.text('10');
     final okButton = find.text('OK');
@@ -78,6 +79,10 @@ void main() {
         //enter amount
         await driver.tap(amountInputField);
         await driver.enterText('125.50');
+
+        //select category
+        await driver.tap(catDropdownInputField);
+        await driver.tap(find.text('Food'));
 
         //enter date
         await driver.tap(dateInputField);

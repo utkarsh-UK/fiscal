@@ -4,6 +4,7 @@ import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.da
 import 'package:fiscal/data/db/database.dart';
 import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
 import 'package:fiscal/domain/repositories/repositories.dart';
+import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +21,7 @@ Future<void> init() async {
       getRecentTransactions: locator(),
       addNewTransaction: locator(),
       getDailySummary: locator(),
+      getCategories: locator(),
     ),
   );
 
@@ -28,6 +30,7 @@ Future<void> init() async {
   locator.registerFactory(() => GetRecentTransactions(locator()));
   locator.registerFactory(() => AddNewTransaction(locator()));
   locator.registerFactory(() => GetDailySummary(locator()));
+  locator.registerFactory(() => GetCategories(locator()));
 
   // repository
   locator.registerFactory<TransactionRepository>(
