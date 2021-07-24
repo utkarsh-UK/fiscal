@@ -75,9 +75,11 @@ class MockTransactionProvider extends _i1.Mock
           String? description = r'',
           double? amount,
           _i4.TransactionType? type,
-          String? categoryID,
+          int? categoryID,
           int? accountID,
-          DateTime? date}) =>
+          DateTime? date,
+          String? icon,
+          String? color}) =>
       (super.noSuchMethod(
           Invocation.method(#addNewTransaction, [], {
             #title: title,
@@ -86,7 +88,9 @@ class MockTransactionProvider extends _i1.Mock
             #type: type,
             #categoryID: categoryID,
             #accountID: accountID,
-            #date: date
+            #date: date,
+            #icon: icon,
+            #color: color
           }),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
@@ -143,14 +147,6 @@ class MockTransactionProviderData extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#allTransactions, _allTransactions),
           returnValueForMissingStub: null);
   @override
-  List<_i5.Category> get allCategories =>
-      (super.noSuchMethod(Invocation.getter(#allCategories),
-          returnValue: <_i5.Category>[]) as List<_i5.Category>);
-  @override
-  set allCategories(List<_i5.Category>? _allCategories) =>
-      super.noSuchMethod(Invocation.setter(#allCategories, _allCategories),
-          returnValueForMissingStub: null);
-  @override
   Map<String, Object?> get summary =>
       (super.noSuchMethod(Invocation.getter(#summary),
           returnValue: <String, Object?>{}) as Map<String, Object?>);
@@ -165,10 +161,6 @@ class MockTransactionProviderData extends _i1.Mock
   @override
   set setAllTransactions(List<_i7.Transaction>? all) =>
       super.noSuchMethod(Invocation.setter(#setAllTransactions, all),
-          returnValueForMissingStub: null);
-  @override
-  set setAllCategories(List<_i5.Category>? all) =>
-      super.noSuchMethod(Invocation.setter(#setAllCategories, all),
           returnValueForMissingStub: null);
   @override
   set setRecentTransaction(Map<String, Object?>? data) =>

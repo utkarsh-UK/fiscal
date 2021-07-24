@@ -10,6 +10,8 @@ class TransactionItem extends StatelessWidget {
   final TransactionType transactionType;
   final DateTime transactionDate;
   final double amount;
+  final String iconName;
+  final Color iconColor;
 
   const TransactionItem({
     Key? key,
@@ -18,6 +20,8 @@ class TransactionItem extends StatelessWidget {
     required this.transactionType,
     required this.transactionDate,
     required this.amount,
+    this.iconName = 'others',
+    this.iconColor = const Color(0xFF000000),
   }) : super(key: key);
 
   @override
@@ -27,8 +31,10 @@ class TransactionItem extends StatelessWidget {
     final bool isIncome = transactionType == TransactionType.INCOME;
     String desc = '';
 
-    if(description == null) desc = '';
-    else desc = description!.isNotEmpty ? description! : 'N/A';
+    if (description == null)
+      desc = '';
+    else
+      desc = description!.isNotEmpty ? description! : 'N/A';
 
     return Container(
       width: containerSize,
@@ -51,7 +57,7 @@ class TransactionItem extends StatelessWidget {
                   height: 60.0,
                   width: 5.0,
                   decoration: BoxDecoration(
-                    color: FiscalTheme.SECONDARY_COLOR,
+                    color: iconColor,
                     borderRadius: BorderRadius.circular(6.0),
                   ),
                 ),
@@ -68,7 +74,7 @@ class TransactionItem extends StatelessWidget {
                       BoxShadow(color: Colors.grey[400]!, blurRadius: 6.0),
                     ],
                   ),
-                  child: SvgPicture.asset(FiscalAssets.INVESTMENT_ICON, width: 10.0),
+                  child: SvgPicture.asset('${FiscalAssets.ICONS_PATH}$iconName.svg', width: 10.0),
                 ),
               ],
             ),

@@ -8,28 +8,42 @@ import '../../../fixtures/transactions/transaction.dart';
 void main() {
   late TransactionModel model;
   late TransactionModel modelWithIntID;
+  late TransactionModel modelWithCategory;
   late DateTime date;
 
   setUp(() {
     date = DateTime(2021, 05, 14, 14, 13, 29, 104);
     model = TransactionModel(
-        transactionID: 'id',
-        title: 'title',
-        amount: 10.10,
-        transactionType: TransactionType.INCOME,
-        categoryID: 'category',
-        accountID: 1,
-        date: date,
-        description: 'desc');
+      transactionID: 'id',
+      title: 'title',
+      amount: 10.10,
+      transactionType: TransactionType.INCOME,
+      categoryID: 1,
+      accountID: 1,
+      date: date,
+      description: 'desc',
+      category: CategoryModel(categoryID: 1, color: 'color', icon: 'icon', name: '', createdAt: DateTime.now()),
+    );
     modelWithIntID = TransactionModel(
         transactionID: '1',
         title: 'title',
         amount: 10.10,
         transactionType: TransactionType.INCOME,
-        categoryID: 'category',
+        categoryID: 1,
         accountID: 1,
         date: date,
         description: 'desc');
+    modelWithCategory = TransactionModel(
+      transactionID: '1',
+      title: 'title',
+      amount: 10.10,
+      transactionType: TransactionType.INCOME,
+      categoryID: 1,
+      accountID: 1,
+      date: date,
+      description: 'desc',
+      category: CategoryModel(categoryID: 1, color: 'color', icon: 'icon', name: '', createdAt: DateTime.now()),
+    );
   });
 
   test('should be a subclass of Transaction entity', () async {
@@ -61,6 +75,8 @@ void main() {
     //assert
     final expectedMap = transactionQuery;
     expectedMap.remove('transaction_id');
+    expectedMap.remove('icon');
+    expectedMap.remove('color');
     expect(result, expectedMap);
   });
 
@@ -75,8 +91,10 @@ void main() {
       "description": "desc",
       "amount": 10.10,
       "transaction_type": "INCOME",
-      "category_id": "category",
-      "acc_id": 1
+      "category_id": 1,
+      "acc_id": 1,
+      'icon': 'icon',
+      'color': 'color'
     };
     expect(result, expectedMap);
   });
@@ -88,7 +106,7 @@ void main() {
       title: 'title',
       amount: 10.10,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID: 1,
       accountID: 1,
       date: date,
       description: 'desc',
@@ -106,7 +124,7 @@ void main() {
       title: 'title',
       amount: 10.10,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID: 1,
       accountID: 1,
       date: date,
       description: 'desc',
@@ -115,5 +133,25 @@ void main() {
     final result = TransactionModel.fromTransaction(transaction, id: '1');
     //assert
     expect(result, modelWithIntID);
+  });
+
+  test('should return valid model with category when the data is valid', () async {
+    // arrange
+    Map<String, Object?> modelQuery = {
+      "transaction_id": "1",
+      "date": "2021-05-14T14:13:29.104",
+      "title": "title",
+      "description": "desc",
+      "amount": 10.10,
+      "transaction_type": "INCOME",
+      "category_id": 1,
+      "acc_id": 1,
+      'icon': 'icon',
+      'color': 'color'
+    };
+    //act
+    final result = TransactionModel.fromQueryResult(modelQuery);
+    //assert
+    expect(result, modelWithCategory);
   });
 }

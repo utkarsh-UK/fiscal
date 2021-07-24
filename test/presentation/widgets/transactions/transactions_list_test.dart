@@ -13,13 +13,13 @@ import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
-  late MockTransactionProviderData mockTransactionProviderData;
+  // late MockTransactionProviderData mockTransactionProviderData;
   late ProviderMock providerMock;
 
   setUp(() {
     GetIt.instance.registerSingleton<NavigationService>(NavigationService());
     mockTransactionProvider = MockTransactionProvider();
-    mockTransactionProviderData = MockTransactionProviderData();
+    // mockTransactionProviderData = MockTransactionProviderData();
     providerMock = ProviderMock();
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });

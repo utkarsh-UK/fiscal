@@ -13,12 +13,12 @@ import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
-  late MockTransactionProviderData mockTransactionProviderData;
+  // late MockTransactionProviderData mockTransactionProviderData;
   late ProviderMock providerMock;
 
   setUp(() {
     mockTransactionProvider = MockTransactionProvider();
-    mockTransactionProviderData = MockTransactionProviderData();
+    // mockTransactionProviderData = MockTransactionProviderData();
     providerMock = ProviderMock();
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });
@@ -29,7 +29,7 @@ void main() {
         title: 'Invested in Stocks And Mutual Funds',
         amount: 1765.6,
         transactionType: TransactionType.INCOME,
-        categoryID: '12',
+        categoryID:12,
         accountID: 2,
         date: DateTime.now(),
         description: 'Investment Description'),
@@ -38,7 +38,7 @@ void main() {
         title: 'React Course',
         amount: 2000.6,
         transactionType: TransactionType.EXPENSE,
-        categoryID: '12',
+        categoryID: 12,
         accountID: 2,
         date: DateTime.now(),
         description: 'Bought Udemy Course with long descriptin'),

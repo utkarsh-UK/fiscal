@@ -11,7 +11,6 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../fixtures/transactions/transaction.dart';
 import 'database.mocks.dart';
-import 'transaction_remote_data_source_impl_test.mocks.dart';
 
 @GenerateMocks([], customMocks: [
   MockSpec<Database>(returnNullOnMissingStub: true),
@@ -19,11 +18,10 @@ import 'transaction_remote_data_source_impl_test.mocks.dart';
 ])
 void main() {
   late TransactionRemoteDataSourceImpl dataSourceImpl;
-  late MockDatabase mockDatabase;
+  // late MockDatabase mockDatabase;
   late DatabaseMock databaseMock;
 
   setUp(() {
-    mockDatabase = MockDatabase();
     databaseMock = DatabaseMock();
     dataSourceImpl = TransactionRemoteDataSourceImpl(db: databaseMock);
   });
@@ -37,32 +35,41 @@ void main() {
     final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
     final transactions = [
       TransactionModel(
-          transactionID: 'id',
-          title: 'title',
-          amount: 10.10,
-          transactionType: TransactionType.INCOME,
-          categoryID: 'category',
-          accountID: 1,
-          date: date,
-          description: 'desc')
+        transactionID: 'id',
+        title: 'title',
+        amount: 10.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 1,
+        accountID: 1,
+        date: date,
+        description: 'desc',
+        category: CategoryModel(categoryID: 1, name: '', color: 'color', icon: 'icon', createdAt: DateTime.now()),
+      )
     ];
 
     test('should fetch all transactions for initial load and specified batch size', () async {
       // arrange
-      String query = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? ORDER BY'
-          ' ${TransactionTable.id} DESC LIMIT ?';
-      when(databaseMock.rawQuery(query, ['', time, batchSize])).thenAnswer((_) async => queryResult);
+      String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'FROM ${TransactionTable.TABLE_NAME} t '
+          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'WHERE ${TransactionTable.date} like ? '
+          'ORDER BY '
+          '${TransactionTable.id} DESC LIMIT ?';
+      when(databaseMock.rawQuery(query, [time, batchSize])).thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.getAllTransactions('', time);
       //assert
-      verify(databaseMock.rawQuery(query, [batchSize]));
+      verify(databaseMock.rawQuery(query, [time, batchSize]));
       expect(result, {'data': transactions});
     });
 
     test('should fetch paginated transactions for subsequent load and specified batch size', () async {
       // arrange
-      String paginatedQuery = 'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? and  '
-          '${TransactionTable.id} < ? ORDER BY'
+      String paginatedQuery = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'FROM ${TransactionTable.TABLE_NAME} t '
+          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
+          'ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
       when(databaseMock.rawQuery(paginatedQuery, [time, lastFetchedTransactionID, batchSize]))
           .thenAnswer((_) async => queryResult);
@@ -82,8 +89,10 @@ void main() {
   });
 
   group('getRecentTransactions', () {
-    String query = 'SELECT * FROM ${TransactionTable.TABLE_NAME} ORDER BY'
-        ' ${TransactionTable.id} DESC LIMIT ?';
+    String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+        'FROM ${TransactionTable.TABLE_NAME} t '
+        'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+        'ORDER BY ${TransactionTable.id} DESC LIMIT ?';
 
     List<Map<String, Object?>> queryResult = [transactionQuery];
     final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
@@ -93,7 +102,7 @@ void main() {
           title: 'title',
           amount: 10.10,
           transactionType: TransactionType.INCOME,
-          categoryID: 'category',
+          categoryID: 1,
           accountID: 1,
           date: date,
           description: 'desc')
@@ -129,7 +138,7 @@ void main() {
         title: 'title',
         amount: 10.10,
         transactionType: TransactionType.INCOME,
-        categoryID: 'category',
+        categoryID: 1,
         accountID: 1,
         date: date,
         description: 'desc');

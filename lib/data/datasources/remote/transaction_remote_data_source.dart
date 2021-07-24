@@ -47,17 +47,23 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       if (lastFetchedTransactionID.isEmpty) {
         //initial fetch request
         queryData = await db.rawQuery(
-          'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ?  ORDER BY'
-          ' ${TransactionTable.id} DESC LIMIT ?',
+          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'FROM ${TransactionTable.TABLE_NAME} t '
+          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'WHERE ${TransactionTable.date} like ? '
+          'ORDER BY '
+          '${TransactionTable.id} DESC LIMIT ?',
           ['$time%', batchSize],
         );
       } else {
         //subsequent fetch request
         queryData = await db.rawQuery(
-          'SELECT * FROM ${TransactionTable.TABLE_NAME} WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
+          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'FROM ${TransactionTable.TABLE_NAME} t '
+          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
           'ORDER BY'
-          ' ${TransactionTable.id} DESC LIMIT ?'
-          '',
+          ' ${TransactionTable.id} DESC LIMIT ?',
           ['$time%', lastFetchedTransactionID, batchSize],
         );
       }
@@ -65,8 +71,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         ..sort((a, b) => b.date.compareTo(a.date));
 
       FLog.info(
-        text:
-            'Fetched ${queryData.toString()} ${queryList.length} transactions for [lastTransactionID: $lastFetchedTransactionID] from '
+        text: 'Fetched ${queryList.length} transactions for [lastTransactionID: $lastFetchedTransactionID] from '
             'database',
         className: CLASS_NAME,
         methodName: 'getAllTransactions()',
@@ -92,9 +97,10 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
 
     try {
       final queryData = await db.rawQuery(
-        'SELECT * FROM ${TransactionTable.TABLE_NAME}  ORDER BY'
-        ' ${TransactionTable.id} DESC LIMIT ?'
-        '',
+        'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+        'FROM ${TransactionTable.TABLE_NAME} t '
+        'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+        'ORDER BY ${TransactionTable.id} DESC LIMIT ?',
         [10],
       );
 

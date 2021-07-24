@@ -1,6 +1,4 @@
 import 'package:fiscal/core/utils/routing/navigation_service.dart';
-import 'package:fiscal/core/utils/static/enums.dart';
-import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/screens/transactions/all_transactions.dart';
 import 'package:flutter/material.dart';
@@ -14,13 +12,13 @@ import '../../widgets/home/transaction_form_test.mocks.dart';
 
 void main() {
   late MockTransactionProvider mockTransactionProvider;
-  late MockTransactionProviderData mockTransactionProviderData;
+  // late MockTransactionProviderData mockTransactionProviderData;
   late ProviderMock providerMock;
 
   setUp(() {
     GetIt.instance.registerSingleton<NavigationService>(NavigationService());
     mockTransactionProvider = MockTransactionProvider();
-    mockTransactionProviderData = MockTransactionProviderData();
+    // mockTransactionProviderData = MockTransactionProviderData();
     providerMock = ProviderMock();
     when(mockTransactionProvider.hasListeners).thenReturn(false);
   });

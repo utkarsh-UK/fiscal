@@ -6,7 +6,7 @@ import '../../../fixtures/transactions/transaction.dart';
 
 void main() {
   late CategoryModel model;
-  late CategoryModel modelWithIntID;
+  late CategoryModel modelWithTransactionJSON;
   late DateTime createdAt;
 
   setUp(() {
@@ -19,12 +19,12 @@ void main() {
       createdAt: createdAt,
     );
 
-    modelWithIntID = CategoryModel(
+    modelWithTransactionJSON = CategoryModel(
       categoryID: 1,
-      name: 'category',
+      name: '',
       icon: 'category',
       color: 'color',
-      createdAt: createdAt,
+      createdAt: DateTime.now(),
     );
   });
 
@@ -73,5 +73,18 @@ void main() {
       "transaction_type": "EXPENSE",
     };
     expect(result, expectedMap);
+  });
+
+  test('should return valid model when the Transaction JSON is valid', () async {
+    // arrange
+    Map<String, Object?> modelQuery = {
+      "category_id": 1,
+      "icon": "category",
+      "color": 'color',
+    };
+    //act
+    final result = CategoryModel.fromTransactionQueryResult(modelQuery);
+    //assert
+    expect(result, modelWithTransactionJSON);
   });
 }

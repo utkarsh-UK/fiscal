@@ -27,7 +27,7 @@ void main() {
         title: 'title',
         amount: 1.0,
         transactionType: TransactionType.INCOME,
-        categoryID: 'category',
+        categoryID: 1,
         accountID: 1,
         date: transactionDate,
       ),

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 
 class Transaction extends Equatable {
   final String transactionID;
@@ -7,9 +8,10 @@ class Transaction extends Equatable {
   final String? description;
   final double amount;
   final TransactionType transactionType;
-  final String categoryID;
+  final int categoryID;
   final int accountID;
   final DateTime date;
+  final Category? category;
 
   Transaction({
     required this.transactionID,
@@ -20,6 +22,7 @@ class Transaction extends Equatable {
     required this.categoryID,
     required this.accountID,
     required this.date,
+    this.category,
   });
 
   @override

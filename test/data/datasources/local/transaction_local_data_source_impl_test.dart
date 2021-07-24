@@ -26,14 +26,16 @@ void main() {
 
   final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
   final transaction = TransactionModel(
-      transactionID: 'id',
-      title: 'title',
-      amount: 10.10,
-      transactionType: TransactionType.INCOME,
-      categoryID: 'category',
-      accountID: 1,
-      date: date,
-      description: 'desc');
+    transactionID: 'id',
+    title: 'title',
+    amount: 10.10,
+    transactionType: TransactionType.INCOME,
+    categoryID: 1,
+    accountID: 1,
+    date: date,
+    description: 'desc',
+    category: CategoryModel(categoryID: 1, name: '', icon: 'icon', color: 'color'),
+  );
 
   final transactionsList = [transaction, transaction];
   final serializedList = transactionsList.map((t) => TransactionModel.toJSON(t)).toList();

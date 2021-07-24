@@ -5,8 +5,10 @@ Map<String, Object?> transactionQuery = {
   "description": "desc",
   "amount": 10.10,
   "transaction_type": "INCOME",
-  "category_id": "category",
-  "acc_id": 1
+  "category_id": 1,
+  "acc_id": 1,
+  "icon": 'icon',
+  'color': 'color'
 };
 
 Map<String, Object?> categoryQuery = {

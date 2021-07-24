@@ -38,8 +38,8 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
-                      String description) {}),
+                  onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                      String description, String icon, String color) {}),
             ),
           ),
         ),
@@ -81,8 +81,8 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String title, TransactionType type, double amount, String category, int account, DateTime date,
-                      String description) {}),
+                  onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                      String description, String icon, String color) {}),
             ),
           ),
         ),

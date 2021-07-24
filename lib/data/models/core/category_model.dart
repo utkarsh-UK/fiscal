@@ -43,8 +43,21 @@ class CategoryModel extends Category {
       name: '${data[CategoryTable.name]}',
       icon: '${data[CategoryTable.icon]}',
       color: '${data[CategoryTable.color]}',
-      transactionType: Converters.convertTransactionTypeString('${data[CategoryTable.transactionType]}'),
+      transactionType: data[CategoryTable.transactionType] == null
+          ? TransactionType.EXPENSE
+          : Converters.convertTransactionTypeString('${data[CategoryTable.transactionType]}'),
       createdAt: DateTime.parse('${data[CategoryTable.createdAt] ?? DateTime.now()}'),
+    );
+  }
+
+  factory CategoryModel.fromTransactionQueryResult(Map<String, Object?> data) {
+    return CategoryModel(
+      categoryID: int.parse('${data[CategoryTable.id]}'),
+      name: '',
+      icon: data[CategoryTable.icon] == null ? '' : '${data[CategoryTable.icon]}',
+      color: data[CategoryTable.color] == null ? '' : '${data[CategoryTable.color]}',
+      transactionType: TransactionType.EXPENSE,
+      createdAt: DateTime.now(),
     );
   }
 

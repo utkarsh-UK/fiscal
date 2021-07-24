@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionForm extends StatefulWidget {
-  final Function(String, TransactionType, double, String, int, DateTime, String) onSubmit;
+  /// Parameters :- (ID, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon, Category Color)
+  final Function(String, TransactionType, double, int, int, DateTime, String, String, String) onSubmit;
 
   const TransactionForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -97,7 +98,7 @@ class _TransactionFormState extends State<TransactionForm> {
               width: size.width * 0.9,
               child: DropdownButtonFormField<String>(
                 key: ValueKey('type_dropdown'),
-                onChanged: (type) => setState(() => _typeDropdownValue = type ?? 'EXPENSE'),
+                onChanged: _handleTypeDropDownChange,
                 value: _typeDropdownValue,
                 onSaved: (type) => _typeDropdownValue = type ?? 'EXPENSE',
                 decoration: InputDecoration(
@@ -305,7 +306,18 @@ class _TransactionFormState extends State<TransactionForm> {
     if (!result) return;
 
     // call onSubmit
-    widget.onSubmit(_title, _transactionType, _amount, '$_categoryDropdownValue', 0, _transactionDate, _description);
+    final _selectedCategory = _categories.firstWhere((cat) => cat.categoryID == _categoryDropdownValue);
+    widget.onSubmit(
+      _title,
+      _transactionType,
+      _amount,
+      _categoryDropdownValue,
+      0,
+      _transactionDate,
+      _description,
+      _selectedCategory.icon,
+      _selectedCategory.color,
+    );
   }
 
   bool _validateInputs(String? title, TransactionType? type, double? amount, String? description, int category) {
@@ -325,6 +337,16 @@ class _TransactionFormState extends State<TransactionForm> {
     });
 
     return child;
+  }
+
+  void _handleTypeDropDownChange(String? type) {
+    setState(() => _typeDropdownValue = type ?? 'EXPENSE');
+
+    final transactionType = Converters.convertTransactionTypeString(_typeDropdownValue);
+    context.read<TransactionProvider>().getCategories(transactionType).then((cat) {
+      _categoryDropdownValue = cat.first.categoryID;
+      setState(() => _categories = cat);
+    });
   }
 
   Future<void> _handleDateSelector() async {
@@ -349,14 +371,6 @@ class _TransactionFormState extends State<TransactionForm> {
 
     _dateController.text = transDate.getFullStringDate;
     setState(() => _transactionDate = transDate);
-  }
-
-  void _clearInputs() {
-    _titleController.clear();
-    _amountController.clear();
-    _dateController.clear();
-    _descriptionController.clear();
-    setState(() {});
   }
 }
 

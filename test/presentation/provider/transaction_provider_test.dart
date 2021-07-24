@@ -46,7 +46,7 @@ void main() {
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID:1,
       accountID: 1,
       date: transactionDate,
     ),
@@ -115,7 +115,7 @@ void main() {
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID: 1,
       accountID: 1,
       date: transactionDate,
       description: 'description',
@@ -128,11 +128,13 @@ void main() {
       await provider.addNewTransaction(
         date: transactionDate,
         accountID: 1,
-        categoryID: 'category',
+        categoryID: 1,
         amount: 1.0,
         title: 'title',
         type: TransactionType.INCOME,
         description: 'description',
+        icon: 'icon',
+        color: 'color',
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
@@ -146,11 +148,13 @@ void main() {
       await provider.addNewTransaction(
         date: transactionDate,
         accountID: 1,
-        categoryID: 'category',
+        categoryID: 1,
         amount: 1.0,
         title: 'title',
         type: TransactionType.INCOME,
         description: 'description',
+        icon: 'icon',
+        color: 'color',
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));

@@ -46,6 +46,12 @@ class _RecentTransactionsState extends State<RecentTransactions> {
             transactionType: transactions[index].transactionType,
             transactionDate: transactions[index].date,
             amount: transactions[index].amount,
+            iconName: transactions[index].category == null ? 'others' : transactions[index].category!.icon,
+            iconColor: Color(
+              transactions[index].category == null
+                  ? 0xFF000000
+                  : int.parse('${transactions[index].category!.color}'),
+            ),
           ),
         );
 }

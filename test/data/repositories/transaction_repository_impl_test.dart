@@ -7,7 +7,6 @@ import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/data/repositories/transaction_repository_impl.dart';
-import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -34,7 +33,7 @@ void main() {
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID: 1,
       accountID: 1,
       date: transactionDate,
     ),
@@ -132,7 +131,7 @@ void main() {
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
-      categoryID: 'category',
+      categoryID: 1,
       accountID: 1,
       date: transactionDate,
     );

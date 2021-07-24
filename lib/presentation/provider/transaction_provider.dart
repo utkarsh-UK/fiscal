@@ -116,13 +116,16 @@ class TransactionProvider extends ChangeNotifier {
     String description = '',
     required double amount,
     required TransactionType type,
-    required String categoryID,
+    required int categoryID,
     required int accountID,
     required DateTime date,
+    required String icon,
+    required String color,
   }) async {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
     FLog.info(
-      text: 'Parameters: [$title], [$description], [$amount], [$type], [$categoryID], [$accountID], [${date.getFullStringDate}]',
+      text: 'Parameters: [$title], [$description], [$amount], [$type], [$categoryID], [$accountID], [${date.getFullStringDate}]'
+          ' [$icon] [$color]',
       className: CLASS_NAME,
       methodName: 'addNewTransaction()',
     );
@@ -139,6 +142,7 @@ class TransactionProvider extends ChangeNotifier {
       accountID: accountID,
       date: date,
       description: description,
+      category: Category(categoryID: categoryID, name: '', icon: icon, color: color),
     );
 
     final failureOrTransactions = await _addNewTransaction(
