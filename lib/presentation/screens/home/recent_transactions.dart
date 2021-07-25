@@ -41,6 +41,7 @@ class _RecentTransactionsState extends State<RecentTransactions> {
           shrinkWrap: true,
           itemBuilder: (BuildContext ctx, int index) => TransactionItem(
             key: ValueKey('trans_$index'),
+            transactionID: num.parse(transactions[index].transactionID).toInt(),
             title: transactions[index].title,
             description: transactions[index].description,
             transactionType: transactions[index].transactionType,
@@ -48,10 +49,9 @@ class _RecentTransactionsState extends State<RecentTransactions> {
             amount: transactions[index].amount,
             iconName: transactions[index].category == null ? 'others' : transactions[index].category!.icon,
             iconColor: Color(
-              transactions[index].category == null
-                  ? 0xFF000000
-                  : int.parse('${transactions[index].category!.color}'),
+              transactions[index].category == null ? 0xFF000000 : int.parse('${transactions[index].category!.color}'),
             ),
+            onDeleted: () => context.read<TransactionProvider>().getDailySummary(),
           ),
         );
 }

@@ -93,4 +93,9 @@ class MockTransactionLocalDataSource extends _i1.Mock
           Invocation.method(#cacheNewTransaction, [transaction]),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
+  @override
+  _i3.Future<void> removeTransaction(int? transactionID) => (super.noSuchMethod(
+      Invocation.method(#removeTransaction, [transactionID]),
+      returnValue: Future<void>.value(null),
+      returnValueForMissingStub: Future.value()) as _i3.Future<void>);
 }

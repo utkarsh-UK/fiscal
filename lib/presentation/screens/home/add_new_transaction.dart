@@ -14,38 +14,41 @@ class AddNewTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ScreenTitle(
-                  key: ValueKey('title'),
-                  title: 'Add Transaction',
-                  actions: [
-                    IconButton(
-                      key: ValueKey('close'),
-                      onPressed: locator.get<NavigationService>().navigateBack,
-                      icon: Icon(
-                        Icons.close_rounded,
-                        color: FiscalTheme.SECONDARY_COLOR,
-                        size: 35.0,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ScreenTitle(
+                    key: ValueKey('title'),
+                    title: 'Add Transaction',
+                    actions: [
+                      IconButton(
+                        key: ValueKey('close'),
+                        onPressed: locator.get<NavigationService>().navigateBack,
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: FiscalTheme.SECONDARY_COLOR,
+                          size: 35.0,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-                  child: TransactionForm(
-                    key: ValueKey('form'),
-                    onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
-                        String description, String icon, String color) {
-                      _addTransaction(title, type, amount, category, account, date, description, icon, color, context);
-                    },
+                    ],
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                    child: TransactionForm(
+                      key: ValueKey('form'),
+                      onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                          String description, String icon, String color) {
+                        _addTransaction(title, type, amount, category, account, date, description, icon, color, context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

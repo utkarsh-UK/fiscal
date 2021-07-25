@@ -94,6 +94,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
     } on DataException catch (d) {
       FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'addNewTransaction()');
       return Left(DataFailure(message: d.message));
+    } on CacheException catch (c) {
+      FLog.error(text: 'Error Repo: ${c.message}', className: CLASS_NAME, methodName: 'addNewTransaction()');
+      return Left(CacheFailure(message: c.message));
     }
   }
 
@@ -152,6 +155,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
     try {
       final result = await remoteDataSource.deleteTransaction(transactionID);
+      if (result) await localDataSource.removeTransaction(transactionID);
 
       FLog.info(
         text: 'Deleted transaction. ID: [$transactionID]',
@@ -164,6 +168,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
     } on DataException catch (d) {
       FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'deleteTransaction()');
       return Left(DataFailure(message: d.message));
+    } on CacheException catch (c) {
+      FLog.error(text: 'Error Repo: ${c.message}', className: CLASS_NAME, methodName: 'deleteTransaction()');
+      return Left(CacheFailure(message: c.message));
     }
   }
 }

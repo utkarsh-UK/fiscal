@@ -1,10 +1,13 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class TransactionItem extends StatelessWidget {
+  final int transactionID;
   final String title;
   final String? description;
   final TransactionType transactionType;
@@ -12,9 +15,11 @@ class TransactionItem extends StatelessWidget {
   final double amount;
   final String iconName;
   final Color iconColor;
+  final VoidCallback? onDeleted;
 
   const TransactionItem({
     Key? key,
+    required this.transactionID,
     required this.title,
     required this.description,
     required this.transactionType,
@@ -22,6 +27,7 @@ class TransactionItem extends StatelessWidget {
     required this.amount,
     this.iconName = 'others',
     this.iconColor = const Color(0xFF000000),
+    this.onDeleted,
   }) : super(key: key);
 
   @override
@@ -37,8 +43,8 @@ class TransactionItem extends StatelessWidget {
       desc = description!.isNotEmpty ? description! : 'N/A';
 
     return Dismissible(
-      key: ValueKey('dismiss'),
-      onDismissed: (direction) {},
+      key: UniqueKey(),
+      onDismissed: (_) => _onDismiss(context),
       child: Container(
         width: containerSize,
         decoration: BoxDecoration(
@@ -143,5 +149,11 @@ class TransactionItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onDismiss(BuildContext context) {
+    context.read<TransactionProvider>().deleteTransaction(transactionID).then((_) {
+      if (onDeleted != null) onDeleted!();
+    });
   }
 }

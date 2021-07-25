@@ -6,11 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUp(() {});
 
-  testWidgets('render single transaction item as a list tile.',
-      (WidgetTester tester) async {
+  testWidgets('render single transaction item as a list tile.', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: TransactionItem(
+          transactionID: 1,
           title: 'title',
           description: 'desc',
           transactionType: TransactionType.INCOME,

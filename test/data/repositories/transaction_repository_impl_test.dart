@@ -213,18 +213,30 @@ void main() {
     });
   });
 
-
   group('deleteTransaction', () {
-    int transactionID =1;
+    int transactionID = 1;
 
-    test('should delete transaction and return true when call to remote data source is successful.', () async {
+    test('should delete transaction from database and cache and return true when call to remote data source is successful.',
+        () async {
       // arrange
       when(mockTransactionRemoteDataSource.deleteTransaction(transactionID)).thenAnswer((_) async => true);
+      when(mockTransactionLocalDataSource.removeTransaction(transactionID)).thenAnswer((_) async => true);
       //act
       final result = await repository.deleteTransaction(transactionID);
       //assert
       verify(mockTransactionRemoteDataSource.deleteTransaction(transactionID));
       expect(result, Right(true));
+    });
+
+    test('should not call local data source when database deletion is failed or false.',
+        () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.deleteTransaction(transactionID)).thenAnswer((_) async => false);
+      //act
+      await repository.deleteTransaction(transactionID);
+      //assert
+      verify(mockTransactionRemoteDataSource.deleteTransaction(transactionID));
+      verifyNever(mockTransactionLocalDataSource.removeTransaction(transactionID));
     });
 
     test('should return DataFailure when call to remote data source is unsuccessful.', () async {
@@ -237,5 +249,4 @@ void main() {
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
-
 }

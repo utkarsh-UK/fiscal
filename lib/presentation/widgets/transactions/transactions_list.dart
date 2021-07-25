@@ -14,7 +14,7 @@ class TransactionsList extends StatelessWidget {
           return CircularProgressIndicator(key: ValueKey('progress'));
         else if (provider.status == TransactionStatus.ERROR)
           return ErrorWidget(provider.error);
-        else if (provider.status == TransactionStatus.COMPLETED) {
+        else if (provider.status == TransactionStatus.COMPLETED || provider.status == TransactionStatus.DELETED) {
           final transactions = provider.providerData.allTransactions;
 
           if (transactions.isEmpty) return Center(child: Text('No transactions'));
@@ -25,6 +25,7 @@ class TransactionsList extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (BuildContext ctx, int index) => TransactionItem(
               key: ValueKey('all_trans_$index'),
+              transactionID: num.parse(transactions[index].transactionID).toInt(),
               title: transactions[index].title,
               description: transactions[index].description,
               transactionType: transactions[index].transactionType,

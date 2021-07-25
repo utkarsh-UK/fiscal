@@ -241,6 +241,10 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'deleteTransaction()',
       );
     }, (isDeleted) {
+      if (isDeleted) {
+        providerData.allTransactions.removeWhere((t) => t.transactionID == '$transactionID');
+        providerData.recentTransactions.removeWhere((t) => t.transactionID == '$transactionID');
+      }
       _status = TransactionStatus.DELETED;
       notifyListeners();
 

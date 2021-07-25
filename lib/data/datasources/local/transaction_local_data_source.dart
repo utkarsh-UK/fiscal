@@ -12,6 +12,8 @@ abstract class TransactionLocalDataSource {
   Future<void> cacheRecentTransactions(List<TransactionModel> transactions);
 
   Future<void> cacheNewTransaction(TransactionModel transaction);
+
+  Future<void> removeTransaction(int transactionID);
 }
 
 class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
@@ -108,6 +110,37 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
         text: 'Exception occurred:',
         className: CLASS_NAME,
         methodName: 'getRecentTransactions()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw CacheException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> removeTransaction(int transactionID) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'removeTransaction()');
+
+    try {
+      final oldTransactions = await getRecentTransactions();
+      if (oldTransactions.isEmpty || !oldTransactions.any((t) => t.transactionID == '$transactionID')) return;
+
+      oldTransactions.removeWhere((t) => t.transactionID == '$transactionID');
+
+      final newTransactions = oldTransactions.map((t) => TransactionModel.toJSON(t)).toList();
+      _preferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(newTransactions));
+
+      FLog.info(
+        text: 'Deleted transaction from cache. [TransactionID: $transactionID]',
+        className: CLASS_NAME,
+        methodName: 'removeTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'removeTransaction()');
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred:',
+        className: CLASS_NAME,
+        methodName: 'removeTransaction()',
         exception: e,
         stacktrace: trace,
       );

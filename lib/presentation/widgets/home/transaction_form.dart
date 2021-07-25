@@ -263,7 +263,7 @@ class _TransactionFormState extends State<TransactionForm> {
               child: Consumer<TransactionProvider>(
                 builder: (context, provider, child) {
                   if (provider.status == TransactionStatus.LOADING)
-                    return CircularProgressIndicator(key: ValueKey('progress'));
+                    return Center(child: CircularProgressIndicator(key: ValueKey('progress')));
                   else if (provider.status == TransactionStatus.ERROR)
                     return ErrorWidget(provider.error);
                   else if (provider.status == TransactionStatus.ADDED)

@@ -231,7 +231,7 @@ void main() {
 
     test('should delete transaction and mark status as DELETED', () async {
       // arrange
-      when(mockDeleteTransaction(any)).thenAnswer((_) async => Right(true));
+      when(mockDeleteTransaction(any)).thenAnswer((_) async => Right(false));
       //act
       await provider.deleteTransaction(id);
       //assert

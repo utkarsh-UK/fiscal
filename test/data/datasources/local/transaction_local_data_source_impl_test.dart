@@ -124,4 +124,81 @@ void main() {
       expect(() => call(), throwsA(TypeMatcher<CacheException>()));
     });
   });
+
+
+  group('removeTransaction', () {
+    int transactionID = 1;
+
+    final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
+    Map<String, Object?> transCached1 = {
+      "transaction_id": "1",
+      "date": "2021-05-14T14:13:29.104",
+      "title": "title",
+      "description": "desc",
+      "amount": 10.10,
+      "transaction_type": "INCOME",
+      "category_id": 1,
+      "acc_id": 1,
+      "icon": 'icon',
+      'color': 'color'
+    };
+
+    Map<String, Object?> transCached2 = {
+      "transaction_id": "2",
+      "date": "2021-05-14T14:13:29.104",
+      "title": "title",
+      "description": "desc",
+      "amount": 10.10,
+      "transaction_type": "INCOME",
+      "category_id": 1,
+      "acc_id": 1,
+      "icon": 'icon',
+      'color': 'color'
+    };
+
+    final trans = TransactionModel(
+      transactionID: '2',
+      title: 'title',
+      amount: 10.10,
+      transactionType: TransactionType.INCOME,
+      categoryID: 1,
+      accountID: 1,
+      date: date,
+      description: 'desc',
+      category: CategoryModel(categoryID: 1, name: '', icon: 'icon', color: 'color'),
+    );
+
+    final transList = [trans];
+    final serializedTransList = transList.map((t) => TransactionModel.toJSON(t)).toList();
+
+    test('should remove cached transaction if it is cached', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      when(mockSharedPreferences.getString(RECENT_TRANS_SHARED_PREF_KEY)).thenReturn(json.encode([transCached1, transCached2]));
+      //act
+      await localDataSource.removeTransaction(transactionID);
+      //assert
+      verify(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(serializedTransList)));
+    });
+
+    test('should return directly when no transaction present in cache', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+      when(mockSharedPreferences.getString(any)).thenReturn(json.encode([transCached1, transCached2]));
+      //act
+      await localDataSource.removeTransaction(2);
+      //assert
+      verifyNever(mockSharedPreferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(serializedTransList)));
+    });
+
+    test('should throw CacheException when caching goes wrong', () async {
+      // arrange
+      when(mockSharedPreferences.setString(any, any)).thenThrow(CacheException());
+      //act
+      final call = localDataSource.removeTransaction;
+      //assert
+      expect(() => call(transactionID), throwsA(TypeMatcher<CacheException>()));
+    });
+  });
+
 }
