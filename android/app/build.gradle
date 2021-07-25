@@ -65,6 +65,13 @@ android {
                     versionCode 1
                     versionName "1.0.0-test"
                 }
+        preprod
+                {
+                    dimension "app"
+                    applicationId "com.utkarshkore.fiscal"
+                    versionCode 1
+                    versionName "1.0.0"
+                }
     }
 
     buildTypes {

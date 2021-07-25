@@ -8,6 +8,7 @@ class TransactionParam extends Equatable {
   final String time;
   final Transaction? transaction;
   final TransactionType transactionType;
+  int transactionID;
 
   TransactionParam({
     this.transactionBatchSize = 10,
@@ -15,6 +16,7 @@ class TransactionParam extends Equatable {
     this.time = '',
     this.transaction,
     this.transactionType = TransactionType.EXPENSE,
+    this.transactionID = 1,
   });
 
   @override

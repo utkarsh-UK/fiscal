@@ -139,4 +139,31 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return Left(DataFailure(message: d.message));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> updateTransaction(Transaction transaction) {
+    // TODO: implement updateTransaction
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteTransaction(int transactionID) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'deleteTransaction()');
+
+    try {
+      final result = await remoteDataSource.deleteTransaction(transactionID);
+
+      FLog.info(
+        text: 'Deleted transaction. ID: [$transactionID]',
+        className: CLASS_NAME,
+        methodName: 'deleteTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'deleteTransaction()');
+
+      return Right(result);
+    } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'deleteTransaction()');
+      return Left(DataFailure(message: d.message));
+    }
+  }
 }

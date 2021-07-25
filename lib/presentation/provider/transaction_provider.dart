@@ -8,7 +8,22 @@ import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:flutter/foundation.dart' hide Category;
 
-enum TransactionStatus { REFRESHING, LOADING, COMPLETED, ADDED, SUMMARY_LOADED, ERROR, INITIAL }
+enum TransactionStatus {
+  REFRESHING,
+  LOADING,
+  COMPLETED,
+  ADDED,
+  SUMMARY_LOADED,
+  ERROR,
+  INITIAL,
+  RECENT_TRANS_ERR,
+  ALL_TRANS_ERR,
+  ADD_TRANS_ERR,
+  SUMMARY_ERR,
+  DELETING,
+  DELETED,
+  TRANS_DELETE_ERR,
+}
 
 class TransactionProvider extends ChangeNotifier {
   static const String CLASS_NAME = 'TransactionProvider';
@@ -18,6 +33,7 @@ class TransactionProvider extends ChangeNotifier {
   final AddNewTransaction _addNewTransaction;
   final GetDailySummary _getDailySummary;
   final GetCategories _getCategories;
+  final DeleteTransaction _deleteTransaction;
 
   TransactionProvider({
     required GetAllTransactions getAllTransactions,
@@ -25,11 +41,13 @@ class TransactionProvider extends ChangeNotifier {
     required AddNewTransaction addNewTransaction,
     required GetDailySummary getDailySummary,
     required GetCategories getCategories,
+    required DeleteTransaction deleteTransaction,
   })  : _getAllTransactions = getAllTransactions,
         _getRecentTransactions = getRecentTransactions,
         _addNewTransaction = addNewTransaction,
         _getDailySummary = getDailySummary,
-        _getCategories = getCategories;
+        _getCategories = getCategories,
+        _deleteTransaction = deleteTransaction;
 
   TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
@@ -51,7 +69,7 @@ class TransactionProvider extends ChangeNotifier {
 
     failureOrTransactions.fold((failure) {
       _message = Utility.mapFailureToMessage(failure);
-      _status = TransactionStatus.ERROR;
+      _status = TransactionStatus.RECENT_TRANS_ERR;
       notifyListeners();
 
       FLog.error(
@@ -89,7 +107,7 @@ class TransactionProvider extends ChangeNotifier {
 
     failureOrTransactions.fold((failure) {
       _message = Utility.mapFailureToMessage(failure);
-      _status = TransactionStatus.ERROR;
+      _status = TransactionStatus.ALL_TRANS_ERR;
       notifyListeners();
 
       FLog.error(
@@ -151,7 +169,7 @@ class TransactionProvider extends ChangeNotifier {
 
     failureOrTransactions.fold((failure) {
       _message = Utility.mapFailureToMessage(failure);
-      _status = TransactionStatus.ERROR;
+      _status = TransactionStatus.ADD_TRANS_ERR;
       notifyListeners();
 
       FLog.error(
@@ -182,7 +200,7 @@ class TransactionProvider extends ChangeNotifier {
 
     failureOrSummary.fold((failure) {
       _message = Utility.mapFailureToMessage(failure);
-      _status = TransactionStatus.ERROR;
+      _status = TransactionStatus.SUMMARY_ERR;
       notifyListeners();
 
       FLog.error(
@@ -202,6 +220,37 @@ class TransactionProvider extends ChangeNotifier {
       );
     });
     FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getDailySummary()');
+  }
+
+  Future<void> deleteTransaction(int transactionID) async {
+    FLog.info(text: 'Enter: ID [$transactionID]', className: CLASS_NAME, methodName: 'deleteTransaction()');
+
+    _status = TransactionStatus.DELETING;
+    notifyListeners();
+
+    final failureOrDeleted = await _deleteTransaction(Params(transactionParam: TransactionParam(transactionID: transactionID)));
+
+    failureOrDeleted.fold((failure) {
+      _message = Utility.mapFailureToMessage(failure);
+      _status = TransactionStatus.TRANS_DELETE_ERR;
+      notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'deleteTransaction()',
+      );
+    }, (isDeleted) {
+      _status = TransactionStatus.DELETED;
+      notifyListeners();
+
+      FLog.info(
+        text: 'Deleted transaction and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'deleteTransaction()',
+      );
+    });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'deleteTransaction()');
   }
 
   Future<List<Category>> getCategories(TransactionType type) async {

@@ -4,6 +4,7 @@ import 'package:fiscal/presentation/widgets/home/screen_title.dart';
 import 'package:fiscal/presentation/widgets/transactions/transactions_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:provider/provider.dart';
 
 class AllTransactions extends StatefulWidget {
@@ -57,7 +58,7 @@ class _AllTransactionsState extends State<AllTransactions> {
   }
 
   void _selectMonth(BuildContext context) async {
-    final date = await showDatePicker(
+    final date = await showMonthPicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now().subtract(Duration(days: 365)),

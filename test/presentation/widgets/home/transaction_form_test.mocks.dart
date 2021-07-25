@@ -100,6 +100,11 @@ class MockTransactionProvider extends _i1.Mock
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
+  _i3.Future<void> deleteTransaction(int? transactionID) => (super.noSuchMethod(
+      Invocation.method(#deleteTransaction, [transactionID]),
+      returnValue: Future<void>.value(null),
+      returnValueForMissingStub: Future.value()) as _i3.Future<void>);
+  @override
   _i3.Future<List<_i5.Category>> getCategories(_i4.TransactionType? type) =>
       (super.noSuchMethod(Invocation.method(#getCategories, [type]),
               returnValue: Future<List<_i5.Category>>.value(<_i5.Category>[]))

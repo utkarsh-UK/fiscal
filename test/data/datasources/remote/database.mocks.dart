@@ -18,4 +18,16 @@ class DatabaseMock extends Mock implements Database {
         returnValueForMissingStub: Future<int>.value(1),
         returnValue: Future<int>.value(1));
   }
+
+  @override
+  Future<int> delete(String table, {String? where, List<Object?>? whereArgs}) {
+    return super.noSuchMethod(
+        Invocation.method(
+          #delete,
+          [table],
+          {#where: where, #whereArgs: whereArgs},
+        ),
+        returnValueForMissingStub: Future<int>.value(1),
+        returnValue: Future<int>.value(1));
+  }
 }

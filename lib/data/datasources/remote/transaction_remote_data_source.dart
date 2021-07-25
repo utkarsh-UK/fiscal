@@ -23,6 +23,9 @@ abstract class TransactionRemoteDataSource {
   /// into local cache.
   Future<String> addNewTransaction(TransactionModel transaction);
 
+  /// Deletes transaction with this [transactionID].
+  Future<bool> deleteTransaction(int transactionID);
+
   /// Fetch monthly summary for current month.
   Future<Map<String, Object?>> getDailySummary();
 
@@ -255,6 +258,38 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         text: 'Exception occurred: $type',
         className: CLASS_NAME,
         methodName: 'getCategories()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteTransaction(int transactionID) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'deleteTransaction()');
+
+    try {
+      final result = await db.delete(
+        TransactionTable.TABLE_NAME,
+        where: '${TransactionTable.id}=?',
+        whereArgs: [transactionID],
+      );
+      final bool isDeleted = result > 0;
+
+      FLog.info(
+        text: !isDeleted ? 'Could not delete transaction. ID: [$transactionID]' : 'Deleted transaction. ID: [$transactionID]',
+        className: CLASS_NAME,
+        methodName: 'deleteTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'deleteTransaction()');
+
+      return isDeleted;
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred: $transactionID',
+        className: CLASS_NAME,
+        methodName: 'deleteTransaction()',
         exception: e,
         stacktrace: trace,
       );

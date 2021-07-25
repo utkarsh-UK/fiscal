@@ -12,6 +12,8 @@ import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
 import 'package:fiscal/domain/usecases/core/get_categories.dart' as _i11;
 import 'package:fiscal/domain/usecases/transactions/add_new_transaction.dart'
     as _i9;
+import 'package:fiscal/domain/usecases/transactions/delete_transaction.dart'
+    as _i13;
 import 'package:fiscal/domain/usecases/transactions/get_all_transactions.dart'
     as _i3;
 import 'package:fiscal/domain/usecases/transactions/get_daily_summary.dart'
@@ -118,4 +120,20 @@ class MockGetCategories extends _i1.Mock implements _i11.GetCategories {
                   Future<_i2.Either<_i5.Failure, List<_i12.Category>>>.value(
                       _FakeEither<_i5.Failure, List<_i12.Category>>()))
           as _i4.Future<_i2.Either<_i5.Failure, List<_i12.Category>>>);
+}
+
+/// A class which mocks [DeleteTransaction].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDeleteTransaction extends _i1.Mock implements _i13.DeleteTransaction {
+  MockDeleteTransaction() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, bool>> call(_i7.Params? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue: Future<_i2.Either<_i5.Failure, bool>>.value(
+                  _FakeEither<_i5.Failure, bool>()))
+          as _i4.Future<_i2.Either<_i5.Failure, bool>>);
 }

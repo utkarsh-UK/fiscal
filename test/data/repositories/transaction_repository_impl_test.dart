@@ -212,4 +212,30 @@ void main() {
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
+
+
+  group('deleteTransaction', () {
+    int transactionID =1;
+
+    test('should delete transaction and return true when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.deleteTransaction(transactionID)).thenAnswer((_) async => true);
+      //act
+      final result = await repository.deleteTransaction(transactionID);
+      //assert
+      verify(mockTransactionRemoteDataSource.deleteTransaction(transactionID));
+      expect(result, Right(true));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.deleteTransaction(any)).thenThrow(DataException());
+      //act
+      final result = await repository.deleteTransaction(transactionID);
+      //assert
+      verify(mockTransactionRemoteDataSource.deleteTransaction(transactionID));
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
+
 }

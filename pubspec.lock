@@ -423,6 +423,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.7"
+  month_picker_dialog:
+    dependency: "direct main"
+    description:
+      name: month_picker_dialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   nested:
     dependency: transitive
     description:
@@ -578,12 +585,12 @@ packages:
     source: hosted
     version: "1.0.0"
   rxdart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.0"
+    version: "0.26.0"
   sembast:
     dependency: transitive
     description:

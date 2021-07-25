@@ -162,6 +162,8 @@ void main() {
     });
 
     test('should throw DataException when adding data fails', () async {
+      //arrange
+      when(databaseMock.rawQuery(lastInsertedRowIDQuery)).thenThrow(Exception());
       //act
       final call = dataSourceImpl.addNewTransaction;
       //assert
@@ -248,6 +250,42 @@ void main() {
       final call = dataSourceImpl.getCategories;
       //assert
       expect(() => call(type), throwsA(TypeMatcher<DataException>()));
+    });
+  });
+
+  group('deleteTransaction', () {
+    int transactionID = 1;
+
+    test('should delete transaction from database and return true after deletion.', () async {
+      // arrange
+      when(databaseMock.delete(TransactionTable.TABLE_NAME, where: '${TransactionTable.id}=?', whereArgs: [transactionID]))
+          .thenAnswer((_) async => 1);
+      //act
+      final result = await dataSourceImpl.deleteTransaction(transactionID);
+      //assert
+      verify(databaseMock.delete(TransactionTable.TABLE_NAME, where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
+      expect(result, true);
+    });
+
+    test('should return false when no transactions deleted.', () async {
+      // arrange
+      when(databaseMock.delete(TransactionTable.TABLE_NAME, where: '${TransactionTable.id}=?', whereArgs: [transactionID]))
+          .thenAnswer((_) async => 0);
+      //act
+      final result = await dataSourceImpl.deleteTransaction(transactionID);
+      //assert
+      verify(databaseMock.delete(TransactionTable.TABLE_NAME, where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
+      expect(result, false);
+    });
+
+    test('should throw DataException when deletion is not successful.', () async {
+      // arrange
+      when(databaseMock.delete(TransactionTable.TABLE_NAME, where: '${TransactionTable.id}=?', whereArgs: [transactionID]))
+          .thenThrow(Exception());
+      //act
+      final call = dataSourceImpl.deleteTransaction;
+      //assert
+      expect(() => call(transactionID), throwsA(TypeMatcher<DataException>()));
     });
   });
 }

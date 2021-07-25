@@ -6,7 +6,7 @@ import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/domain/repositories/transaction_repository.dart';
 
 class GetCategories extends Usecase<List<Category>, Params> {
-  static const String CLASS_NAME = 'AddNewTransaction:USECASE';
+  static const String CLASS_NAME = 'GetCategories:USECASE';
 
   final TransactionRepository _repository;
 

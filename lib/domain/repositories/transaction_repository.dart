@@ -17,6 +17,12 @@ abstract class TransactionRepository {
   /// Adds this new [transaction] to database and cache sub-sequently.
   Future<Either<Failure, String>> addNewTransaction(Transaction transaction);
 
+  /// Updates this [transaction] to database.
+  Future<Either<Failure, String>> updateTransaction(Transaction transaction);
+
+  /// Deletes transaction with [transactionID].
+  Future<Either<Failure, bool>> deleteTransaction(int transactionID);
+
   /// Fetched summary for current month.
   ///
   /// Returns [Map<>] with {INCOME, EXPENSE} keys.

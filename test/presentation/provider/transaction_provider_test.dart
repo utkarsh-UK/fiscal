@@ -14,7 +14,14 @@ import 'package:mockito/mockito.dart';
 
 import 'transaction_provider_test.mocks.dart';
 
-@GenerateMocks([GetAllTransactions, GetRecentTransactions, AddNewTransaction, GetDailySummary, GetCategories])
+@GenerateMocks([
+  GetAllTransactions,
+  GetRecentTransactions,
+  AddNewTransaction,
+  GetDailySummary,
+  GetCategories,
+  DeleteTransaction,
+])
 void main() {
   late TransactionProvider provider;
   late MockGetAllTransactions mockGetAllTransactions;
@@ -22,6 +29,7 @@ void main() {
   late MockAddNewTransaction mockAddNewTransaction;
   late MockGetDailySummary mockGetDailySummary;
   late MockGetCategories mockGetCategories;
+  late MockDeleteTransaction mockDeleteTransaction;
 
   setUp(() {
     mockGetAllTransactions = MockGetAllTransactions();
@@ -29,6 +37,7 @@ void main() {
     mockAddNewTransaction = MockAddNewTransaction();
     mockGetDailySummary = MockGetDailySummary();
     mockGetCategories = MockGetCategories();
+    mockDeleteTransaction = MockDeleteTransaction();
 
     provider = TransactionProvider(
       getAllTransactions: mockGetAllTransactions,
@@ -36,6 +45,7 @@ void main() {
       addNewTransaction: mockAddNewTransaction,
       getDailySummary: mockGetDailySummary,
       getCategories: mockGetCategories,
+      deleteTransaction: mockDeleteTransaction,
     );
   });
 
@@ -46,7 +56,7 @@ void main() {
       title: 'title',
       amount: 1.0,
       transactionType: TransactionType.INCOME,
-      categoryID:1,
+      categoryID: 1,
       accountID: 1,
       date: transactionDate,
     ),
@@ -71,7 +81,7 @@ void main() {
       await provider.getRecentTransactions();
       //assert
       verify(mockGetRecentTransactions(NoParams()));
-      expect(provider.status, TransactionStatus.ERROR);
+      expect(provider.status, TransactionStatus.RECENT_TRANS_ERR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
       expect(provider.providerData.recentTransactions, isEmpty);
     });
@@ -102,7 +112,7 @@ void main() {
       //assert
       verify(mockGetAllTransactions(
           Params(transactionParam: TransactionParam(time: date, lastFetchedTransactionID: lastTransactionID))));
-      expect(provider.status, TransactionStatus.ERROR);
+      expect(provider.status, TransactionStatus.ALL_TRANS_ERR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
       expect(provider.providerData.allTransactions, isEmpty);
     });
@@ -158,7 +168,7 @@ void main() {
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
-      expect(provider.status, TransactionStatus.ERROR);
+      expect(provider.status, TransactionStatus.ADD_TRANS_ERR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
     });
   });
@@ -183,7 +193,7 @@ void main() {
       await provider.getDailySummary();
       //assert
       verify(mockGetDailySummary(NoParams()));
-      expect(provider.status, TransactionStatus.ERROR);
+      expect(provider.status, TransactionStatus.SUMMARY_ERR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
     });
   });
@@ -215,4 +225,30 @@ void main() {
       expect(result, isEmpty);
     });
   });
+
+  group('DeleteTransaction', () {
+    int id = 1;
+
+    test('should delete transaction and mark status as DELETED', () async {
+      // arrange
+      when(mockDeleteTransaction(any)).thenAnswer((_) async => Right(true));
+      //act
+      await provider.deleteTransaction(id);
+      //assert
+      verify(mockDeleteTransaction(Params(transactionParam: TransactionParam(transactionID: id))));
+      expect(provider.status, TransactionStatus.DELETED);
+    });
+
+    test('should mark status ERROR and set error message when transactions are failed.', () async {
+      // arrange
+      when(mockDeleteTransaction(any)).thenAnswer((_) async =>  Left(DataFailure()));
+      //act
+      await provider.deleteTransaction(id);
+      //assert
+      verify(mockDeleteTransaction(Params(transactionParam: TransactionParam(transactionID: id))));
+      expect(provider.status, TransactionStatus.TRANS_DELETE_ERR);
+      expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
+    });
+  });
+
 }
