@@ -228,8 +228,7 @@ void main() {
       expect(result, Right(true));
     });
 
-    test('should not call local data source when database deletion is failed or false.',
-        () async {
+    test('should not call local data source when database deletion is failed or false.', () async {
       // arrange
       when(mockTransactionRemoteDataSource.deleteTransaction(transactionID)).thenAnswer((_) async => false);
       //act
@@ -246,6 +245,53 @@ void main() {
       final result = await repository.deleteTransaction(transactionID);
       //assert
       verify(mockTransactionRemoteDataSource.deleteTransaction(transactionID));
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
+
+  group('updateTransaction', () {
+    DateTime transactionDate = DateTime(2021, 05, 12);
+    TransactionModel transaction = TransactionModel(
+      transactionID: '1',
+      title: 'title',
+      amount: 1.0,
+      transactionType: TransactionType.INCOME,
+      categoryID: 1,
+      accountID: 1,
+      date: transactionDate,
+    );
+
+    test('should update transaction in database and cache and return true when call to remote data source is successful.',
+        () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => true);
+      when(mockTransactionLocalDataSource.updateTransaction(transaction)).thenAnswer((_) async => Future.value());
+      //act
+      final result = await repository.updateTransaction(transaction);
+      //assert
+      verify(mockTransactionRemoteDataSource.updateTransaction(transaction));
+      verify(mockTransactionLocalDataSource.updateTransaction(transaction));
+      expect(result, Right(true));
+    });
+
+    test('should not call local data source when database updation is failed or false.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => false);
+      when(mockTransactionLocalDataSource.updateTransaction(transaction)).thenAnswer((_) async => Future.value());
+      //act
+      await repository.updateTransaction(transaction);
+      //assert
+      verify(mockTransactionRemoteDataSource.updateTransaction(transaction));
+      verifyNever(mockTransactionLocalDataSource.updateTransaction(transaction));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.updateTransaction(any)).thenThrow(DataException());
+      //act
+      final result = await repository.updateTransaction(transaction);
+      //assert
+      verify(mockTransactionRemoteDataSource.updateTransaction(transaction));
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });

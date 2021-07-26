@@ -288,4 +288,52 @@ void main() {
       expect(() => call(transactionID), throwsA(TypeMatcher<DataException>()));
     });
   });
+
+  group('updateTransaction', () {
+    final DateTime date = DateTime(2021, 05, 14, 14, 13, 29, 104);
+    final transaction = TransactionModel(
+        transactionID: '1',
+        title: 'title',
+        amount: 10.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 1,
+        accountID: 1,
+        date: date,
+        description: 'desc');
+    int transactionID = 1;
+
+    test('should update transaction from database and return true after updating.', () async {
+      // arrange
+      when(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
+          where: '${TransactionTable.id}=?', whereArgs: [transactionID])).thenAnswer((_) async => 1);
+      //act
+      final result = await dataSourceImpl.updateTransaction(transaction);
+      //assert
+      verify(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
+          where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
+      expect(result, true);
+    });
+
+    test('should return false when no transactions updated.', () async {
+      // arrange
+      when(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
+          where: '${TransactionTable.id}=?', whereArgs: [transactionID])).thenAnswer((_) async => 0);
+      //act
+      final result = await dataSourceImpl.updateTransaction(transaction);
+      //assert
+      verify(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
+          where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
+      expect(result, false);
+    });
+
+    test('should throw DataException when deletion is not successful.', () async {
+      // arrange
+      when(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
+          where: '${TransactionTable.id}=?', whereArgs: [transactionID])).thenThrow(Exception());
+      //act
+      final call = dataSourceImpl.updateTransaction;
+      //assert
+      expect(() => call(transaction), throwsA(TypeMatcher<DataException>()));
+    });
+  });
 }

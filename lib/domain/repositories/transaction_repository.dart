@@ -18,7 +18,7 @@ abstract class TransactionRepository {
   Future<Either<Failure, String>> addNewTransaction(Transaction transaction);
 
   /// Updates this [transaction] to database.
-  Future<Either<Failure, String>> updateTransaction(Transaction transaction);
+  Future<Either<Failure, bool>> updateTransaction(Transaction transaction);
 
   /// Deletes transaction with [transactionID].
   Future<Either<Failure, bool>> deleteTransaction(int transactionID);

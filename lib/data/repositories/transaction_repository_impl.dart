@@ -144,9 +144,30 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, String>> updateTransaction(Transaction transaction) {
-    // TODO: implement updateTransaction
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> updateTransaction(Transaction transaction) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+    try {
+      final transactionModel = TransactionModel.fromTransaction(transaction);
+
+      final result = await remoteDataSource.updateTransaction(transactionModel);
+      if (result) await localDataSource.updateTransaction(transactionModel);
+
+      FLog.info(
+        text: 'Updated transaction. ID: [${transaction.transactionID}]',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+      return Right(result);
+    } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'updateTransaction()');
+      return Left(DataFailure(message: d.message));
+    } on CacheException catch (c) {
+      FLog.error(text: 'Error Repo: ${c.message}', className: CLASS_NAME, methodName: 'updateTransaction()');
+      return Left(CacheFailure(message: c.message));
+    }
   }
 
   @override

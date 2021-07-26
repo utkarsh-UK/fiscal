@@ -49,6 +49,10 @@ class MockTransactionRemoteDataSource extends _i1.Mock
       (super.noSuchMethod(Invocation.method(#addNewTransaction, [transaction]),
           returnValue: Future<String>.value('')) as _i3.Future<String>);
   @override
+  _i3.Future<bool> updateTransaction(_i4.TransactionModel? transaction) =>
+      (super.noSuchMethod(Invocation.method(#updateTransaction, [transaction]),
+          returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
+  @override
   _i3.Future<bool> deleteTransaction(int? transactionID) => (super.noSuchMethod(
       Invocation.method(#deleteTransaction, [transactionID]),
       returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
@@ -91,6 +95,11 @@ class MockTransactionLocalDataSource extends _i1.Mock
   _i3.Future<void> cacheNewTransaction(_i4.TransactionModel? transaction) =>
       (super.noSuchMethod(
           Invocation.method(#cacheNewTransaction, [transaction]),
+          returnValue: Future<void>.value(null),
+          returnValueForMissingStub: Future.value()) as _i3.Future<void>);
+  @override
+  _i3.Future<void> updateTransaction(_i4.TransactionModel? transaction) =>
+      (super.noSuchMethod(Invocation.method(#updateTransaction, [transaction]),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override

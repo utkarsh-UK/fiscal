@@ -23,6 +23,9 @@ enum TransactionStatus {
   DELETING,
   DELETED,
   TRANS_DELETE_ERR,
+  UPDATING,
+  UPDATED,
+  TRANS_UPDATE_ERR,
 }
 
 class TransactionProvider extends ChangeNotifier {
@@ -34,6 +37,7 @@ class TransactionProvider extends ChangeNotifier {
   final GetDailySummary _getDailySummary;
   final GetCategories _getCategories;
   final DeleteTransaction _deleteTransaction;
+  final UpdateTransaction _updateTransaction;
 
   TransactionProvider({
     required GetAllTransactions getAllTransactions,
@@ -42,12 +46,14 @@ class TransactionProvider extends ChangeNotifier {
     required GetDailySummary getDailySummary,
     required GetCategories getCategories,
     required DeleteTransaction deleteTransaction,
+    required UpdateTransaction updateTransaction,
   })  : _getAllTransactions = getAllTransactions,
         _getRecentTransactions = getRecentTransactions,
         _addNewTransaction = addNewTransaction,
         _getDailySummary = getDailySummary,
         _getCategories = getCategories,
-        _deleteTransaction = deleteTransaction;
+        _deleteTransaction = deleteTransaction,
+        _updateTransaction = updateTransaction;
 
   TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
@@ -255,6 +261,53 @@ class TransactionProvider extends ChangeNotifier {
       );
     });
     FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'deleteTransaction()');
+  }
+
+  Future<void> updateTransaction(Transaction transaction) async {
+    FLog.info(text: 'Enter:', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+    _status = TransactionStatus.UPDATING;
+    notifyListeners();
+
+    final failureOrUpdated = await _updateTransaction(
+      Params(transactionParam: TransactionParam(transaction: transaction)),
+    );
+
+    failureOrUpdated.fold((failure) {
+      _message = Utility.mapFailureToMessage(failure);
+      _status = TransactionStatus.TRANS_UPDATE_ERR;
+      notifyListeners();
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
+      );
+    }, (isUpdated) {
+      if (isUpdated) {
+        int allTransIndex = providerData.allTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
+        int recentTransIndex = providerData.recentTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
+
+        if (allTransIndex != -1) {
+          providerData.allTransactions.removeWhere((t) => t.transactionID == '${transaction.transactionID}');
+          providerData.allTransactions.insert(allTransIndex, transaction);
+        }
+
+        if (recentTransIndex != -1) {
+          providerData.recentTransactions.removeWhere((t) => t.transactionID == transaction.transactionID);
+          providerData.recentTransactions.insert(allTransIndex, transaction);
+        }
+      }
+      _status = TransactionStatus.UPDATED;
+      notifyListeners();
+
+      FLog.info(
+        text: 'Updated transaction and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
+      );
+    });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
   }
 
   Future<List<Category>> getCategories(TransactionType type) async {

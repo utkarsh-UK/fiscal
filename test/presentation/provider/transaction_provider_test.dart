@@ -21,6 +21,7 @@ import 'transaction_provider_test.mocks.dart';
   GetDailySummary,
   GetCategories,
   DeleteTransaction,
+  UpdateTransaction,
 ])
 void main() {
   late TransactionProvider provider;
@@ -30,6 +31,7 @@ void main() {
   late MockGetDailySummary mockGetDailySummary;
   late MockGetCategories mockGetCategories;
   late MockDeleteTransaction mockDeleteTransaction;
+  late MockUpdateTransaction mockUpdateTransaction;
 
   setUp(() {
     mockGetAllTransactions = MockGetAllTransactions();
@@ -38,6 +40,7 @@ void main() {
     mockGetDailySummary = MockGetDailySummary();
     mockGetCategories = MockGetCategories();
     mockDeleteTransaction = MockDeleteTransaction();
+    mockUpdateTransaction = MockUpdateTransaction();
 
     provider = TransactionProvider(
       getAllTransactions: mockGetAllTransactions,
@@ -46,6 +49,7 @@ void main() {
       getDailySummary: mockGetDailySummary,
       getCategories: mockGetCategories,
       deleteTransaction: mockDeleteTransaction,
+      updateTransaction: mockUpdateTransaction,
     );
   });
 
@@ -239,9 +243,9 @@ void main() {
       expect(provider.status, TransactionStatus.DELETED);
     });
 
-    test('should mark status ERROR and set error message when transactions are failed.', () async {
+    test('should mark status TRANS_DELETE_ERR and set error message when transactions are failed.', () async {
       // arrange
-      when(mockDeleteTransaction(any)).thenAnswer((_) async =>  Left(DataFailure()));
+      when(mockDeleteTransaction(any)).thenAnswer((_) async => Left(DataFailure()));
       //act
       await provider.deleteTransaction(id);
       //assert
@@ -251,4 +255,37 @@ void main() {
     });
   });
 
+  group('UpdateTransaction', () {
+    DateTime transactionDate = DateTime(2021, 05, 12);
+    Transaction transaction = Transaction(
+      transactionID: 'id',
+      title: 'title',
+      amount: 1.0,
+      transactionType: TransactionType.INCOME,
+      categoryID: 1,
+      accountID: 1,
+      date: transactionDate,
+    );
+
+    test('should update transaction and mark status as UPDATED', () async {
+      // arrange
+      when(mockUpdateTransaction(any)).thenAnswer((_) async => Right(false));
+      //act
+      await provider.updateTransaction(transaction);
+      //assert
+      verify(mockUpdateTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
+      expect(provider.status, TransactionStatus.UPDATED);
+    });
+
+    test('should mark status TRANS_UPDATE_ERR and set error message when transactions are failed.', () async {
+      // arrange
+      when(mockUpdateTransaction(any)).thenAnswer((_) async => Left(DataFailure()));
+      //act
+      await provider.updateTransaction(transaction);
+      //assert
+      verify(mockUpdateTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
+      expect(provider.status, TransactionStatus.TRANS_UPDATE_ERR);
+      expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
+    });
+  });
 }

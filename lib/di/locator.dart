@@ -23,6 +23,7 @@ Future<void> init() async {
       getDailySummary: locator(),
       getCategories: locator(),
       deleteTransaction: locator(),
+      updateTransaction: locator(),
     ),
   );
 

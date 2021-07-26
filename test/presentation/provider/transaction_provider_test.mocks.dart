@@ -20,6 +20,8 @@ import 'package:fiscal/domain/usecases/transactions/get_daily_summary.dart'
     as _i10;
 import 'package:fiscal/domain/usecases/transactions/get_recent_transactions.dart'
     as _i8;
+import 'package:fiscal/domain/usecases/transactions/update_transaction.dart'
+    as _i14;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: comment_references
@@ -127,6 +129,22 @@ class MockGetCategories extends _i1.Mock implements _i11.GetCategories {
 /// See the documentation for Mockito's code generation for more information.
 class MockDeleteTransaction extends _i1.Mock implements _i13.DeleteTransaction {
   MockDeleteTransaction() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, bool>> call(_i7.Params? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue: Future<_i2.Either<_i5.Failure, bool>>.value(
+                  _FakeEither<_i5.Failure, bool>()))
+          as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+}
+
+/// A class which mocks [UpdateTransaction].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUpdateTransaction extends _i1.Mock implements _i14.UpdateTransaction {
+  MockUpdateTransaction() {
     _i1.throwOnMissingStub(this);
   }
 

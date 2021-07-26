@@ -57,12 +57,12 @@ class MockTransactionRepository extends _i1.Mock
                   _FakeEither<_i5.Failure, String>()))
           as _i4.Future<_i2.Either<_i5.Failure, String>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> updateTransaction(
+  _i4.Future<_i2.Either<_i5.Failure, bool>> updateTransaction(
           _i6.Transaction? transaction) =>
       (super.noSuchMethod(Invocation.method(#updateTransaction, [transaction]),
-              returnValue: Future<_i2.Either<_i5.Failure, String>>.value(
-                  _FakeEither<_i5.Failure, String>()))
-          as _i4.Future<_i2.Either<_i5.Failure, String>>);
+              returnValue: Future<_i2.Either<_i5.Failure, bool>>.value(
+                  _FakeEither<_i5.Failure, bool>()))
+          as _i4.Future<_i2.Either<_i5.Failure, bool>>);
   @override
   _i4.Future<_i2.Either<_i5.Failure, bool>> deleteTransaction(
           int? transactionID) =>

@@ -23,6 +23,9 @@ abstract class TransactionRemoteDataSource {
   /// into local cache.
   Future<String> addNewTransaction(TransactionModel transaction);
 
+  /// Updates transaction with this [transaction] and returns row count.
+  Future<bool> updateTransaction(TransactionModel transaction);
+
   /// Deletes transaction with this [transactionID].
   Future<bool> deleteTransaction(int transactionID);
 
@@ -290,6 +293,40 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         text: 'Exception occurred: $transactionID',
         className: CLASS_NAME,
         methodName: 'deleteTransaction()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<bool> updateTransaction(TransactionModel transaction) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+    try {
+      final int transactionID = num.tryParse(transaction.transactionID)?.toInt() ?? -1;
+      final result = await db.update(
+        TransactionTable.TABLE_NAME,
+        TransactionModel.toQuery(transaction),
+        where: '${TransactionTable.id}=?',
+        whereArgs: [transactionID],
+      );
+      final bool isUpdated = result > 0;
+
+      FLog.info(
+        text: !isUpdated ? 'Could not update transaction. ID: [$transactionID]' : 'Updated transaction. ID: [$transactionID]',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+      return isUpdated;
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred: ${transaction.transactionID}',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
         exception: e,
         stacktrace: trace,
       );

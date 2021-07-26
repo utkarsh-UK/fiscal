@@ -30,4 +30,17 @@ class DatabaseMock extends Mock implements Database {
         returnValueForMissingStub: Future<int>.value(1),
         returnValue: Future<int>.value(1));
   }
+
+  @override
+  Future<int> update(String table, Map<String, Object?> values,
+      {String? where, List<Object?>? whereArgs, ConflictAlgorithm? conflictAlgorithm}) {
+    return super.noSuchMethod(
+        Invocation.method(
+          #update,
+          [table, values],
+          {#where: where, #whereArgs: whereArgs,#conflictAlgorithm: conflictAlgorithm},
+        ),
+        returnValueForMissingStub: Future<int>.value(1),
+        returnValue: Future<int>.value(1));
+  }
 }

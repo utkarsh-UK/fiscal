@@ -1,15 +1,27 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/domain/enitities/core/category.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionForm extends StatefulWidget {
-  /// Parameters :- (ID, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon, Category Color)
   final Function(String, TransactionType, double, int, int, DateTime, String, String, String) onSubmit;
+  final bool isUpdateState;
+  final Transaction? transaction;
 
-  const TransactionForm({Key? key, required this.onSubmit}) : super(key: key);
+  /// [onSubmit] Parameters :- (ID, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon, Category
+  /// Color).
+  ///
+  /// If [isUpdateState] is true, [transaction] parameter must not be null.
+  const TransactionForm({
+    Key? key,
+    required this.onSubmit,
+    this.isUpdateState = false,
+    this.transaction,
+  })  : assert(isUpdateState ? transaction != null : true),
+        super(key: key);
 
   @override
   _TransactionFormState createState() => _TransactionFormState();
@@ -43,8 +55,18 @@ class _TransactionFormState extends State<TransactionForm> {
     _amountController = TextEditingController();
     _dateController = TextEditingController();
 
+    if (widget.isUpdateState && widget.transaction != null) {
+      _titleController.text = widget.transaction!.title;
+      _descriptionController.text = widget.transaction!.description ?? '';
+      _amountController.text = widget.transaction!.amount.toString();
+      _dateController.text = widget.transaction!.date.getFullStringDate;
+    }
+
     context.read<TransactionProvider>().getCategories(TransactionType.EXPENSE).then((cat) {
-      _categoryDropdownValue = cat.first.categoryID;
+      _categoryDropdownValue =
+          widget.isUpdateState && widget.transaction != null
+              ? widget.transaction!.categoryID
+              : cat.first.categoryID;
       setState(() => _categories = cat);
     });
   }

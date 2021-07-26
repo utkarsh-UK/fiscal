@@ -13,6 +13,8 @@ abstract class TransactionLocalDataSource {
 
   Future<void> cacheNewTransaction(TransactionModel transaction);
 
+  Future<void> updateTransaction(TransactionModel transaction);
+
   Future<void> removeTransaction(int transactionID);
 }
 
@@ -141,6 +143,41 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
         text: 'Exception occurred:',
         className: CLASS_NAME,
         methodName: 'removeTransaction()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw CacheException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateTransaction(TransactionModel transaction) async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'updateTransaction()');
+
+    try {
+      final oldTransactions = await getRecentTransactions();
+      if (oldTransactions.isEmpty || !oldTransactions.any((t) => t.transactionID == '${transaction.transactionID}')) return;
+
+      int index = oldTransactions.indexWhere((t) => t.transactionID == '${transaction.transactionID}');
+      if (index != -1) {
+        oldTransactions.removeWhere((t) => t.transactionID == '${transaction.transactionID}');
+        oldTransactions.insert(index, transaction);
+      }
+
+      final newTransactions = oldTransactions.map((t) => TransactionModel.toJSON(t)).toList();
+      _preferences.setString(RECENT_TRANS_SHARED_PREF_KEY, json.encode(newTransactions));
+
+      FLog.info(
+        text: 'Updated transaction from cache. [TransactionID: ${transaction.transactionID}]',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred:',
+        className: CLASS_NAME,
+        methodName: 'updateTransaction()',
         exception: e,
         stacktrace: trace,
       );
