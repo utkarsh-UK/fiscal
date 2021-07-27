@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionForm extends StatefulWidget {
-  final Function(String, TransactionType, double, int, int, DateTime, String, String, String) onSubmit;
+  final Function(String, String, TransactionType, double, int, int, DateTime, String, String, String) onSubmit;
   final bool isUpdateState;
   final Transaction? transaction;
 
-  /// [onSubmit] Parameters :- (ID, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon, Category
+  /// [onSubmit] Parameters :- (ID, Title, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon,
+  /// Category
   /// Color).
   ///
   /// If [isUpdateState] is true, [transaction] parameter must not be null.
+  /// Else empty transaction object will be passed to prevent runtime exceptions.
   const TransactionForm({
     Key? key,
     required this.onSubmit,
@@ -43,7 +45,6 @@ class _TransactionFormState extends State<TransactionForm> {
   String _typeDropdownValue = 'EXPENSE';
   int _categoryDropdownValue = -1;
   DateTime _transactionDate = DateTime.now();
-  String formattedDate = '';
   TransactionType _transactionType = TransactionType.EXPENSE;
 
   @override
@@ -60,13 +61,15 @@ class _TransactionFormState extends State<TransactionForm> {
       _descriptionController.text = widget.transaction!.description ?? '';
       _amountController.text = widget.transaction!.amount.toString();
       _dateController.text = widget.transaction!.date.getFullStringDate;
+      _typeDropdownValue = Converters.convertTransactionTypeEnum(widget.transaction!.transactionType);
+      _transactionDate = widget.transaction!.date;
     }
 
-    context.read<TransactionProvider>().getCategories(TransactionType.EXPENSE).then((cat) {
+    final type =
+        widget.isUpdateState && widget.transaction != null ? widget.transaction!.transactionType : TransactionType.EXPENSE;
+    context.read<TransactionProvider>().getCategories(type).then((cat) {
       _categoryDropdownValue =
-          widget.isUpdateState && widget.transaction != null
-              ? widget.transaction!.categoryID
-              : cat.first.categoryID;
+          widget.isUpdateState && widget.transaction != null ? widget.transaction!.categoryID : cat.first.categoryID;
       setState(() => _categories = cat);
     });
   }
@@ -284,11 +287,11 @@ class _TransactionFormState extends State<TransactionForm> {
               width: size.width,
               child: Consumer<TransactionProvider>(
                 builder: (context, provider, child) {
-                  if (provider.status == TransactionStatus.LOADING)
+                  if (provider.status == TransactionStatus.LOADING || provider.status == TransactionStatus.UPDATING)
                     return Center(child: CircularProgressIndicator(key: ValueKey('progress')));
                   else if (provider.status == TransactionStatus.ERROR)
                     return ErrorWidget(provider.error);
-                  else if (provider.status == TransactionStatus.ADDED)
+                  else if (provider.status == TransactionStatus.ADDED || provider.status == TransactionStatus.UPDATED)
                     return _onAddComplete(child!);
                   else
                     return child!;
@@ -330,6 +333,7 @@ class _TransactionFormState extends State<TransactionForm> {
     // call onSubmit
     final _selectedCategory = _categories.firstWhere((cat) => cat.categoryID == _categoryDropdownValue);
     widget.onSubmit(
+      widget.isUpdateState ? widget.transaction!.transactionID : '',
       _title,
       _transactionType,
       _amount,
@@ -354,9 +358,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   Widget _onAddComplete(Widget child) {
     // _clearInputs();
-    context.read<TransactionProvider>().getRecentTransactions().then((_) {
-      context.read<TransactionProvider>().getDailySummary();
-    });
+    if (!widget.isUpdateState) {
+      context.read<TransactionProvider>().getRecentTransactions().then((_) {
+        context.read<TransactionProvider>().getDailySummary();
+      });
+    }
 
     return child;
   }

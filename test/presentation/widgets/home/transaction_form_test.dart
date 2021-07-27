@@ -40,7 +40,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
                       String description, String icon, String color) {}),
             ),
           ),
@@ -83,7 +83,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
                       String description, String icon, String color) {}),
             ),
           ),
@@ -131,7 +131,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                onSubmit: (String title, TransactionType type, double amount, int category, int account, DateTime date,
+                onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
                     String description, String icon, String color) {},
                 isUpdateState: true,
                 transaction: transaction,

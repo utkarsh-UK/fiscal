@@ -1,14 +1,17 @@
 import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/di/locator.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/screen_title.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AddNewTransaction extends StatelessWidget {
-  const AddNewTransaction({Key? key}) : super(key: key);
+class UpdateTransaction extends StatelessWidget {
+  final Transaction transaction;
+
+  const UpdateTransaction({Key? key, required this.transaction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +26,11 @@ class AddNewTransaction extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ScreenTitle(
-                    key: ValueKey('title'),
-                    title: 'Add Transaction',
+                    key: ValueKey('update_title'),
+                    title: 'Update Transaction',
                     actions: [
                       IconButton(
-                        key: ValueKey('close'),
+                        key: ValueKey('close_update'),
                         onPressed: locator.get<NavigationService>().navigateBack,
                         icon: Icon(
                           Icons.close_rounded,
@@ -40,11 +43,12 @@ class AddNewTransaction extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                     child: TransactionForm(
-                      key: ValueKey('form'),
+                      key: ValueKey('update_form'),
+                      transaction: transaction,
+                      isUpdateState: true,
                       onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
-                          DateTime date,
-                          String description, String icon, String color) {
-                        _addTransaction(title, type, amount, category, account, date, description, icon, color, context);
+                          DateTime date, String description, String icon, String color) {
+                        _updateTransaction(id, title, type, amount, category, account, date, description, icon, color, context);
                       },
                     ),
                   ),
@@ -57,18 +61,19 @@ class AddNewTransaction extends StatelessWidget {
     );
   }
 
-  void _addTransaction(String title, TransactionType type, double amount, int category, int account, DateTime date,
+  void _updateTransaction(String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
       String description, String icon, String color, BuildContext context) {
-    context.read<TransactionProvider>().addNewTransaction(
-          title: title,
-          amount: amount,
-          type: type,
-          categoryID: category,
-          accountID: account,
-          date: date,
-          description: description,
-          icon: icon,
-          color: color,
-        );
+    final trans = Transaction(
+      transactionID: id,
+      title: title,
+      amount: amount,
+      transactionType: type,
+      categoryID: category,
+      accountID: account,
+      date: date,
+      description: description,
+    );
+
+    context.read<TransactionProvider>().updateTransaction(trans);
   }
 }

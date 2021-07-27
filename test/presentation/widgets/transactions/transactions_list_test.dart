@@ -34,7 +34,7 @@ void main() {
           ChangeNotifierProvider<TransactionProvider>(create: (_) => providerMock),
         ],
         child: MaterialApp(
-          home: TransactionsList(),
+          home: Scaffold(body: TransactionsList()),
         ),
       ),
     );

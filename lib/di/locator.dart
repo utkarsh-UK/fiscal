@@ -34,6 +34,7 @@ Future<void> init() async {
   locator.registerFactory(() => GetDailySummary(locator()));
   locator.registerFactory(() => GetCategories(locator()));
   locator.registerFactory(() => DeleteTransaction(locator()));
+  locator.registerFactory(() => UpdateTransaction(locator()));
 
   // repository
   locator.registerFactory<TransactionRepository>(

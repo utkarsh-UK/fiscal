@@ -1,4 +1,5 @@
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,16 +7,25 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUp(() {});
 
+  DateTime transactionDate =  DateTime(2021, 06, 26);
+  Transaction transaction = Transaction(
+    transactionID: '1',
+    title: 'title',
+    amount: 100.983223,
+    transactionType: TransactionType.INCOME,
+    categoryID: 1,
+    accountID: 1,
+    date: transactionDate,
+    description: 'desc',
+  );
+
   testWidgets('render single transaction item as a list tile.', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: TransactionItem(
-          transactionID: 1,
-          title: 'title',
-          description: 'desc',
-          transactionType: TransactionType.INCOME,
-          amount: 100.983223,
-          transactionDate: DateTime(2021, 06, 26),
+        home: Scaffold(
+          body: TransactionItem(
+          transaction: transaction,
+          ),
         ),
       ),
     );

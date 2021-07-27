@@ -39,19 +39,17 @@ class _RecentTransactionsState extends State<RecentTransactions> {
           physics: const BouncingScrollPhysics(),
           itemCount: transactions.length,
           shrinkWrap: true,
-          itemBuilder: (BuildContext ctx, int index) => TransactionItem(
-            key: ValueKey('trans_$index'),
-            transactionID: num.parse(transactions[index].transactionID).toInt(),
-            title: transactions[index].title,
-            description: transactions[index].description,
-            transactionType: transactions[index].transactionType,
-            transactionDate: transactions[index].date,
-            amount: transactions[index].amount,
-            iconName: transactions[index].category == null ? 'others' : transactions[index].category!.icon,
-            iconColor: Color(
-              transactions[index].category == null ? 0xFF000000 : int.parse('${transactions[index].category!.color}'),
-            ),
-            onDeleted: () => context.read<TransactionProvider>().getDailySummary(),
-          ),
+          itemBuilder: (BuildContext ctx, int index) {
+            print('COLOR: ${transactions[index].category!.color}');
+            return TransactionItem(
+              key: ValueKey('trans_$index'),
+              transaction: transactions[index],
+              iconName: transactions[index].category == null ? 'others' : transactions[index].category!.icon,
+              iconColor: Color(
+                transactions[index].category == null ? 0xFF000000 : int.parse('${transactions[index].category!.color}'),
+              ),
+              onDeleted: () => context.read<TransactionProvider>().getDailySummary(),
+            );
+          },
         );
 }

@@ -11,6 +11,7 @@ void main() {
     final expense = find.byValueKey('expense');
     final emptyRecentTransactions = find.byValueKey('empty_trans');
     final addTransactionScreen = find.text('Add Transaction');
+    final updateTransactionScreen = find.text('Update Transaction');
     final titleInputField = find.byValueKey('trans_title');
     final amountInputField = find.byValueKey('trans_amount');
     final catDropdownInputField = find.byValueKey('categories_dropdown');
@@ -111,6 +112,52 @@ void main() {
         expect(await driver.getText(income), '0.00');
         expect(await driver.getText(expense), '125.50');
         expect(await driver.getText(recentTransTitle), 'First Transaction');
+        expect(await driver.getText(recentTransType), 'Expense');
+        expect(await driver.getText(find.text('$currentMonth 10')), '$currentMonth 10');
+      });
+    });
+
+    test('Select most recent transaction and click to update', () async {
+      //act
+      await driver.tap(find.text('First Transaction'));
+      //assert
+      await driver.waitFor(updateTransactionScreen);
+    });
+
+    test('Update recent transaction.', () async {
+      await driver.runUnsynchronized(() async {
+        //arrange
+        final currentMonth = DateFormat('MMMM').format(DateTime.now());
+        //act
+        // enter title
+        await driver.tap(titleInputField);
+        await driver.enterText('Transaction Updated');
+
+        //enter amount
+        await driver.tap(amountInputField);
+        await driver.enterText('130.50');
+
+        //enter description
+        await driver.tap(descInputField);
+        await driver.enterText('Updated description');
+        await driver.scroll(find.byValueKey('scroller'), 0, -300, const Duration(milliseconds: 800));
+
+        //click save
+        await driver.tap(saveButton);
+
+        //assert
+        await driver.waitFor(progressIndicator);
+        await driver.waitFor(saveButton);
+        await driver.scroll(find.byValueKey('scroller'), 0, 300, const Duration(milliseconds: 800));
+
+        //click close button
+        await driver.tap(find.byValueKey('close_update'));
+
+        //verify transaction is added
+        await driver.waitFor(find.text('INR   -130.50'));
+        expect(await driver.getText(income), '0.00');
+        expect(await driver.getText(expense), '130.50');
+        expect(await driver.getText(recentTransTitle), 'Transaction Updated');
         expect(await driver.getText(recentTransType), 'Expense');
         expect(await driver.getText(find.text('$currentMonth 10')), '$currentMonth 10');
       });

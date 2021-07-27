@@ -25,6 +25,17 @@ class Transaction extends Equatable {
     this.category,
   });
 
+  Transaction.empty()
+      : this.transactionID = '',
+        this.title = '',
+        this.date = DateTime.now(),
+        this.accountID = 0,
+        this.categoryID = 0,
+        this.amount = 0,
+        this.category = null,
+        this.description = '',
+        this.transactionType = TransactionType.EXPENSE;
+
   @override
   List<Object> get props => [transactionID, title, amount, date, transactionType];
 }

@@ -61,7 +61,7 @@ class TransactionModel extends Transaction {
         category: CategoryModel.fromJSON(data));
   }
 
-  factory TransactionModel.fromTransaction(Transaction transaction, {String id = ''}) {
+  factory TransactionModel.fromTransaction(Transaction transaction, {String id = '', CategoryModel? categoryModel}) {
     return TransactionModel(
       transactionID: id.isNotEmpty ? id : transaction.transactionID,
       title: transaction.title,
@@ -72,7 +72,7 @@ class TransactionModel extends Transaction {
       accountID: transaction.accountID,
       date: transaction.date,
       category: transaction.category == null
-          ? null
+          ? categoryModel
           : CategoryModel(
               categoryID: transaction.categoryID,
               name: transaction.category!.name,

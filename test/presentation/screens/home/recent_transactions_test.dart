@@ -51,7 +51,7 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [ChangeNotifierProvider<TransactionProvider>(create: (_) => providerMock),],
-        child: MaterialApp(home: RecentTransactions()),
+        child: MaterialApp(home: Scaffold(body: RecentTransactions())),
       ),
     );
 

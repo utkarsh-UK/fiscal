@@ -3,6 +3,7 @@ import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/usecase/transaction_param.dart';
 import 'package:fiscal/core/usecase/usecase.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
+import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
@@ -284,20 +285,26 @@ class TransactionProvider extends ChangeNotifier {
         methodName: 'updateTransaction()',
       );
     }, (isUpdated) {
-      if (isUpdated) {
-        int allTransIndex = providerData.allTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
-        int recentTransIndex = providerData.recentTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
-
-        if (allTransIndex != -1) {
-          providerData.allTransactions.removeWhere((t) => t.transactionID == '${transaction.transactionID}');
-          providerData.allTransactions.insert(allTransIndex, transaction);
-        }
-
-        if (recentTransIndex != -1) {
-          providerData.recentTransactions.removeWhere((t) => t.transactionID == transaction.transactionID);
-          providerData.recentTransactions.insert(allTransIndex, transaction);
-        }
-      }
+      // if (isUpdated) {
+      //   int allTransIndex = providerData.allTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
+      //   int recentTransIndex = providerData.recentTransactions.indexWhere((t) => t.transactionID == transaction.transactionID);
+      //
+      //   if (allTransIndex != -1) {
+      //     final category = providerData.allTransactions.firstWhere((t) => t.transactionID == transaction.transactionID).category;
+      //     final model = TransactionModel.fromTransaction(transaction, categoryModel: category as CategoryModel);
+      //     providerData.allTransactions.removeWhere((t) => t.transactionID == '${transaction.transactionID}');
+      //     providerData.allTransactions.insert(allTransIndex, model);
+      //   }
+      //
+      //   if (recentTransIndex != -1) {
+      //     final category =
+      //         providerData.recentTransactions.firstWhere((t) => t.transactionID == transaction.transactionID).category;
+      //     print(category.toString());
+      //     final model = TransactionModel.fromTransaction(transaction, categoryModel: category as CategoryModel);
+      //     providerData.recentTransactions.removeWhere((t) => t.transactionID == '${transaction.transactionID}');
+      //     providerData.recentTransactions.insert(recentTransIndex, model);
+      //   }
+      // }
       _status = TransactionStatus.UPDATED;
       notifyListeners();
 
