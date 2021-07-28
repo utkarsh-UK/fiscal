@@ -264,7 +264,11 @@ void main() {
     test('should update transaction in database and cache and return true when call to remote data source is successful.',
         () async {
       // arrange
-      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => true);
+    final Map<String, Object> methodReturn = {
+      'isUpdated': true,
+      'transaction': transaction,
+    };
+      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => methodReturn);
       when(mockTransactionLocalDataSource.updateTransaction(transaction)).thenAnswer((_) async => Future.value());
       //act
       final result = await repository.updateTransaction(transaction);
@@ -276,7 +280,11 @@ void main() {
 
     test('should not call local data source when database updation is failed or false.', () async {
       // arrange
-      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => false);
+      final Map<String, Object> methodReturn = {
+        'isUpdated': false,
+        'transaction': transaction,
+      };
+      when(mockTransactionRemoteDataSource.updateTransaction(transaction)).thenAnswer((_) async => methodReturn);
       when(mockTransactionLocalDataSource.updateTransaction(transaction)).thenAnswer((_) async => Future.value());
       //act
       await repository.updateTransaction(transaction);

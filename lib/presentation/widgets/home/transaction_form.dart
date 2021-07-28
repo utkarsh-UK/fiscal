@@ -358,11 +358,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   Widget _onAddComplete(Widget child) {
     // _clearInputs();
-    if (!widget.isUpdateState) {
-      context.read<TransactionProvider>().getRecentTransactions().then((_) {
-        context.read<TransactionProvider>().getDailySummary();
-      });
-    }
+    // if (!widget.isUpdateState) {
+    context.read<TransactionProvider>().getRecentTransactions().then((_) {
+      context.read<TransactionProvider>().getDailySummary();
+    });
+    // }
 
     return child;
   }

@@ -3,11 +3,11 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i3;
-import 'dart:ui' as _i6;
+import 'dart:ui' as _i7;
 
 import 'package:fiscal/core/utils/static/enums.dart' as _i4;
-import 'package:fiscal/domain/enitities/core/category.dart' as _i5;
-import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i7;
+import 'package:fiscal/domain/enitities/core/category.dart' as _i6;
+import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i5;
 import 'package:fiscal/presentation/provider/transaction_provider.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -105,16 +105,21 @@ class MockTransactionProvider extends _i1.Mock
       returnValue: Future<void>.value(null),
       returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
-  _i3.Future<List<_i5.Category>> getCategories(_i4.TransactionType? type) =>
-      (super.noSuchMethod(Invocation.method(#getCategories, [type]),
-              returnValue: Future<List<_i5.Category>>.value(<_i5.Category>[]))
-          as _i3.Future<List<_i5.Category>>);
+  _i3.Future<void> updateTransaction(_i5.Transaction? transaction) =>
+      (super.noSuchMethod(Invocation.method(#updateTransaction, [transaction]),
+          returnValue: Future<void>.value(null),
+          returnValueForMissingStub: Future.value()) as _i3.Future<void>);
   @override
-  void addListener(_i6.VoidCallback? listener) =>
+  _i3.Future<List<_i6.Category>> getCategories(_i4.TransactionType? type) =>
+      (super.noSuchMethod(Invocation.method(#getCategories, [type]),
+              returnValue: Future<List<_i6.Category>>.value(<_i6.Category>[]))
+          as _i3.Future<List<_i6.Category>>);
+  @override
+  void addListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i6.VoidCallback? listener) =>
+  void removeListener(_i7.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -136,19 +141,19 @@ class MockTransactionProviderData extends _i1.Mock
   }
 
   @override
-  List<_i7.Transaction> get recentTransactions =>
+  List<_i5.Transaction> get recentTransactions =>
       (super.noSuchMethod(Invocation.getter(#recentTransactions),
-          returnValue: <_i7.Transaction>[]) as List<_i7.Transaction>);
+          returnValue: <_i5.Transaction>[]) as List<_i5.Transaction>);
   @override
-  set recentTransactions(List<_i7.Transaction>? _recentTransactions) => super
+  set recentTransactions(List<_i5.Transaction>? _recentTransactions) => super
       .noSuchMethod(Invocation.setter(#recentTransactions, _recentTransactions),
           returnValueForMissingStub: null);
   @override
-  List<_i7.Transaction> get allTransactions =>
+  List<_i5.Transaction> get allTransactions =>
       (super.noSuchMethod(Invocation.getter(#allTransactions),
-          returnValue: <_i7.Transaction>[]) as List<_i7.Transaction>);
+          returnValue: <_i5.Transaction>[]) as List<_i5.Transaction>);
   @override
-  set allTransactions(List<_i7.Transaction>? _allTransactions) =>
+  set allTransactions(List<_i5.Transaction>? _allTransactions) =>
       super.noSuchMethod(Invocation.setter(#allTransactions, _allTransactions),
           returnValueForMissingStub: null);
   @override
@@ -160,11 +165,11 @@ class MockTransactionProviderData extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#summary, _summary),
           returnValueForMissingStub: null);
   @override
-  set setRecentTransactions(List<_i7.Transaction>? trans) =>
+  set setRecentTransactions(List<_i5.Transaction>? trans) =>
       super.noSuchMethod(Invocation.setter(#setRecentTransactions, trans),
           returnValueForMissingStub: null);
   @override
-  set setAllTransactions(List<_i7.Transaction>? all) =>
+  set setAllTransactions(List<_i5.Transaction>? all) =>
       super.noSuchMethod(Invocation.setter(#setAllTransactions, all),
           returnValueForMissingStub: null);
   @override

@@ -151,7 +151,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
       final transactionModel = TransactionModel.fromTransaction(transaction);
 
       final result = await remoteDataSource.updateTransaction(transactionModel);
-      if (result) await localDataSource.updateTransaction(transactionModel);
+      if (result['isUpdated'] != null && result['isUpdated'] as bool)
+        await localDataSource.updateTransaction(result['transaction'] as TransactionModel);
 
       FLog.info(
         text: 'Updated transaction. ID: [${transaction.transactionID}]',
@@ -160,7 +161,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       );
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
 
-      return Right(result);
+      return Right(result['isUpdated'] as bool);
     } on DataException catch (d) {
       FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'updateTransaction()');
       return Left(DataFailure(message: d.message));

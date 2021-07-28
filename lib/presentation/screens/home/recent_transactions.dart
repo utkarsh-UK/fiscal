@@ -40,7 +40,6 @@ class _RecentTransactionsState extends State<RecentTransactions> {
           itemCount: transactions.length,
           shrinkWrap: true,
           itemBuilder: (BuildContext ctx, int index) {
-            print('COLOR: ${transactions[index].category!.color}');
             return TransactionItem(
               key: ValueKey('trans_$index'),
               transaction: transactions[index],

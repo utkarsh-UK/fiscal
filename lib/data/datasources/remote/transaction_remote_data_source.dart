@@ -23,8 +23,8 @@ abstract class TransactionRemoteDataSource {
   /// into local cache.
   Future<String> addNewTransaction(TransactionModel transaction);
 
-  /// Updates transaction with this [transaction] and returns row count.
-  Future<bool> updateTransaction(TransactionModel transaction);
+  /// Updates transaction with this [transaction] and returns updated transaction.
+  Future<Map<String, Object>> updateTransaction(TransactionModel transaction);
 
   /// Deletes transaction with this [transactionID].
   Future<bool> deleteTransaction(int transactionID);
@@ -301,7 +301,8 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   }
 
   @override
-  Future<bool> updateTransaction(TransactionModel transaction) async {
+  Future<Map<String, Object>> updateTransaction(TransactionModel transaction) async {
+    TransactionModel? updatedModel;
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'updateTransaction()');
 
     try {
@@ -313,6 +314,16 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         whereArgs: [transactionID],
       );
       final bool isUpdated = result > 0;
+      if (isUpdated) {
+        final updatedRow = await db.rawQuery(
+          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'FROM ${TransactionTable.TABLE_NAME} t '
+          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'WHERE ${TransactionTable.id}=?',
+          [transactionID]
+        );
+        updatedModel = TransactionModel.fromQueryResult(updatedRow.first);
+      }
 
       FLog.info(
         text: !isUpdated ? 'Could not update transaction. ID: [$transactionID]' : 'Updated transaction. ID: [$transactionID]',
@@ -321,7 +332,7 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       );
       FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'updateTransaction()');
 
-      return isUpdated;
+      return {'isUpdated': isUpdated, 'transaction': updatedModel ?? transaction};
     } catch (e, trace) {
       FLog.error(
         text: 'Exception occurred: ${transaction.transactionID}',

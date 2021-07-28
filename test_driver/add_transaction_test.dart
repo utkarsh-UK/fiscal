@@ -137,6 +137,10 @@ void main() {
         await driver.tap(amountInputField);
         await driver.enterText('130.50');
 
+        //select category
+        await driver.tap(catDropdownInputField);
+        await driver.tap(find.text('Health'));
+
         //enter description
         await driver.tap(descInputField);
         await driver.enterText('Updated description');
@@ -157,7 +161,7 @@ void main() {
         await driver.waitFor(find.text('INR   -130.50'));
         expect(await driver.getText(income), '0.00');
         expect(await driver.getText(expense), '130.50');
-        expect(await driver.getText(recentTransTitle), 'Transaction Updated');
+        expect(await driver.getText(find.text('Transaction Updated')), 'Transaction Updated');
         expect(await driver.getText(recentTransType), 'Expense');
         expect(await driver.getText(find.text('$currentMonth 10')), '$currentMonth 10');
       });

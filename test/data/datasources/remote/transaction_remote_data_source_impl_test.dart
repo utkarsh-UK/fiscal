@@ -300,30 +300,69 @@ void main() {
         accountID: 1,
         date: date,
         description: 'desc');
+    final updatedTransaction = TransactionModel(
+        transactionID: '1',
+        title: 'updated',
+        amount: 12.10,
+        transactionType: TransactionType.INCOME,
+        categoryID: 1,
+        accountID: 1,
+        date: date,
+        description: 'desc');
     int transactionID = 1;
 
-    test('should update transaction from database and return true after updating.', () async {
+    final query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+        'FROM ${TransactionTable.TABLE_NAME} t '
+        'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+        'WHERE ${TransactionTable.id}=?';
+    Map<String, Object?> transactionQuery = {
+      "transaction_id": "1",
+      "date": "2021-05-14T14:13:29.104",
+      "title": "updated",
+      "description": "desc",
+      "amount": 12.10,
+      "transaction_type": "INCOME",
+      "category_id": 1,
+      "acc_id": 1,
+      "icon": 'icon',
+      'color': 'color'
+    };
+    List<Map<String, Object?>> queryResult = [transactionQuery];
+
+    test('should update transaction from database and return updated transaction with true after updating.', () async {
       // arrange
+      final Map<String, Object> methodReturn = {
+        'isUpdated': true,
+        'transaction': updatedTransaction,
+      };
       when(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
           where: '${TransactionTable.id}=?', whereArgs: [transactionID])).thenAnswer((_) async => 1);
+      when(databaseMock.rawQuery(query, [transactionID])).thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.updateTransaction(transaction);
       //assert
       verify(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
           where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
-      expect(result, true);
+      verify(databaseMock.rawQuery(query, [transactionID]));
+      expect(result, methodReturn);
     });
 
     test('should return false when no transactions updated.', () async {
       // arrange
+      final Map<String, Object> methodReturn = {
+        'isUpdated': false,
+        'transaction': transaction,
+      };
       when(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
           where: '${TransactionTable.id}=?', whereArgs: [transactionID])).thenAnswer((_) async => 0);
+      when(databaseMock.rawQuery(query, [transactionID])).thenAnswer((_) async => queryResult);
       //act
       final result = await dataSourceImpl.updateTransaction(transaction);
       //assert
       verify(databaseMock.update(TransactionTable.TABLE_NAME, TransactionModel.toQuery(transaction),
           where: '${TransactionTable.id}=?', whereArgs: [transactionID]));
-      expect(result, false);
+      verifyNever(databaseMock.rawQuery(query, [transactionID]));
+      expect(result, methodReturn);
     });
 
     test('should throw DataException when deletion is not successful.', () async {

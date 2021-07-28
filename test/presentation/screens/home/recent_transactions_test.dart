@@ -46,7 +46,7 @@ void main() {
 
   testWidgets('fetch recent transactions and show them in list.', (WidgetTester tester) async {
     when(providerMock.status).thenReturn(TransactionStatus.COMPLETED);
-    when(providerMock.getRecentTransactions()).thenAnswer((_) => Future.value());
+    when(providerMock.getRecentTransactions()).thenAnswer((_) => Future.value(_transactions));
 
     await tester.pumpWidget(
       MultiProvider(
