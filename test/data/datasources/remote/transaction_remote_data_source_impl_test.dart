@@ -235,7 +235,7 @@ void main() {
     final categories = [category];
     final String type = 'EXPENSE';
 
-    test('should fetch recent transactions from database', () async {
+    test('should fetch categories from database', () async {
       // arrange
       when(databaseMock.rawQuery(query, ['EXPENSE'])).thenAnswer((_) async => queryResult);
       //act
@@ -373,6 +373,41 @@ void main() {
       final call = dataSourceImpl.updateTransaction;
       //assert
       expect(() => call(transaction), throwsA(TypeMatcher<DataException>()));
+    });
+  });
+
+  group('getAccounts', () {
+    String query = 'SELECT * FROM ${AccountsTable.TABLE_NAME};';
+
+    List<Map<String, Object?>> queryResult = [accountQuery];
+    DateTime createdAt = DateTime(2021, 05, 12);
+    AccountModel account = AccountModel(
+      accountID: 1,
+      accountNumber: 12345,
+      logo: 'logo',
+      bankName: 'bank',
+      balance: 10000,
+      createdAt: createdAt,
+    );
+
+    final accounts = [account];
+
+    test('should fetch all accounts from database', () async {
+      // arrange
+      when(databaseMock.rawQuery(query)).thenAnswer((_) async => queryResult);
+      //act
+      final result = await dataSourceImpl.getAccounts();
+      //assert
+      verify(databaseMock.rawQuery(query));
+      expect(result, accounts);
+      verifyNoMoreInteractions(databaseMock);
+    });
+
+    test('should throw DataException when fetching data fails', () async {
+      //act
+      final call = dataSourceImpl.getAccounts;
+      //assert
+      expect(() => call(), throwsA(TypeMatcher<DataException>()));
     });
   });
 }

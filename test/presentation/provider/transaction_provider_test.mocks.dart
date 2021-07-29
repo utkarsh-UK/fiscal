@@ -7,8 +7,10 @@ import 'dart:async' as _i4;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:fiscal/core/error/failure.dart' as _i5;
 import 'package:fiscal/core/usecase/usecase.dart' as _i7;
+import 'package:fiscal/domain/enitities/core/account.dart' as _i16;
 import 'package:fiscal/domain/enitities/core/category.dart' as _i12;
 import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
+import 'package:fiscal/domain/usecases/core/get_accounts.dart' as _i15;
 import 'package:fiscal/domain/usecases/core/get_categories.dart' as _i11;
 import 'package:fiscal/domain/usecases/transactions/add_new_transaction.dart'
     as _i9;
@@ -154,4 +156,22 @@ class MockUpdateTransaction extends _i1.Mock implements _i14.UpdateTransaction {
               returnValue: Future<_i2.Either<_i5.Failure, bool>>.value(
                   _FakeEither<_i5.Failure, bool>()))
           as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+}
+
+/// A class which mocks [GetAccounts].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetAccounts extends _i1.Mock implements _i15.GetAccounts {
+  MockGetAccounts() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, List<_i16.Account>>> call(
+          _i7.NoParams? params) =>
+      (super.noSuchMethod(Invocation.method(#call, [params]),
+              returnValue:
+                  Future<_i2.Either<_i5.Failure, List<_i16.Account>>>.value(
+                      _FakeEither<_i5.Failure, List<_i16.Account>>()))
+          as _i4.Future<_i2.Either<_i5.Failure, List<_i16.Account>>>);
 }

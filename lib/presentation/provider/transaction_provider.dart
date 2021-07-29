@@ -3,8 +3,8 @@ import 'package:fiscal/core/core.dart';
 import 'package:fiscal/core/usecase/transaction_param.dart';
 import 'package:fiscal/core/usecase/usecase.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
-import 'package:fiscal/data/models/models.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
+import 'package:fiscal/domain/usecases/core/get_accounts.dart';
 import 'package:fiscal/domain/usecases/core/get_categories.dart';
 import 'package:fiscal/domain/usecases/usecases.dart';
 import 'package:flutter/foundation.dart' hide Category;
@@ -39,6 +39,7 @@ class TransactionProvider extends ChangeNotifier {
   final GetCategories _getCategories;
   final DeleteTransaction _deleteTransaction;
   final UpdateTransaction _updateTransaction;
+  final GetAccounts _getAccounts;
 
   TransactionProvider({
     required GetAllTransactions getAllTransactions,
@@ -48,13 +49,15 @@ class TransactionProvider extends ChangeNotifier {
     required GetCategories getCategories,
     required DeleteTransaction deleteTransaction,
     required UpdateTransaction updateTransaction,
+    required GetAccounts getAccounts,
   })  : _getAllTransactions = getAllTransactions,
         _getRecentTransactions = getRecentTransactions,
         _addNewTransaction = addNewTransaction,
         _getDailySummary = getDailySummary,
         _getCategories = getCategories,
         _deleteTransaction = deleteTransaction,
-        _updateTransaction = updateTransaction;
+        _updateTransaction = updateTransaction,
+        _getAccounts = getAccounts;
 
   TransactionStatus _status = TransactionStatus.INITIAL;
   String _message = '';
@@ -344,6 +347,35 @@ class TransactionProvider extends ChangeNotifier {
     FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getCategories()');
 
     return categories;
+  }
+
+  Future<List<Account>> getAccounts() async {
+    late List<Account> accounts;
+
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAccounts()');
+
+    final failureOrAccounts = await _getAccounts(NoParams());
+
+    failureOrAccounts.fold((failure) {
+      accounts = [];
+
+      FLog.error(
+        text: 'Error message: $_message and status: $_status',
+        className: CLASS_NAME,
+        methodName: 'getAccounts()',
+      );
+    }, (fetchedAccounts) {
+      accounts = fetchedAccounts;
+
+      FLog.info(
+        text: 'Fetched accounts and notified listeners.',
+        className: CLASS_NAME,
+        methodName: 'getAccounts()',
+      );
+    });
+    FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getAccounts()');
+
+    return accounts;
   }
 }
 

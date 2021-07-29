@@ -1,4 +1,5 @@
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
+import 'package:fiscal/presentation/widgets/core/empty_transactions.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,11 @@ class TransactionsList extends StatelessWidget {
         else if (provider.status == TransactionStatus.COMPLETED || provider.status == TransactionStatus.DELETED) {
           final transactions = provider.providerData.allTransactions;
 
-          if (transactions.isEmpty) return Center(child: Text('No transactions'));
+          if (transactions.isEmpty)
+            return Container(
+              margin: const EdgeInsets.only(top: 30.0),
+              child: EmptyTransactions(),
+            );
 
           return ListView.builder(
             physics: const BouncingScrollPhysics(),

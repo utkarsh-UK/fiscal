@@ -5,4 +5,9 @@ class Converters {
 
   static TransactionType convertTransactionTypeString(String type) =>
       type == 'INCOME' ? TransactionType.INCOME : TransactionType.EXPENSE;
+
+  static String convertAccountTypeEnum(AccountType type) => type == AccountType.SAVINGS ? 'SAVINGS' : 'CURRENT';
+
+  static AccountType convertAccountTypeString(String type) =>
+      type == 'SAVINGS' ? AccountType.SAVINGS : AccountType.CURRENT;
 }

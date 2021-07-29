@@ -1,5 +1,6 @@
 import 'package:f_logs/f_logs.dart';
 import 'package:fiscal/core/error/exceptions.dart';
+import 'package:fiscal/core/utils/tables/accounts_table.dart';
 import 'package:fiscal/core/utils/tables/category_table.dart';
 import 'package:fiscal/core/utils/tables/transaction_table.dart';
 import 'package:fiscal/data/models/models.dart';
@@ -34,6 +35,9 @@ abstract class TransactionRemoteDataSource {
 
   /// Fetches all categories for [type] transaction.
   Future<List<CategoryModel>> getCategories(String type);
+
+  /// Fetches all accounts.
+  Future<List<AccountModel>> getAccounts();
 }
 
 class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
@@ -316,12 +320,11 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       final bool isUpdated = result > 0;
       if (isUpdated) {
         final updatedRow = await db.rawQuery(
-          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
-          'FROM ${TransactionTable.TABLE_NAME} t '
-          'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
-          'WHERE ${TransactionTable.id}=?',
-          [transactionID]
-        );
+            'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+            'FROM ${TransactionTable.TABLE_NAME} t '
+            'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+            'WHERE ${TransactionTable.id}=?',
+            [transactionID]);
         updatedModel = TransactionModel.fromQueryResult(updatedRow.first);
       }
 
@@ -338,6 +341,35 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
         text: 'Exception occurred: ${transaction.transactionID}',
         className: CLASS_NAME,
         methodName: 'updateTransaction()',
+        exception: e,
+        stacktrace: trace,
+      );
+      throw DataException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<AccountModel>> getAccounts() async {
+    FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAccounts()');
+
+    try {
+      final queryData = await db.rawQuery('SELECT * FROM ${AccountsTable.TABLE_NAME};');
+
+      final queryList = queryData.map((account) => AccountModel.fromQueryResult(account)).toList();
+
+      FLog.info(
+        text: 'Fetched ${queryList.length} categories from database',
+        className: CLASS_NAME,
+        methodName: 'getAccounts()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getAccounts()');
+
+      return queryList;
+    } catch (e, trace) {
+      FLog.error(
+        text: 'Exception occurred:',
+        className: CLASS_NAME,
+        methodName: 'getAccounts()',
         exception: e,
         stacktrace: trace,
       );

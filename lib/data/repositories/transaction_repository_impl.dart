@@ -7,6 +7,7 @@ import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/data/datasources/local/transaction_local_data_source.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/models/models.dart';
+import 'package:fiscal/domain/enitities/core/account.dart';
 import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/domain/repositories/transaction_repository.dart';
@@ -193,6 +194,26 @@ class TransactionRepositoryImpl implements TransactionRepository {
     } on CacheException catch (c) {
       FLog.error(text: 'Error Repo: ${c.message}', className: CLASS_NAME, methodName: 'deleteTransaction()');
       return Left(CacheFailure(message: c.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Account>>> getAccounts() async {
+    try {
+      FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getAccounts()');
+      final accounts = await remoteDataSource.getAccounts();
+
+      FLog.info(
+        text: 'Fetched ${accounts.length} accounts from database.',
+        className: CLASS_NAME,
+        methodName: 'getAccounts()',
+      );
+      FLog.info(text: 'Exit', className: CLASS_NAME, methodName: 'getAccounts()');
+
+      return Right(accounts);
+    } on DataException catch (d) {
+      FLog.error(text: 'Error Repo: ${d.message}', className: CLASS_NAME, methodName: 'getAccounts()');
+      return Left(DataFailure(message: d.message));
     }
   }
 }

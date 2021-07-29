@@ -22,6 +22,7 @@ import 'transaction_provider_test.mocks.dart';
   GetCategories,
   DeleteTransaction,
   UpdateTransaction,
+  GetAccounts,
 ])
 void main() {
   late TransactionProvider provider;
@@ -32,6 +33,7 @@ void main() {
   late MockGetCategories mockGetCategories;
   late MockDeleteTransaction mockDeleteTransaction;
   late MockUpdateTransaction mockUpdateTransaction;
+  late MockGetAccounts mockGetAccounts;
 
   setUp(() {
     mockGetAllTransactions = MockGetAllTransactions();
@@ -41,16 +43,17 @@ void main() {
     mockGetCategories = MockGetCategories();
     mockDeleteTransaction = MockDeleteTransaction();
     mockUpdateTransaction = MockUpdateTransaction();
+    mockGetAccounts = MockGetAccounts();
 
     provider = TransactionProvider(
-      getAllTransactions: mockGetAllTransactions,
-      getRecentTransactions: mockGetRecentTransactions,
-      addNewTransaction: mockAddNewTransaction,
-      getDailySummary: mockGetDailySummary,
-      getCategories: mockGetCategories,
-      deleteTransaction: mockDeleteTransaction,
-      updateTransaction: mockUpdateTransaction,
-    );
+        getAllTransactions: mockGetAllTransactions,
+        getRecentTransactions: mockGetRecentTransactions,
+        addNewTransaction: mockAddNewTransaction,
+        getDailySummary: mockGetDailySummary,
+        getCategories: mockGetCategories,
+        deleteTransaction: mockDeleteTransaction,
+        updateTransaction: mockUpdateTransaction,
+        getAccounts: mockGetAccounts);
   });
 
   DateTime transactionDate = DateTime(2021, 05, 12);
@@ -286,6 +289,40 @@ void main() {
       verify(mockUpdateTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
       expect(provider.status, TransactionStatus.TRANS_UPDATE_ERR);
       expect(provider.error, DEFAULT_DATABASE_FAILURE_MESSAGE);
+    });
+  });
+
+  group('getAccounts', () {
+    DateTime createdAt = DateTime(2021, 05, 12);
+    Account account = Account(
+      accountID: 1,
+      accountNumber: 12345,
+      bankName: 'bank',
+      logo: 'logo',
+      balance: 10000,
+      createdAt: createdAt,
+    );
+
+    final accounts = [account];
+
+    test('should fetch accounts when usecase call is successful.', () async {
+      // arrange
+      when(mockGetAccounts(any)).thenAnswer((_) async => Right(accounts));
+      //act
+      final result = await provider.getAccounts();
+      //assert
+      verify(mockGetAccounts(NoParams()));
+      expect(result, accounts);
+    });
+
+    test('should return empty list when fetching accounts is failed.', () async {
+      // arrange
+      when(mockGetAccounts(any)).thenAnswer((_) async => Left(DataFailure()));
+      //act
+      final result = await provider.getAccounts();
+      //assert
+      verify(mockGetAccounts(NoParams()));
+      expect(result, isEmpty);
     });
   });
 }

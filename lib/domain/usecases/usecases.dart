@@ -4,3 +4,6 @@ export './transactions/add_new_transaction.dart';
 export './transactions/get_daily_summary.dart';
 export './transactions/delete_transaction.dart';
 export './transactions/update_transaction.dart';
+
+export './core/get_categories.dart';
+export './core/get_accounts.dart';

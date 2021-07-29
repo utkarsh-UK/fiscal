@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:fiscal/core/error/failure.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
-import 'package:fiscal/domain/enitities/core/category.dart';
-import 'package:fiscal/domain/enitities/transactions/transaction.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 
 abstract class TransactionRepository {
   /// Fetches 10 most recent transactions.
@@ -32,4 +31,7 @@ abstract class TransactionRepository {
   ///
   /// [type] can be INCOME/EXPENSE.
   Future<Either<Failure, List<Category>>> getCategories(TransactionType type);
+
+  /// Fetches all accounts.
+  Future<Either<Failure, List<Account>>> getAccounts();
 }

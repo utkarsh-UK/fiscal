@@ -1,5 +1,6 @@
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
+import 'package:fiscal/presentation/widgets/core/empty_transactions.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _RecentTransactionsState extends State<RecentTransactions> {
       );
 
   Widget _buildList(List<Transaction> transactions) => transactions.isEmpty
-      ? Center(child: Text('No Transactions Yet', key: ValueKey('empty_trans')))
+      ? EmptyTransactions()
       : ListView.builder(
           physics: const BouncingScrollPhysics(),
           itemCount: transactions.length,

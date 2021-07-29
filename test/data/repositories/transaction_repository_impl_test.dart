@@ -303,4 +303,38 @@ void main() {
       expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
     });
   });
+
+  group('getAccounts', () {
+    DateTime createdAt = DateTime(2021, 05, 12);
+    AccountModel account = AccountModel(
+      accountID: 1,
+      accountNumber: 12345,
+      logo: 'logo',
+      bankName: 'bank',
+      balance: 10000,
+      createdAt: createdAt,
+    );
+
+    final accounts = [account];
+
+    test('should return all accounts when call to remote data source is successful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getAccounts()).thenAnswer((_) async => accounts);
+      //act
+      final result = await repository.getAccounts();
+      //assert
+      verify(mockTransactionRemoteDataSource.getAccounts());
+      expect(result, Right(accounts));
+    });
+
+    test('should return DataFailure when call to remote data source is unsuccessful.', () async {
+      // arrange
+      when(mockTransactionRemoteDataSource.getAccounts()).thenThrow(DataException());
+      //act
+      final result = await repository.getAccounts();
+      //assert
+      verify(mockTransactionRemoteDataSource.getAccounts());
+      expect(result, Left(DataFailure(message: DEFAULT_DATA_EXCEPTION_MESSAGE)));
+    });
+  });
 }

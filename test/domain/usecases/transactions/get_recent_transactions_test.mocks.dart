@@ -7,6 +7,7 @@ import 'dart:async' as _i4;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:fiscal/core/error/failure.dart' as _i5;
 import 'package:fiscal/core/utils/static/enums.dart' as _i8;
+import 'package:fiscal/domain/enitities/core/account.dart' as _i9;
 import 'package:fiscal/domain/enitities/core/category.dart' as _i7;
 import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i6;
 import 'package:fiscal/domain/repositories/transaction_repository.dart' as _i3;
@@ -86,4 +87,10 @@ class MockTransactionRepository extends _i1.Mock
                   Future<_i2.Either<_i5.Failure, List<_i7.Category>>>.value(
                       _FakeEither<_i5.Failure, List<_i7.Category>>()))
           as _i4.Future<_i2.Either<_i5.Failure, List<_i7.Category>>>);
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, List<_i9.Account>>> getAccounts() =>
+      (super.noSuchMethod(Invocation.method(#getAccounts, []),
+          returnValue: Future<_i2.Either<_i5.Failure, List<_i9.Account>>>.value(
+              _FakeEither<_i5.Failure, List<_i9.Account>>())) as _i4
+          .Future<_i2.Either<_i5.Failure, List<_i9.Account>>>);
 }

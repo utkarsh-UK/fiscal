@@ -19,3 +19,13 @@ Map<String, Object?> categoryQuery = {
   "color": 'color',
   "transaction_type": "EXPENSE",
 };
+
+Map<String, Object?> accountQuery = {
+  "account_id": 1,
+  "account_no": 12345,
+  "bank_name": 'bank',
+  "balance": 10000.0,
+  "logo": 'logo',
+  "timestamp": "2021-05-14T14:13:29.104",
+  "account_type": "SAVINGS",
+};
