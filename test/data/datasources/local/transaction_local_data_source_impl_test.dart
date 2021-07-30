@@ -35,6 +35,7 @@ void main() {
     date: date,
     description: 'desc',
     category: CategoryModel(categoryID: 1, name: '', icon: 'icon', color: 'color'),
+    account: AccountModel(accountID: 1, accountNumber: 12345, bankName: 'bank', balance: 10000, logo: 'logo'),
   );
 
   final transactionsList = [transaction, transaction];
@@ -139,7 +140,10 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       "icon": 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'account_id': 1
     };
 
     Map<String, Object?> transCached2 = {
@@ -152,7 +156,10 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       "icon": 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'account_id': 1
     };
 
     final trans = TransactionModel(
@@ -165,6 +172,7 @@ void main() {
       date: date,
       description: 'desc',
       category: CategoryModel(categoryID: 1, name: '', icon: 'icon', color: 'color'),
+      account: AccountModel(accountID: 1, accountNumber: 12345, bankName: 'bank', balance: 10000, logo: 'logo'),
     );
 
     final transList = [trans];
@@ -212,7 +220,10 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       "icon": 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'account_id': 1
     };
 
     Map<String, Object?> transCached2 = {
@@ -225,7 +236,10 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       "icon": 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'account_id': 1
     };
 
     final trans1 = TransactionModel(
@@ -250,6 +264,7 @@ void main() {
       date: date,
       description: 'desc',
       category: CategoryModel(categoryID: 1, name: '', icon: 'icon', color: 'color'),
+      account: AccountModel(accountID: 1, accountNumber: 12345, bankName: 'bank', balance: 10000, logo: 'logo'),
     );
 
     final transList = [trans1, trans2];

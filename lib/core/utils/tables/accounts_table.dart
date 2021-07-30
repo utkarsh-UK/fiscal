@@ -12,4 +12,10 @@ class AccountsTable {
 
   static const String SAVINGS = 'SAVINGS';
   static const String CURRENT = 'CURRENT';
+
+  static const String account_insert_query = '''
+    INSERT INTO ${AccountsTable.TABLE_NAME} (bank_name, balance, account_type, timestamp, account_no, logo)
+    VALUES ('HDFC Bank', 12056, 'SAVINGS', '2021-07-23T14:13:29.104', 23123141, 'logo'),
+    ('Central Bank', 8900, 'SAVINGS', '2021-07-23T14:13:29.104', 676172672, 'logo');
+    ''';
 }

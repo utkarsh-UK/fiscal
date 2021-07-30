@@ -57,10 +57,11 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       if (lastFetchedTransactionID.isEmpty) {
         //initial fetch request
         queryData = await db.rawQuery(
-          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
           'FROM ${TransactionTable.TABLE_NAME} t '
           'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
-          'WHERE ${TransactionTable.date} like ? '
+          'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
+          'WHERE t.${TransactionTable.date} LIKE ? '
           'ORDER BY '
           '${TransactionTable.id} DESC LIMIT ?',
           ['$time%', batchSize],
@@ -68,9 +69,10 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       } else {
         //subsequent fetch request
         queryData = await db.rawQuery(
-          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+          'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
           'FROM ${TransactionTable.TABLE_NAME} t '
           'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
           'WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
           'ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?',
@@ -107,9 +109,10 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
 
     try {
       final queryData = await db.rawQuery(
-        'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+        'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
         'FROM ${TransactionTable.TABLE_NAME} t '
         'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+        'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
         'ORDER BY ${TransactionTable.id} DESC LIMIT ?',
         [10],
       );
@@ -320,9 +323,10 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
       final bool isUpdated = result > 0;
       if (isUpdated) {
         final updatedRow = await db.rawQuery(
-            'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+            'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
             'FROM ${TransactionTable.TABLE_NAME} t '
             'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+            'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
             'WHERE ${TransactionTable.id}=?',
             [transactionID]);
         updatedModel = TransactionModel.fromQueryResult(updatedRow.first);

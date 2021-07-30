@@ -12,6 +12,7 @@ class Transaction extends Equatable {
   final int accountID;
   final DateTime date;
   final Category? category;
+  final Account? account;
 
   Transaction({
     required this.transactionID,
@@ -23,6 +24,7 @@ class Transaction extends Equatable {
     required this.accountID,
     required this.date,
     this.category,
+    this.account,
   });
 
   Transaction.empty()
@@ -33,6 +35,7 @@ class Transaction extends Equatable {
         this.categoryID = 0,
         this.amount = 0,
         this.category = null,
+        this.account = null,
         this.description = '',
         this.transactionType = TransactionType.EXPENSE;
 

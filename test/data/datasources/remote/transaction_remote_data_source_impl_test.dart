@@ -28,7 +28,7 @@ void main() {
 
   group('getAllTransactions', () {
     String lastFetchedTransactionID = 'id';
-    String time = '2021-05-14%';
+    String time = '2021-05';
     int batchSize = 10;
 
     List<Map<String, Object?>> queryResult = [transactionQuery];
@@ -49,10 +49,11 @@ void main() {
 
     test('should fetch all transactions for initial load and specified batch size', () async {
       // arrange
-      String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+      String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
           'FROM ${TransactionTable.TABLE_NAME} t '
           'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
-          'WHERE ${TransactionTable.date} like ? '
+          'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
+          'WHERE t.${TransactionTable.date} LIKE ? '
           'ORDER BY '
           '${TransactionTable.id} DESC LIMIT ?';
       when(databaseMock.rawQuery(query, [time, batchSize])).thenAnswer((_) async => queryResult);
@@ -65,9 +66,10 @@ void main() {
 
     test('should fetch paginated transactions for subsequent load and specified batch size', () async {
       // arrange
-      String paginatedQuery = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+      String paginatedQuery = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
           'FROM ${TransactionTable.TABLE_NAME} t '
           'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+          'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
           'WHERE ${TransactionTable.date} like ? and ${TransactionTable.id} < ? '
           'ORDER BY'
           ' ${TransactionTable.id} DESC LIMIT ?';
@@ -89,9 +91,10 @@ void main() {
   });
 
   group('getRecentTransactions', () {
-    String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color} '
+    String query = 'SELECT t.*, c.${CategoryTable.icon}, c.${CategoryTable.color}, a.* '
         'FROM ${TransactionTable.TABLE_NAME} t '
         'JOIN ${CategoryTable.TABLE_NAME} c ON c.${CategoryTable.id}=t.${TransactionTable.category_id} '
+        'JOIN ${AccountsTable.TABLE_NAME} a ON a.${AccountsTable.id}=t.${TransactionTable.acc_id} '
         'ORDER BY ${TransactionTable.id} DESC LIMIT ?';
 
     List<Map<String, Object?>> queryResult = [transactionQuery];
@@ -325,7 +328,14 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       "icon": 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'balance': 10000,
+      'account_type': 'SAVINGS',
+      'timestamp': '2021-05-14T14:13:29.104',
+      'logo': 'logo',
+      'account_id': 1
     };
     List<Map<String, Object?>> queryResult = [transactionQuery];
 

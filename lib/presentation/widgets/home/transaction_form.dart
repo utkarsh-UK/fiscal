@@ -38,12 +38,14 @@ class _TransactionFormState extends State<TransactionForm> {
   late TextEditingController _dateController;
 
   List<Category> _categories = [];
+  List<Account> _accounts = [];
 
   String _title = '';
   String _description = '';
   double _amount = 0.0;
   String _typeDropdownValue = 'EXPENSE';
   int _categoryDropdownValue = -1;
+  int _accountDropdownValue = -1;
   DateTime _transactionDate = DateTime.now();
   TransactionType _transactionType = TransactionType.EXPENSE;
 
@@ -67,10 +69,17 @@ class _TransactionFormState extends State<TransactionForm> {
 
     final type =
         widget.isUpdateState && widget.transaction != null ? widget.transaction!.transactionType : TransactionType.EXPENSE;
-    context.read<TransactionProvider>().getCategories(type).then((cat) {
+    Future.wait<List<Object>>(
+            [context.read<TransactionProvider>().getCategories(type), context.read<TransactionProvider>().getAccounts()])
+        .then((results) {
+      final fetchedCat = results.first as List<Category>;
+      final fetchedAcc = results[1] as List<Account>;
       _categoryDropdownValue =
-          widget.isUpdateState && widget.transaction != null ? widget.transaction!.categoryID : cat.first.categoryID;
-      setState(() => _categories = cat);
+          widget.isUpdateState && widget.transaction != null ? widget.transaction!.categoryID : fetchedCat.first.categoryID;
+      _accountDropdownValue =
+          widget.isUpdateState && widget.transaction != null ? widget.transaction!.accountID : fetchedAcc.first.accountID;
+      _categories = fetchedCat;
+      setState(() => _accounts = fetchedAcc);
     });
   }
 
@@ -217,19 +226,34 @@ class _TransactionFormState extends State<TransactionForm> {
             const SizedBox(height: 16.0),
             InputTitle(title: 'Account:'),
             const SizedBox(height: 12.0),
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+            SizedBox(
+              width: size.width * 0.9,
+              child: DropdownButtonFormField<int>(
+                key: ValueKey('account_dropdown'),
+                onChanged: (cat) => setState(() => _accountDropdownValue = cat ?? -1),
+                value: _accountDropdownValue,
+                onSaved: (cat) => _accountDropdownValue = cat ?? -1,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
+                  filled: true,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 ),
-                fillColor: FiscalTheme.TEXT_INPUT_BACKGROUND_COLOR,
-                filled: true,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: FiscalTheme.TEXT_INPUT_BORDER_COLOR),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                iconSize: 25.0,
+                style: FiscalTheme.inputText,
+                items: _accounts
+                    .map((cat) => DropdownMenuItem<int>(
+                          key: ValueKey('acc_${cat.accountID}'),
+                          value: cat.accountID,
+                          child: Text("${cat.bankName} (${cat.accountNumber})"),
+                        ))
+                    .toList(),
               ),
-              keyboardType: TextInputType.text,
             ),
             const SizedBox(height: 16.0),
             InputTitle(title: 'Date:'),
@@ -338,7 +362,7 @@ class _TransactionFormState extends State<TransactionForm> {
       _transactionType,
       _amount,
       _categoryDropdownValue,
-      0,
+      _accountDropdownValue,
       _transactionDate,
       _description,
       _selectedCategory.icon,

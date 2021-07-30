@@ -1,6 +1,7 @@
 import 'package:fiscal/core/utils/helpers/converters.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/core/utils/tables/accounts_table.dart';
+import 'package:fiscal/core/utils/tables/transaction_table.dart';
 import 'package:fiscal/domain/enitities/core/account.dart';
 
 class AccountModel extends Account {
@@ -44,11 +45,11 @@ class AccountModel extends Account {
 
   factory AccountModel.fromJSON(Map<String, dynamic> data) {
     return AccountModel(
-      accountID: int.parse('${data[AccountsTable.id]}'),
+      accountID: int.parse('${data[TransactionTable.acc_id]}'),
       accountNumber: int.parse('${data[AccountsTable.account_number]}'),
       bankName: '${data[AccountsTable.bank_name]}',
-      balance: num.parse('${data[AccountsTable.balance]}').toDouble(),
-      logo: '${data[AccountsTable.logo]}',
+      balance: -1,
+      logo: '',
       accountType: data[AccountsTable.account_type] == null
           ? AccountType.SAVINGS
           : Converters.convertAccountTypeString('${data[AccountsTable.account_type]}'),

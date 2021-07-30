@@ -6,9 +6,12 @@ Map<String, Object?> transactionQuery = {
   "amount": 10.10,
   "transaction_type": "INCOME",
   "category_id": 1,
+  "account_id": 1,
   "acc_id": 1,
   "icon": 'icon',
-  'color': 'color'
+  'color': 'color',
+  'bank_name': 'bank',
+  'account_no': 12345,
 };
 
 Map<String, Object?> categoryQuery = {

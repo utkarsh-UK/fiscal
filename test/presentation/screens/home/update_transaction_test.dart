@@ -36,10 +36,22 @@ void main() {
       description: 'desc',
     );
 
+    Account account = Account(
+      accountID: 1,
+      accountNumber: 12345,
+      bankName: 'bank',
+      logo: 'logo',
+      balance: 10000,
+      createdAt: createdAt,
+    );
+
+
     final categories = [category];
+    final accounts = [account];
 
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.INITIAL);
     when(mockTransactionProvider.getCategories(TransactionType.INCOME)).thenAnswer((_) async => categories);
+    when(mockTransactionProvider.getAccounts()).thenAnswer((_) async => accounts);
 
     await tester.pumpWidget(
       MaterialApp(

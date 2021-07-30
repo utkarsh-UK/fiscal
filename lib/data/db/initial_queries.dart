@@ -18,6 +18,7 @@ CREATE TABLE ${AccountsTable.TABLE_NAME} (
   ${AccountsTable.balance} REAL NOT NULL,
   ${AccountsTable.account_type} TEXT NOT NULL CHECK(${AccountsTable.account_type} IN ('${AccountsTable.SAVINGS}', '${AccountsTable.CURRENT}')),
   ${AccountsTable.timestamp} TEXT NOT NULL,
-  ${AccountsTable.account_number} INTEGER NOT NULL
+  ${AccountsTable.account_number} INTEGER NOT NULL,
+  ${AccountsTable.logo} TEXT NOT NULL DEFAULT ""
 );
 ''';

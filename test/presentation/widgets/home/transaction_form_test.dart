@@ -1,6 +1,6 @@
 import 'package:fiscal/core/utils/extensions/date_extensions.dart';
 import 'package:fiscal/core/utils/static/enums.dart';
-import 'package:fiscal/domain/enitities/core/category.dart';
+import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/domain/enitities/transactions/transaction.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/widgets/home/transaction_form.dart';
@@ -23,12 +23,22 @@ void main() {
 
   DateTime createdAt = DateTime(2021, 05, 12);
   Category category = Category(categoryID: 1, name: 'category', icon: 'category', color: 'color', createdAt: createdAt);
+  Account account = Account(
+    accountID: 1,
+    accountNumber: 12345,
+    bankName: 'bank',
+    logo: 'logo',
+    balance: 10000,
+    createdAt: createdAt,
+  );
 
   final categories = [category];
+  final accounts = [account];
 
   testWidgets('render transaction form with correct fields.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.INITIAL);
     when(mockTransactionProvider.getCategories(TransactionType.EXPENSE)).thenAnswer((_) async => categories);
+    when(mockTransactionProvider.getAccounts()).thenAnswer((_) async => accounts);
 
     await tester.pumpWidget(
       MediaQuery(
@@ -40,8 +50,8 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
-                      String description, String icon, String color) {}),
+                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
+                      DateTime date, String description, String icon, String color) {}),
             ),
           ),
         ),
@@ -54,7 +64,7 @@ void main() {
 
     //find inputs
     final inputFields = find.byType(TextField, skipOffstage: false);
-    expect(inputFields, findsNWidgets(5));
+    expect(inputFields, findsNWidgets(4));
 
     //find type dropdown
     final typeDropdown = find.byKey(ValueKey('type_dropdown'));
@@ -64,6 +74,16 @@ void main() {
     final categoryDropdown = find.byKey(ValueKey('categories_dropdown'));
     expect(categoryDropdown, findsOneWidget);
 
+    //find category dropdown
+    final accountDropdown = find.byKey(ValueKey('account_dropdown'));
+    expect(accountDropdown, findsOneWidget);
+
+    await tester.pumpAndSettle();
+
+    //find category and account value
+    expect(find.text('category'), findsOneWidget);
+    expect(find.text('bank (12345)'), findsOneWidget);
+
     //find save btn
     final save = find.byKey(ValueKey('save'));
     expect(save, findsOneWidget);
@@ -72,6 +92,7 @@ void main() {
   testWidgets('should render progress indicator when state is LOADING.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.LOADING);
     when(mockTransactionProvider.getCategories(TransactionType.EXPENSE)).thenAnswer((_) async => categories);
+    when(mockTransactionProvider.getAccounts()).thenAnswer((_) async => accounts);
 
     await tester.pumpWidget(
       MediaQuery(
@@ -83,8 +104,8 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: TransactionForm(
-                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
-                      String description, String icon, String color) {}),
+                  onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
+                      DateTime date, String description, String icon, String color) {}),
             ),
           ),
         ),
@@ -97,7 +118,7 @@ void main() {
 
     //find inputs
     final inputFields = find.byType(TextField, skipOffstage: false);
-    expect(inputFields, findsNWidgets(5));
+    expect(inputFields, findsNWidgets(4));
 
     //find progress indicator
     final progress = find.byKey(ValueKey('progress'));
@@ -109,6 +130,7 @@ void main() {
   testWidgets('should render predefined values when form is rendered with isUpdateState flag true.', (WidgetTester tester) async {
     when(mockTransactionProvider.status).thenReturn(TransactionStatus.COMPLETED);
     when(mockTransactionProvider.getCategories(TransactionType.EXPENSE)).thenAnswer((_) async => categories);
+    when(mockTransactionProvider.getAccounts()).thenAnswer((_) async => accounts);
 
     DateTime transactionDate = DateTime(2021, 05, 12);
     Transaction transaction = Transaction(

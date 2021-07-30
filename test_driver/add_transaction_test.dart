@@ -9,12 +9,13 @@ void main() {
     final fab = find.byValueKey('fab');
     final income = find.byValueKey('income');
     final expense = find.byValueKey('expense');
-    final emptyRecentTransactions = find.byValueKey('empty_trans');
+    final emptyRecentTransactions = find.byValueKey('no_rec_transactions');
     final addTransactionScreen = find.text('Add Transaction');
     final updateTransactionScreen = find.text('Update Transaction');
     final titleInputField = find.byValueKey('trans_title');
     final amountInputField = find.byValueKey('trans_amount');
     final catDropdownInputField = find.byValueKey('categories_dropdown');
+    final accDropdownInputField = find.byValueKey('account_dropdown');
     final dateInputField = find.byValueKey('date_picker');
     final dateValue = find.text('10');
     final okButton = find.text('OK');
@@ -58,7 +59,7 @@ void main() {
       await driver.waitFor(find.text('INR   0.00'));
       expect(await driver.getText(income), '0.00');
       expect(await driver.getText(expense), '0.00');
-      expect(await driver.getText(emptyRecentTransactions), 'No Transactions Yet');
+      expect(await driver.getText(emptyRecentTransactions), 'No Transactions yet.\nGet started by adding transaction.');
     });
 
     test('Open add transaction screen and ensure form is visible', () async {
@@ -84,6 +85,10 @@ void main() {
         //select category
         await driver.tap(catDropdownInputField);
         await driver.tap(find.text('Food'));
+
+        //select account
+        await driver.tap(accDropdownInputField);
+        await driver.tap(find.text('HDFC Bank (23123141)'));
 
         //enter date
         await driver.tap(dateInputField);
@@ -140,6 +145,10 @@ void main() {
         //select category
         await driver.tap(catDropdownInputField);
         await driver.tap(find.text('Health'));
+
+        //select account
+        await driver.tap(accDropdownInputField);
+        await driver.tap(find.text('Central Bank (676172672)'));
 
         //enter description
         await driver.tap(descInputField);

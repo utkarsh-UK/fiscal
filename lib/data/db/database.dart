@@ -44,6 +44,7 @@ class FiscalDatabase {
     await db.execute(CREATE_CATEGORY_TABLE_QUERY);
     await db.execute(CategoryTable.income_insert_query);
     await db.execute(CategoryTable.expense_insert_query);
+    await db.execute(AccountsTable.account_insert_query);
 
     //create Transaction table
     await db.execute('''

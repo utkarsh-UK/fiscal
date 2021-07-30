@@ -21,7 +21,7 @@ class TransactionsList extends StatelessWidget {
           if (transactions.isEmpty)
             return Container(
               margin: const EdgeInsets.only(top: 30.0),
-              child: EmptyTransactions(),
+              child: EmptyTransactions(key: ValueKey('no_transactions'),),
             );
 
           return ListView.builder(

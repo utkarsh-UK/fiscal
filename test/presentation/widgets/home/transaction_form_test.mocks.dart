@@ -3,9 +3,10 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i3;
-import 'dart:ui' as _i7;
+import 'dart:ui' as _i8;
 
 import 'package:fiscal/core/utils/static/enums.dart' as _i4;
+import 'package:fiscal/domain/enitities/core/account.dart' as _i7;
 import 'package:fiscal/domain/enitities/core/category.dart' as _i6;
 import 'package:fiscal/domain/enitities/transactions/transaction.dart' as _i5;
 import 'package:fiscal/presentation/provider/transaction_provider.dart' as _i2;
@@ -115,11 +116,16 @@ class MockTransactionProvider extends _i1.Mock
               returnValue: Future<List<_i6.Category>>.value(<_i6.Category>[]))
           as _i3.Future<List<_i6.Category>>);
   @override
-  void addListener(_i7.VoidCallback? listener) =>
+  _i3.Future<List<_i7.Account>> getAccounts() =>
+      (super.noSuchMethod(Invocation.method(#getAccounts, []),
+              returnValue: Future<List<_i7.Account>>.value(<_i7.Account>[]))
+          as _i3.Future<List<_i7.Account>>);
+  @override
+  void addListener(_i8.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
+  void removeListener(_i8.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override

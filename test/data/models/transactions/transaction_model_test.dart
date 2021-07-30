@@ -23,6 +23,7 @@ void main() {
       date: date,
       description: 'desc',
       category: CategoryModel(categoryID: 1, color: 'color', icon: 'icon', name: '', createdAt: DateTime.now()),
+      account: AccountModel(accountID: 1, accountNumber: 12345, bankName: 'bank', balance: 10000, logo: 'logo'),
     );
     modelWithIntID = TransactionModel(
         transactionID: '1',
@@ -77,6 +78,9 @@ void main() {
     expectedMap.remove('transaction_id');
     expectedMap.remove('icon');
     expectedMap.remove('color');
+    expectedMap.remove('bank_name');
+    expectedMap.remove('account_no');
+    expectedMap.remove('account_id');
     expect(result, expectedMap);
   });
 
@@ -94,7 +98,9 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       'icon': 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
     };
     expect(result, expectedMap);
   });
@@ -147,7 +153,14 @@ void main() {
       "category_id": 1,
       "acc_id": 1,
       'icon': 'icon',
-      'color': 'color'
+      'color': 'color',
+      'bank_name': 'bank',
+      'account_no': 12345,
+      'balance': 10000,
+      'account_type': 'SAVINGS',
+      'timestamp': '2021-05-14T14:13:29.104',
+      'logo': 'logo',
+      'account_id': 1
     };
     //act
     final result = TransactionModel.fromQueryResult(modelQuery);
