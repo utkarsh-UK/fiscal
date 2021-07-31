@@ -80,7 +80,9 @@ class MockTransactionProvider extends _i1.Mock
           int? accountID,
           DateTime? date,
           String? icon,
-          String? color}) =>
+          String? color,
+          String? bankName,
+          int? accountNumber}) =>
       (super.noSuchMethod(
           Invocation.method(#addNewTransaction, [], {
             #title: title,
@@ -91,7 +93,9 @@ class MockTransactionProvider extends _i1.Mock
             #accountID: accountID,
             #date: date,
             #icon: icon,
-            #color: color
+            #color: color,
+            #bankName: bankName,
+            #accountNumber: accountNumber
           }),
           returnValue: Future<void>.value(null),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);

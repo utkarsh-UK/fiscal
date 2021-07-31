@@ -152,6 +152,8 @@ void main() {
         description: 'description',
         icon: 'icon',
         color: 'color',
+        bankName: 'bank',
+        accountNumber: 12345
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));
@@ -172,6 +174,8 @@ void main() {
         description: 'description',
         icon: 'icon',
         color: 'color',
+          bankName: 'bank',
+          accountNumber: 12345
       );
       //assert
       verify(mockAddNewTransaction(Params(transactionParam: TransactionParam(transaction: transaction))));

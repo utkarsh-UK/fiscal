@@ -9,7 +9,7 @@ void main() {
     final fab = find.byValueKey('fab');
     final income = find.byValueKey('income');
     final expense = find.byValueKey('expense');
-    final emptyRecentTransactions = find.byValueKey('no_rec_transactions');
+    final emptyRecentTransactions = find.byValueKey('empty_state');
     final addTransactionScreen = find.text('Add Transaction');
     final updateTransactionScreen = find.text('Update Transaction');
     final titleInputField = find.byValueKey('trans_title');

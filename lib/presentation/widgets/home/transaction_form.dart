@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionForm extends StatefulWidget {
-  final Function(String, String, TransactionType, double, int, int, DateTime, String, String, String) onSubmit;
+  final Function(String, String, TransactionType, double, int, int, DateTime, String, String, String, String, int) onSubmit;
   final bool isUpdateState;
   final Transaction? transaction;
 
   /// [onSubmit] Parameters :- (ID, Title, TransactionType, Amount, CategoryID, AccountID, Date, Description, Category Icon,
-  /// Category
-  /// Color).
+  /// Category, Color, BankName, AccountNumber).
   ///
   /// If [isUpdateState] is true, [transaction] parameter must not be null.
   /// Else empty transaction object will be passed to prevent runtime exceptions.
@@ -356,6 +355,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
     // call onSubmit
     final _selectedCategory = _categories.firstWhere((cat) => cat.categoryID == _categoryDropdownValue);
+    final _selectedAccount = _accounts.firstWhere((acc) => acc.accountID == _accountDropdownValue);
     widget.onSubmit(
       widget.isUpdateState ? widget.transaction!.transactionID : '',
       _title,
@@ -367,6 +367,8 @@ class _TransactionFormState extends State<TransactionForm> {
       _description,
       _selectedCategory.icon,
       _selectedCategory.color,
+      _selectedAccount.bankName,
+      _selectedAccount.accountNumber,
     );
   }
 

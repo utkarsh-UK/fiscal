@@ -47,7 +47,7 @@ class UpdateTransaction extends StatelessWidget {
                       transaction: transaction,
                       isUpdateState: true,
                       onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
-                          DateTime date, String description, String icon, String color) {
+                          DateTime date, String description, String icon, String color, String bankName, int accountNumber) {
                         _updateTransaction(id, title, type, amount, category, account, date, description, icon, color, context);
                       },
                     ),

@@ -51,7 +51,7 @@ void main() {
             home: Scaffold(
               body: TransactionForm(
                   onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
-                      DateTime date, String description, String icon, String color) {}),
+                      DateTime date, String description, String icon, String color, String bankName, int accountNumber) {}),
             ),
           ),
         ),
@@ -105,7 +105,7 @@ void main() {
             home: Scaffold(
               body: TransactionForm(
                   onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
-                      DateTime date, String description, String icon, String color) {}),
+                      DateTime date, String description, String icon, String color, String bankName, int accountNumber) {}),
             ),
           ),
         ),
@@ -154,7 +154,7 @@ void main() {
             home: Scaffold(
               body: TransactionForm(
                 onSubmit: (String id, String title, TransactionType type, double amount, int category, int account, DateTime date,
-                    String description, String icon, String color) {},
+                    String description, String icon, String color, String bankName, int accountNumber) {},
                 isUpdateState: true,
                 transaction: transaction,
               ),

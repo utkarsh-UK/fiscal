@@ -42,9 +42,21 @@ class AddNewTransaction extends StatelessWidget {
                     child: TransactionForm(
                       key: ValueKey('form'),
                       onSubmit: (String id, String title, TransactionType type, double amount, int category, int account,
-                          DateTime date,
-                          String description, String icon, String color) {
-                        _addTransaction(title, type, amount, category, account, date, description, icon, color, context);
+                          DateTime date, String description, String icon, String color, String bankName, int accountNumber) {
+                        _addTransaction(
+                          title,
+                          type,
+                          amount,
+                          category,
+                          account,
+                          date,
+                          description,
+                          icon,
+                          color,
+                          bankName,
+                          accountNumber,
+                          context,
+                        );
                       },
                     ),
                   ),
@@ -58,7 +70,7 @@ class AddNewTransaction extends StatelessWidget {
   }
 
   void _addTransaction(String title, TransactionType type, double amount, int category, int account, DateTime date,
-      String description, String icon, String color, BuildContext context) {
+      String description, String icon, String color, String bankName, int accountNumber, BuildContext context) {
     context.read<TransactionProvider>().addNewTransaction(
           title: title,
           amount: amount,
@@ -69,6 +81,8 @@ class AddNewTransaction extends StatelessWidget {
           description: description,
           icon: icon,
           color: color,
+          bankName: bankName,
+          accountNumber: accountNumber,
         );
   }
 }

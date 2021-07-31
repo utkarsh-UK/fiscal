@@ -149,6 +149,8 @@ class TransactionProvider extends ChangeNotifier {
     required DateTime date,
     required String icon,
     required String color,
+    required String bankName,
+    required int accountNumber,
   }) async {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'addNewTransaction()');
     FLog.info(
@@ -171,6 +173,7 @@ class TransactionProvider extends ChangeNotifier {
       date: date,
       description: description,
       category: Category(categoryID: categoryID, name: '', icon: icon, color: color),
+      account: Account(accountID: accountID, bankName: bankName, accountNumber: accountNumber, balance: 0, logo: ''),
     );
 
     final failureOrTransactions = await _addNewTransaction(
