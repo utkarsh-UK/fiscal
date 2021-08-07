@@ -24,6 +24,7 @@ class EmptyTransactions extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             ElevatedButton(
+              key: ValueKey('cta'),
               onPressed: () => locator.get<NavigationService>().navigateToNamed(ADD_NEW_TRANSACTION),
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(6.0),

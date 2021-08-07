@@ -99,7 +99,7 @@ void main() {
         //enter description
         await driver.tap(descInputField);
         await driver.enterText('This is description');
-        await driver.scroll(find.byValueKey('scroller'), 0, -300, const Duration(milliseconds: 800));
+        await driver.scroll(find.byValueKey('scroller'), 0, -200, const Duration(milliseconds: 800));
 
         //click save
         await driver.tap(saveButton);
@@ -107,7 +107,7 @@ void main() {
         //assert
         await driver.waitFor(progressIndicator);
         await driver.waitFor(saveButton);
-        await driver.scroll(find.byValueKey('scroller'), 0, 300, const Duration(milliseconds: 800));
+        await driver.scroll(find.byValueKey('scroller'), 0, 200, const Duration(milliseconds: 800));
 
         //click close button
         await driver.tap(closeButton);

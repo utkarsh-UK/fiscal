@@ -97,7 +97,6 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
       }
 
       final transactions = json.decode(_preferences.getString(RECENT_TRANS_SHARED_PREF_KEY)!) as List<dynamic>;
-      print(transactions.toString());
       final oldTransactions = transactions.map((transactionData) => TransactionModel.fromJSON(transactionData)).toList();
 
       FLog.info(

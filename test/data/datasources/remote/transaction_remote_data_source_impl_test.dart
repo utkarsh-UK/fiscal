@@ -4,6 +4,7 @@ import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/data/datasources/remote/transaction_remote_data_source.dart';
 import 'package:fiscal/data/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:matcher/matcher.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -194,28 +195,29 @@ void main() {
     final String query = ''
         'SELECT ${TransactionTable.transaction_type}, SUM(amount) AS amount '
         'FROM ${TransactionTable.TABLE_NAME} '
-        // 'WHERE ${TransactionTable.date}=DATE() '
-        'GROUP BY ${TransactionTable.transaction_type}';
+        'GROUP BY ${TransactionTable.transaction_type} '
+        'HAVING ${TransactionTable.date} like ?';
     final rows = [dbResult];
+    final currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
 
     test('should get daily summary data for current day', () async {
       // arrange
-      when(databaseMock.rawQuery(query)).thenAnswer((_) async => rows);
+      when(databaseMock.rawQuery(query, [currentMonth])).thenAnswer((_) async => rows);
       //act
       final result = await dataSourceImpl.getDailySummary();
       //assert
-      verify(databaseMock.rawQuery(query, [10]));
+      verify(databaseMock.rawQuery(query, [currentMonth]));
       expect(result, summary);
     });
 
     test('should return 0 value as summary when no records are present', () async {
       // arrange
-      when(databaseMock.rawQuery(query)).thenAnswer((_) async => []);
+      when(databaseMock.rawQuery(query, [currentMonth])).thenAnswer((_) async => []);
       //act
       final expectedResult = {'EXPENSE': 0.0, 'INCOME': 0.0};
       final result = await dataSourceImpl.getDailySummary();
       //assert
-      verify(databaseMock.rawQuery(query, [10]));
+      verify(databaseMock.rawQuery(query, [currentMonth]));
       expect(result, expectedResult);
     });
 

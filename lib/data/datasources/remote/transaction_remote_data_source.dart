@@ -4,6 +4,7 @@ import 'package:fiscal/core/utils/tables/accounts_table.dart';
 import 'package:fiscal/core/utils/tables/category_table.dart';
 import 'package:fiscal/core/utils/tables/transaction_table.dart';
 import 'package:fiscal/data/models/models.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class TransactionRemoteDataSource {
@@ -195,13 +196,13 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
     FLog.info(text: 'Enter', className: CLASS_NAME, methodName: 'getDailySummary()');
 
     try {
-      //TODO Add date later for current day's summary
+      final currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
       final String query = ''
           'SELECT ${TransactionTable.transaction_type}, SUM(amount) AS amount '
           'FROM ${TransactionTable.TABLE_NAME} '
-          // 'WHERE ${TransactionTable.date}=DATE() '
-          'GROUP BY ${TransactionTable.transaction_type}';
-      final results = await db.rawQuery(query);
+          'GROUP BY ${TransactionTable.transaction_type} '
+          'HAVING ${TransactionTable.date} like ?';
+      final results = await db.rawQuery(query, ['$currentMonth%']);
 
       if (results.isEmpty) {
         FLog.warning(
