@@ -3,6 +3,7 @@ import 'package:fiscal/core/utils/static/enums.dart';
 import 'package:fiscal/domain/enitities/core/category.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
+import 'package:fiscal/presentation/widgets/core/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -319,20 +320,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   else
                     return child!;
                 },
-                child: TextButton(
-                  key: ValueKey('save'),
-                  onPressed: _save,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(FiscalTheme.SECONDARY_COLOR),
-                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10.0)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0))),
-                    elevation: MaterialStateProperty.all(4.0),
-                  ),
-                  child: Text(
-                    'Save',
-                    style: FiscalTheme.bodyWhiteText.copyWith(color: Color(0xFFFFFFFF)),
-                  ),
-                ),
+                child: PrimaryButton(key: ValueKey('save'), btnText: 'Save', onPressed: _save),
               ),
             ),
           ],

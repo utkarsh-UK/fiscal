@@ -3,6 +3,7 @@ import 'package:fiscal/core/core.dart';
 import 'package:fiscal/di/locator.dart';
 import 'package:fiscal/presentation/provider/transaction_provider.dart';
 import 'package:fiscal/presentation/screens/home/home.dart';
+import 'package:fiscal/presentation/screens/screens.dart';
 import 'package:fiscal/presentation/screens/transactions/all_transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,7 +33,7 @@ class _LandingState extends State<Landing> {
       AllTransactions(key: ValueKey('trans')),
       Container(key: ValueKey('stats'), child: Text('Stats Page')),
       Container(key: ValueKey('accounts'), child: Text('Accounts Page')),
-      Container(key: ValueKey('settings'), child: Text('Settings Page')),
+      Settings(key: ValueKey('settings')),
     ];
 
     FLog.info(

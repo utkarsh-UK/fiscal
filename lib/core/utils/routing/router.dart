@@ -1,8 +1,6 @@
 import 'package:fiscal/core/utils/routing/route_names.dart';
 import 'package:fiscal/domain/enitities/entities.dart';
-import 'package:fiscal/presentation/screens/home/add_new_transaction.dart';
-import 'package:fiscal/presentation/screens/home/landing.dart';
-import 'package:fiscal/presentation/screens/home/update_transaction.dart';
+import 'package:fiscal/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -19,6 +17,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         if (params['transaction'] != null) args = params;
       }
       return _getPageRoute(UpdateTransaction(transaction: args['transaction']), settings);
+    case INCOME_CATEGORIES:
+      return _getPageRoute(IncomeCategories(), settings);
     default:
       return _getPageRoute(Landing(), settings);
   }

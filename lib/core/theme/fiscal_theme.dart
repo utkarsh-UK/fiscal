@@ -53,6 +53,11 @@ class FiscalTheme {
     fontSize: 16.0,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle inputSecondaryText = TextStyle(
+    color: Color(0xFFD353E3),
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle smallButtonText = TextStyle(
     color: FiscalTheme.ACCENT_COLOR,
     fontSize: 16.0,
